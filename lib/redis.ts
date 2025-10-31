@@ -3,13 +3,20 @@ import Redis from 'ioredis';
 import { env } from './env';
 
 // Create Redis connection for BullMQ
-// Use UPSTASH_REDIS_URL (redis:// protocol) for ioredis, not REST URL
-const redisUrl = process.env.UPSTASH_REDIS_URL || env.UPSTASH_REDIS_REST_URL;
+// Use UPSTASH_REDIS_URL (redis:// protocol) for ioredis
+const redisUrl = process.env.UPSTASH_REDIS_URL;
+
+if (!redisUrl) {
+  throw new Error('UPSTASH_REDIS_URL environment variable is required');
+}
 
 export const connection = new Redis(redisUrl, {
   maxRetriesPerRequest: null,
   enableReadyCheck: false,
-  tls: redisUrl.startsWith('rediss://') ? {} : undefined,
+  family: 6, // Use IPv6
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Define job data interface
