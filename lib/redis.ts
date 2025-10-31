@@ -1,23 +1,5 @@
-import { Queue, Worker, Job } from 'bullmq';
+import { Queue } from 'bullmq';
 import Redis from 'ioredis';
-import { env } from './env';
-
-// Create Redis connection for BullMQ
-// Use UPSTASH_REDIS_URL (redis:// protocol) for ioredis
-const redisUrl = process.env.UPSTASH_REDIS_URL;
-
-if (!redisUrl) {
-  throw new Error('UPSTASH_REDIS_URL environment variable is required');
-}
-
-export const connection = new Redis(redisUrl, {
-  maxRetriesPerRequest: null,
-  enableReadyCheck: false,
-  family: 6, // Use IPv6
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
 
 // Define job data interface
 export interface ImageGenJobData {
@@ -28,21 +10,70 @@ export interface ImageGenJobData {
   mood?: string;
 }
 
-// Create queue
-export const imageGenQueue = new Queue<ImageGenJobData>('image-generation', {
-  connection,
-  defaultJobOptions: {
-    attempts: 2,
-    backoff: {
-      type: 'exponential',
-      delay: 5000,
+// Lazy initialization to avoid connecting during build time
+let _connection: Redis | null = null;
+let _imageGenQueue: Queue<ImageGenJobData> | null = null;
+
+// Get or create Redis connection
+function getConnection(): Redis {
+  if (_connection) {
+    return _connection;
+  }
+
+  const redisUrl = process.env.UPSTASH_REDIS_URL;
+
+  if (!redisUrl) {
+    throw new Error('UPSTASH_REDIS_URL environment variable is required');
+  }
+
+  _connection = new Redis(redisUrl, {
+    maxRetriesPerRequest: null,
+    enableReadyCheck: false,
+    family: 6, // Use IPv6
+    tls: {
+      rejectUnauthorized: false,
     },
-    removeOnComplete: {
-      age: 3600, // keep completed jobs for 1 hour
-      count: 100,
+  });
+
+  return _connection;
+}
+
+// Get or create queue
+function getQueue(): Queue<ImageGenJobData> {
+  if (_imageGenQueue) {
+    return _imageGenQueue;
+  }
+
+  _imageGenQueue = new Queue<ImageGenJobData>('image-generation', {
+    connection: getConnection(),
+    defaultJobOptions: {
+      attempts: 2,
+      backoff: {
+        type: 'exponential',
+        delay: 5000,
+      },
+      removeOnComplete: {
+        age: 3600, // keep completed jobs for 1 hour
+        count: 100,
+      },
+      removeOnFail: {
+        age: 7200, // keep failed jobs for 2 hours
+      },
     },
-    removeOnFail: {
-      age: 7200, // keep failed jobs for 2 hours
-    },
+  });
+
+  return _imageGenQueue;
+}
+
+// Export lazy-loaded instances
+export const connection = new Proxy({} as Redis, {
+  get(target, prop) {
+    return getConnection()[prop as keyof Redis];
+  },
+});
+
+export const imageGenQueue = new Proxy({} as Queue<ImageGenJobData>, {
+  get(target, prop) {
+    return getQueue()[prop as keyof Queue<ImageGenJobData>];
   },
 });
