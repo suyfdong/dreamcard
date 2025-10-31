@@ -10,12 +10,20 @@ export interface ImageGenJobData {
   mood?: string;
 }
 
+// Check if we're in build time (skip Redis connection during build)
+const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
+
 // Lazy initialization to avoid connecting during build time
 let _connection: Redis | null = null;
 let _imageGenQueue: Queue<ImageGenJobData> | null = null;
 
 // Get or create Redis connection
 function getConnection(): Redis {
+  if (isBuildTime) {
+    // Return a mock connection during build time
+    return {} as Redis;
+  }
+
   if (_connection) {
     return _connection;
   }
@@ -40,6 +48,11 @@ function getConnection(): Redis {
 
 // Get or create queue
 function getQueue(): Queue<ImageGenJobData> {
+  if (isBuildTime) {
+    // Return a mock queue during build time
+    return {} as Queue<ImageGenJobData>;
+  }
+
   if (_imageGenQueue) {
     return _imageGenQueue;
   }
@@ -67,13 +80,13 @@ function getQueue(): Queue<ImageGenJobData> {
 
 // Export lazy-loaded instances
 export const connection = new Proxy({} as Redis, {
-  get(target, prop) {
+  get(_target, prop) {
     return getConnection()[prop as keyof Redis];
   },
 });
 
 export const imageGenQueue = new Proxy({} as Queue<ImageGenJobData>, {
-  get(target, prop) {
+  get(_target, prop) {
     return getQueue()[prop as keyof Queue<ImageGenJobData>];
   },
 });
