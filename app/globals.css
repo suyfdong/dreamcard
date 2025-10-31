@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 14% 7%;
+    --foreground: 220 9% 91%;
+    --card: 222 14% 9%;
+    --card-foreground: 220 9% 91%;
+    --popover: 222 14% 9%;
+    --popover-foreground: 220 9% 91%;
+    --primary: 246 90% 70%;
+    --primary-foreground: 220 9% 91%;
+    --secondary: 217 19% 27%;
+    --secondary-foreground: 220 9% 91%;
+    --muted: 217 19% 27%;
+    --muted-foreground: 220 9% 65%;
+    --accent: 246 90% 70%;
+    --accent-foreground: 220 9% 91%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 220 9% 91%;
+    --border: 217 19% 17%;
+    --input: 217 19% 17%;
+    --ring: 246 90% 70%;
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none'%3E%3Cg transform='rotate(-28 30 30)'%3E%3Cdefs%3E%3CradialGradient id='glow' cx='50%25' cy='0%25' r='50%25'%3E%3Cstop offset='0%25' style='stop-color:%23FEF3C7;stop-opacity:0.8'/%3E%3Cstop offset='100%25' style='stop-color:%23F59E0B;stop-opacity:0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='30' cy='10' r='12' fill='url(%23glow)' opacity='0.6'/%3E%3Cpath d='M30 12 L30 50' stroke='%23F59E0B' stroke-width='4.5' stroke-linecap='round' opacity='0.9'/%3E%3Cpath d='M28 16 L30 14 L32 16' stroke='%23FBBF24' stroke-width='1.5' opacity='0.7'/%3E%3Cpath d='M27 22 L30 20 L33 22' stroke='%23FBBF24' stroke-width='1.5' opacity='0.6'/%3E%3Cpath d='M30 10 L33 16 L40 17 L34.5 22 L36.2 29 L30 25 L23.8 29 L25.5 22 L20 17 L27 16 Z' fill='%23FCD34D' stroke='%23F59E0B' stroke-width='2' opacity='0.98'/%3E%3Cpath d='M30 10 L32 14.5 L36.5 15 L33 18.2 L34 22.5 L30 20 L26 22.5 L27 18.2 L23.5 15 L28 14.5 Z' fill='%23FEF3C7' opacity='0.95'/%3E%3Ccircle cx='30' cy='10' r='3' fill='%23FBBF24' opacity='0.9'/%3E%3Ccircle cx='26' cy='8' r='1.5' fill='%23FEF3C7' opacity='0.7'/%3E%3Ccircle cx='34' cy='12' r='1.2' fill='%23FEF3C7' opacity='0.6'/%3E%3C/g%3E%3C/svg%3E") 30 30, auto;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  a, button, [role="button"], input[type="submit"], input[type="button"], .cursor-pointer {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='68' height='68' viewBox='0 0 68 68' fill='none'%3E%3Cg transform='rotate(-28 34 34)'%3E%3Cdefs%3E%3CradialGradient id='glow2' cx='50%25' cy='0%25' r='50%25'%3E%3Cstop offset='0%25' style='stop-color:%23FEF3C7;stop-opacity:0.9'/%3E%3Cstop offset='100%25' style='stop-color:%23F59E0B;stop-opacity:0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='34' cy='10' r='15' fill='url(%23glow2)' opacity='0.7'/%3E%3Cpath d='M34 12 L34 58' stroke='%23F59E0B' stroke-width='5.5' stroke-linecap='round' opacity='0.95'/%3E%3Cpath d='M31 17 L34 15 L37 17' stroke='%23FBBF24' stroke-width='2' opacity='0.75'/%3E%3Cpath d='M30 24 L34 22 L38 24' stroke='%23FBBF24' stroke-width='2' opacity='0.65'/%3E%3Cpath d='M29 31 L34 29 L39 31' stroke='%23FBBF24' stroke-width='1.5' opacity='0.55'/%3E%3Cpath d='M34 10 L37.5 17 L45.5 18 L39 23.5 L41 31 L34 26.5 L27 31 L29 23.5 L22.5 18 L30.5 17 Z' fill='%23FCD34D' stroke='%23F59E0B' stroke-width='2.5' opacity='0.98'/%3E%3Cpath d='M34 10 L36.2 15.5 L41.5 16.2 L37.2 20 L38.5 25 L34 22 L29.5 25 L30.8 20 L26.5 16.2 L31.8 15.5 Z' fill='%23FEF3C7' opacity='0.96'/%3E%3Ccircle cx='34' cy='10' r='3.5' fill='%23FBBF24' opacity='0.95'/%3E%3Ccircle cx='29' cy='8' r='1.8' fill='%23FEF3C7' opacity='0.8'/%3E%3Ccircle cx='38' cy='13' r='1.5' fill='%23FEF3C7' opacity='0.7'/%3E%3Ccircle cx='26' cy='14' r='1.2' fill='%23FEF3C7' opacity='0.6'/%3E%3Cpath d='M30 58 L34 62 L38 58' fill='%23FCD34D' opacity='0.85'/%3E%3C/g%3E%3C/svg%3E") 34 34, pointer !important;
+  }
+}
+
+@layer utilities {
+  .gradient-brand {
+    background: linear-gradient(90deg, #6E67FF 0%, #00D4FF 100%);
+  }
+
+  .font-dream {
+    font-family: 'Cinzel', serif;
+  }
+
+  .font-ethereal {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}

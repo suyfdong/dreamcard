@@ -1,0 +1,31 @@
+{
+  "id": "mock-project",
+  "userId": "user-123",
+  "dreamText": "我在一座古老的图书馆里，书架高耸入云，楼梯螺旋向上。窗外是薄雾弥漫的海洋，一只黑猫坐在窗台上看着我。",
+  "style": "surreal",
+  "aspectRatio": "9:16",
+  "symbols": ["楼梯", "海洋", "猫"],
+  "mood": "孤独",
+  "panels": [
+    {
+      "position": 1,
+      "sketchUrl": "https://images.pexels.com/photos/2666598/pexels-photo-2666598.jpeg?auto=compress&cs=tinysrgb&w=400&h=700",
+      "imageUrl": "https://images.pexels.com/photos/2908984/pexels-photo-2908984.jpeg?auto=compress&cs=tinysrgb&w=400&h=700",
+      "text": "书架如塔，知识之海"
+    },
+    {
+      "position": 2,
+      "sketchUrl": "https://images.pexels.com/photos/1509582/pexels-photo-1509582.jpeg?auto=compress&cs=tinysrgb&w=400&h=700",
+      "imageUrl": "https://images.pexels.com/photos/2422476/pexels-photo-2422476.jpeg?auto=compress&cs=tinysrgb&w=400&h=700",
+      "text": "螺旋向上，永无尽头"
+    },
+    {
+      "position": 3,
+      "sketchUrl": "https://images.pexels.com/photos/1770818/pexels-photo-1770818.jpeg?auto=compress&cs=tinysrgb&w=400&h=700",
+      "imageUrl": "https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=400&h=700",
+      "text": "守望者，静观迷雾"
+    }
+  ],
+  "isPrivate": false,
+  "createdAt": "2025-10-29T10:30:00Z"
+}

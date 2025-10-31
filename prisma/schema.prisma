@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  inputText   String
+  style       String   // minimal | film | cyber | pastel
+  symbols     String[] // array of symbol names
+  mood        String?  // optional mood
+  visibility  String   @default("private") // private | public
+
+  status      String   @default("pending") // pending | queued | running | success | failed
+  progress    Float    @default(0.0) // 0.0 to 1.0
+  errorMsg    String?
+
+  panels      Panel[]
+
+  collageUrl  String?
+  videoUrl    String?
+  shareSlug   String?  @unique
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([shareSlug])
+}
+
+model Panel {
+  id         String   @id @default(uuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  order      Int      // 0, 1, 2 for the three panels
+  scene      String   // scene description
+  caption    String   // 8-16 characters
+
+  sketchUrl  String?  // quick sketch image URL
+  imageUrl   String?  // final styled image URL
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([projectId, order])
+  @@index([projectId])
+}
+
+model Job {
+  id          String   @id @default(uuid())
+  projectId   String   @unique
+  bullmqJobId String   @unique
+
+  status      String   @default("queued") // queued | running | completed | failed
+  progress    Float    @default(0.0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([bullmqJobId])
+}

@@ -1,0 +1,35 @@
+{
+  "projectId": "mock-project",
+  "stage": "collaging",
+  "progress": 100,
+  "stages": [
+    {
+      "name": "parsing",
+      "label": "Parsing",
+      "startTime": 0,
+      "duration": 1000,
+      "completed": true
+    },
+    {
+      "name": "sketching",
+      "label": "Sketching",
+      "startTime": 1000,
+      "duration": 4000,
+      "completed": true
+    },
+    {
+      "name": "rendering",
+      "label": "Rendering",
+      "startTime": 5000,
+      "duration": 20000,
+      "completed": true
+    },
+    {
+      "name": "collaging",
+      "label": "Collaging",
+      "startTime": 25000,
+      "duration": 10000,
+      "completed": true
+    }
+  ]
+}
