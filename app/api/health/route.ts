@@ -10,7 +10,7 @@ export async function GET() {
     deployTime,
     timestamp: Date.now(),
     // 添加一个固定的版本号来追踪
-    buildVersion: '2025-01-31-v2',
+    buildVersion: '2025-01-31-v3', // Updated with Redis fix
     redis: {
       url: process.env.UPSTASH_REDIS_URL ? 'configured' : 'missing',
     },
