@@ -10,7 +10,7 @@ datasource db {
 model Project {
   id          String   @id @default(uuid())
   inputText   String
-  style       String   // minimal | film | cyber | pastel
+  style       String   // memory | surreal | lucid | fantasy
   symbols     String[] // array of symbol names
   mood        String?  // optional mood
   visibility  String   @default("private") // private | public

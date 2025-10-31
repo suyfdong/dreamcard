@@ -33,17 +33,20 @@ Vercel API ← Polling Status ← Database Updates
 
 ```bash
 # Development (requires 2 terminals)
-npm run dev        # Terminal 1: Next.js dev server (port 3000)
-npm run worker     # Terminal 2: BullMQ worker process
+npm run dev           # Terminal 1: Next.js dev server (port 3000)
+npm run worker        # Terminal 2: BullMQ worker process
+
+# Worker (Railway/Production)
+npm run worker:start  # Generate Prisma + push DB schema + start worker (for Railway)
 
 # Database
-npm run db:generate  # Generate Prisma client after schema changes
-npm run db:push      # Push schema to database (development)
-npm run db:studio    # Open Prisma Studio to view/edit data
+npm run db:generate   # Generate Prisma client after schema changes
+npm run db:push       # Push schema to database (development)
+npm run db:studio     # Open Prisma Studio to view/edit data
 
 # Utilities
-npm run check-env    # Validate all required environment variables
-npm run setup        # Install deps + generate Prisma + check env
+npm run check-env     # Validate all required environment variables
+npm run setup         # Install deps + generate Prisma + check env
 ```
 
 ### Important Notes
@@ -126,20 +129,32 @@ Styles defined in `lib/constants.ts`:
 - Path pattern: `{projectId}/panel-{order}-{uuid}.png`
 - `lib/storage.ts` handles uploads via service role key
 
+### 6. Redis Queue System
+
+**BullMQ with Upstash Redis**:
+- `lib/redis.ts` uses lazy initialization to prevent build-time connection errors
+- Checks `NEXT_PHASE === 'phase-production-build'` and returns mock objects during builds
+- Worker connects via ioredis using `UPSTASH_REDIS_URL` (Redis protocol, not REST)
+- Queue name: `image-generation`
+- Job options: 2 retry attempts, exponential backoff, auto-cleanup of completed/failed jobs
+
 ## Environment Variables
 
 Required variables (all critical):
 
 ```bash
-OPENROUTER_API_KEY=sk-or-v1-xxx        # LLM parsing
-REPLICATE_API_TOKEN=r8_xxx              # Image generation
+OPENROUTER_API_KEY=sk-or-v1-xxx             # LLM parsing
+REPLICATE_API_TOKEN=r8_xxx                   # Image generation
 SUPABASE_URL=https://xxx.supabase.co
-SUPABASE_ANON_KEY=eyJ...                # Public access
-SUPABASE_SERVICE_ROLE_KEY=eyJ...        # Server-side (storage uploads)
-UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
-UPSTASH_REDIS_REST_TOKEN=Axxx
-DATABASE_URL=postgresql://postgres:...   # Prisma connection
+SUPABASE_ANON_KEY=eyJ...                     # Public access
+SUPABASE_SERVICE_ROLE_KEY=eyJ...             # Server-side (storage uploads)
+UPSTASH_REDIS_URL=redis://default:xxx@xxx.upstash.io:6379  # BullMQ connection (worker uses this)
+UPSTASH_REDIS_REST_URL=https://xxx.upstash.io  # Optional REST API access
+UPSTASH_REDIS_REST_TOKEN=Axxx                # Optional REST API token
+DATABASE_URL=postgresql://postgres:...        # Prisma connection
 ```
+
+**Note**: The worker uses `UPSTASH_REDIS_URL` (Redis protocol) via ioredis, not the REST API.
 
 **Storage Bucket Setup** (one-time):
 1. Supabase Dashboard → Storage → New bucket
@@ -166,6 +181,15 @@ DATABASE_URL=postgresql://postgres:...   # Prisma connection
    - Replicate: Verify payment method added
    - Storage: Ensure bucket exists and is public
    - Worker: Ensure process is running
+   - Redis: Verify `UPSTASH_REDIS_URL` is set correctly (not REST URL)
+
+### Build-Time Redis Connection Issues
+
+If you see Redis connection errors during `next build`:
+- The codebase uses lazy initialization in `lib/redis.ts` to prevent build-time connections
+- During build (`NEXT_PHASE === 'phase-production-build'`), mock objects are returned
+- This is normal and expected - the worker only connects at runtime
+- If errors persist, check that `NEXT_PHASE` environment variable is set by Next.js build process
 
 ### Modifying Progress Stages
 
@@ -194,8 +218,9 @@ npm run worker
 - No worker runs on Vercel
 
 **Railway** (Worker):
-- Start command: `npm run worker`
-- Environment: Same 8 environment variables
+- Start command: `npm run worker:start` (recommended, includes DB setup)
+- Or: `npm run worker` (if Prisma client already generated)
+- Environment: Same environment variables as Vercel
 - Must remain running 24/7
 
 **Critical**: Worker and API must share the same Redis and Database instances (same env vars).
