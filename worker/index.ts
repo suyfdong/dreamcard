@@ -115,16 +115,17 @@ async function generateSketch(
 
   console.log('Generating SKETCH (fast), prompt:', fullPrompt.substring(0, 100) + '...');
 
-  // Use SDXL-Turbo for fast sketches (Replicate's fastest model)
+  // Use standard SDXL for sketches (fast with low steps)
   const output = await replicate.run(
-    'stability-ai/sdxl-turbo' as any,
+    'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b' as any,
     {
       input: {
         prompt: fullPrompt,
         negative_prompt: negativePrompt,
-        num_inference_steps: 1, // Turbo optimized for 1 step
+        num_inference_steps: 20, // Low steps for speed (vs 40 for final)
         width: GENERATION_CONFIG.IMAGE_WIDTH,
         height: GENERATION_CONFIG.IMAGE_HEIGHT,
+        scheduler: 'K_EULER',
         output_format: 'png',
         output_quality: 80, // Lower quality for sketch
       },
@@ -229,98 +230,58 @@ async function processImageGeneration(job: Job<ImageGenJobData>) {
     });
     await job.updateProgress(PROGRESS_STAGES.PARSING * 100);
 
-    // Step 2: TWO-STAGE GENERATION (v2.md spec)
-    console.log('Step 2: Generating SKETCHES (fast preview)...');
+    // Step 2: SIMPLIFIED SINGLE-STAGE GENERATION
+    console.log('Step 2: Generating images...');
     const panels = [];
 
-    // STAGE 1: Generate sketches for all 3 panels (10-15s total)
+    // Generate all 3 panels with SDXL (good quality, reasonable speed)
     for (let i = 0; i < structure.panels.length; i++) {
       const panelData = structure.panels[i];
 
-      console.log(`Generating SKETCH ${i + 1}/3...`);
-
-      // Generate quick sketch
-      const sketchImageUrl = await generateSketch(panelData.scene, style);
-
-      // Upload sketch to Supabase
-      const sketchFilename = `${projectId}/sketch-${i}-${uuidv4()}.png`;
-      const uploadedSketchUrl = await uploadImageFromUrl(sketchImageUrl, sketchFilename);
-
-      // Create panel in database with sketch only (imageUrl null for now)
-      const panel = await prisma.panel.create({
-        data: {
-          id: uuidv4(),
-          projectId,
-          order: i,
-          scene: panelData.scene,
-          caption: panelData.caption,
-          imageUrl: null, // Will be updated with final render
-          sketchUrl: uploadedSketchUrl, // Sketch available immediately
-        },
-      });
-
-      panels.push(panel);
-
-      // Update progress through SKETCHING phase (0.1 → 0.35)
-      const progress =
-        PROGRESS_STAGES.PARSING +
-        ((i + 1) / GENERATION_CONFIG.NUM_PANELS) *
-          (PROGRESS_STAGES.SKETCHING - PROGRESS_STAGES.PARSING);
-
-      await prisma.project.update({
-        where: { id: projectId },
-        data: { progress },
-      });
-      await job.updateProgress(progress * 100);
-    }
-
-    console.log('✓ All sketches ready! Users can see preview now.');
-    console.log('Step 3: Generating FINAL RENDERS (high quality)...');
-
-    // STAGE 2: Generate final high-quality renders (30-60s total)
-    for (let i = 0; i < panels.length; i++) {
-      const panel = panels[i];
-      const panelData = structure.panels[i];
-
-      console.log(`Generating FINAL RENDER ${i + 1}/3...`);
+      console.log(`Generating image ${i + 1}/3...`);
 
       try {
-        // Generate high-quality final image
-        const finalImageUrl = await generateFinalImage(panelData.scene, style);
+        // Generate image using SDXL
+        const imageUrl = await generateSketch(panelData.scene, style);
 
-        // Upload final image to Supabase
-        const finalFilename = `${projectId}/panel-${i}-${uuidv4()}.png`;
-        const uploadedFinalUrl = await uploadImageFromUrl(finalImageUrl, finalFilename);
+        // Upload to Supabase
+        const filename = `${projectId}/panel-${i}-${uuidv4()}.png`;
+        const uploadedUrl = await uploadImageFromUrl(imageUrl, filename);
 
-        // Update panel with final image URL
-        await prisma.panel.update({
-          where: { id: panel.id },
-          data: { imageUrl: uploadedFinalUrl },
+        // Create panel in database
+        const panel = await prisma.panel.create({
+          data: {
+            id: uuidv4(),
+            projectId,
+            order: i,
+            scene: panelData.scene,
+            caption: panelData.caption,
+            imageUrl: uploadedUrl,
+            sketchUrl: uploadedUrl, // Same as imageUrl for now
+          },
         });
+
+        panels.push(panel);
+
+        // Update progress (0.1 → 0.8)
+        const progress =
+          PROGRESS_STAGES.PARSING +
+          ((i + 1) / GENERATION_CONFIG.NUM_PANELS) *
+            (PROGRESS_STAGES.RENDERING - PROGRESS_STAGES.PARSING);
+
+        await prisma.project.update({
+          where: { id: projectId },
+          data: { progress },
+        });
+        await job.updateProgress(progress * 100);
 
       } catch (error) {
-        console.warn(`Final render failed for panel ${i + 1}, keeping sketch:`, error);
-        // If final render fails, keep the sketch as the final image
-        await prisma.panel.update({
-          where: { id: panel.id },
-          data: { imageUrl: panel.sketchUrl }, // Use sketch as fallback
-        });
+        console.error(`Failed to generate panel ${i + 1}:`, error);
+        throw error; // Fail the whole job if one panel fails
       }
-
-      // Update progress through RENDERING phase (0.35 → 0.8)
-      const progress =
-        PROGRESS_STAGES.SKETCHING +
-        ((i + 1) / GENERATION_CONFIG.NUM_PANELS) *
-          (PROGRESS_STAGES.RENDERING - PROGRESS_STAGES.SKETCHING);
-
-      await prisma.project.update({
-        where: { id: projectId },
-        data: { progress },
-      });
-      await job.updateProgress(progress * 100);
     }
 
-    console.log('✓ All final renders complete!');
+    console.log('✓ All images generated successfully!');
 
     // Mark project as complete
     await prisma.project.update({
