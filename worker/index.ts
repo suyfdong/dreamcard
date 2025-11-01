@@ -67,35 +67,94 @@ async function parseDreamWithLLM(
 🧠 CORE PHILOSOPHY: Dreams don't follow story logic. They follow ASSOCIATION, SYMBOL MUTATION, and SPATIAL IMPOSSIBILITY.
 
 ═══════════════════════════════════════════════════════════════════════
-🌀 THREE-LAYER DREAM STRUCTURE: 象征 (SYMBOL) → 跳切 (JUMP-CUT) → 内化 (INTERNALIZE)
+🌀 THREE-LAYER DREAM STRUCTURE: 象征 (SYMBOL) → 空间 (SPACE) → 情绪 (EMOTION)
 ═══════════════════════════════════════════════════════════════════════
 
-**Panel 1 - 象征层 (SYMBOLIC LAYER):**
-- PURPOSE: Extract ONE ABSTRACT SYMBOL from the dream's core emotion
-- TECHNIQUE: Take a LITERAL ELEMENT and transform it into PURE FORM/TEXTURE/PATTERN
-- EXAMPLE: "Train" → Parallel lines bending into infinity, metallic texture, rhythmic repetition
-- ❌ DO NOT show: The actual train, any recognizable object
-- ✅ DO show: The ESSENCE (parallel lines, industrial texture, vanishing point geometry)
-- COMPOSITION: Extreme close-up, abstract detail, geometric pattern
-- VISUAL QUALITY: Texture-heavy, pattern-based, almost tactile
+**Panel 1 - 象征层 (SYMBOLIC LAYER - Opening/起):**
+- PURPOSE: Use METAPHOR or PARTIAL VIEW to hint at the dream's theme
+- ROLE: Emotional entry point - "What does this dream FEEL like?"
+- VISUAL APPROACH: Abstract / Symbolic / Partial perspective
+- CAMERA LANGUAGE: **WIDE SHOT** (establish space) or abstract pattern
+- MOOD: CALM, COLD - the beginning
+- TECHNIQUE: Do NOT translate literally. "Tiger chasing" ≠ tiger image, = feeling of being chased (shadows, footprints, torn light)
+- EXAMPLE: "Exam anxiety" → Endless floating desks in dark void, blank glowing papers, flickering light
+- ❌ DO NOT: Show the literal subject (no tiger, no person, no exam room)
+- ✅ DO show: The FEELING through symbols (empty desks = pressure, shadows = threat)
 
-**Panel 2 - 跳切层 (JUMP-CUT LAYER):**
-- PURPOSE: SPATIAL IMPOSSIBILITY - reuse Panel 1's visual DNA but in a BROKEN CONTEXT
-- TECHNIQUE: Take Panel 1's element (lines/texture/shape) and place it WHERE IT SHOULDN'T BE
-- EXAMPLE: Those parallel lines become ceiling beams in a distorted room, or footprints on a vertical wall
-- ❌ DO NOT: Continue the story logically
-- ✅ DO show: DREAM LOGIC - gravity shifts, scale breaks, context jumps
-- COMPOSITION: Disorienting angle, impossible perspective, spatial paradox
-- VISUAL QUALITY: Surreal, vertiginous, "wait, how did we get here?"
+**Panel 2 - 空间层 (SPATIAL LAYER - Development/承):**
+- PURPOSE: Show the dream's SPACE, TIME, SCENE characteristics
+- ROLE: Reveal dream's strange logic - "Where am I? What's happening?"
+- VISUAL APPROACH: Wide / Light-and-shadow / Strange composition
+- CAMERA LANGUAGE: **MID SHOT** (atmospheric conflict, environmental)
+- MOOD: CHAOS, CONFLICT - the tension builds
+- TECHNIQUE: Space must be DISJOINTED but UNIFIED (desert classroom, underwater stairs, floating furniture)
+- EXAMPLE: "Exam anxiety" → Neon tunnel shaped like answer sheet, walls flicker with error symbols, oppressive reflective floor
+- ❌ DO NOT: Continue narrative logically
+- ✅ DO show: IMPOSSIBLE SPACES that feel dreamlike (perspective breaks, scale shifts, gravity defies)
 
-**Panel 3 - 内化层 (INTERNALIZATION LAYER):**
-- PURPOSE: SYMBOL BECOMES MUNDANE - the abstract symbol transforms into a CONCRETE METAPHOR
-- TECHNIQUE: The symbol SOLIDIFIES into an everyday object that SHOULDN'T exist this way
-- EXAMPLE: Those parallel lines crystallize into pencils arranged like train tracks on a desk
-- ❌ DO NOT: Resolve or explain the dream
-- ✅ DO show: The symbol's FINAL MUTATION - familiar object in uncanny arrangement
-- COMPOSITION: Mid-shot with unsettling stillness, objects arranged with dream-logic
-- VISUAL QUALITY: Hyper-real detail, uncanny precision, "this is almost normal but wrong"
+**Panel 3 - 情绪层 (EMOTIONAL LAYER - Resolution/转合):**
+- PURPOSE: Use motion, color, or structure to express the dream's emotional climax or internalization
+- ROLE: End the dream's rhythm - "How does this dream resolve/dissolve?"
+- VISUAL APPROACH: Negative space / Motion / Blur / Uncertainty
+- CAMERA LANGUAGE: **CLOSE-UP** or symbolic ending (detail, intimate)
+- MOOD: DISSOLUTION, NEGATIVE SPACE, AMBIGUITY - the ending fades
+- TECHNIQUE: Use dynamics to show emotion dissolving (melting, dispersing, floating away, fragmenting)
+- EXAMPLE: "Exam anxiety" → Pen tip dripping glowing liquid ink, melting into code streams, floating numbers, anxiety dissolving
+- ❌ DO NOT: Resolve or explain the dream clearly
+- ✅ DO show: Emotional release through visual dissolution (blur edges, particles, fading, transformation)
+
+═══════════════════════════════════════════════════════════════════════
+🎬 CAMERA LANGUAGE & RHYTHM PROGRESSION (MANDATORY)
+═══════════════════════════════════════════════════════════════════════
+
+**Shot Sequence (起承转合):**
+1. Panel 1 (象征): **WIDE SHOT** - Establish the dream space (distant, abstract, calm)
+2. Panel 2 (空间): **MID SHOT** - Atmospheric conflict (environmental, chaotic)
+3. Panel 3 (情绪): **CLOSE-UP** - Symbolic ending (intimate detail, dissolution)
+
+**Rhythm Progression (节奏递进):**
+1. Panel 1: **CALM** → Cold, quiet, establishing
+2. Panel 2: **CHAOS** → Conflict, tension, disorienting
+3. Panel 3: **DISSOLUTION** → Negative space, blur, fading
+
+**Composition Breathing (构图呼吸感):**
+- ❌ DO NOT fill every corner with elements
+- ✅ DO preserve negative space, blur, or dissolving edges
+- ✅ Light/shadow and leading lines must guide the viewer's eye flow
+- ✅ Each panel should have visual rhythm: motion vs stillness, bright vs dark alternation
+
+**Color Control (色彩递进):**
+- All three panels must share UNIFIED COLOR TONE but vary in brightness
+- Color progresses with emotion: cold→warm OR dark→light OR saturated→desaturated
+- Example: Panel 1 (dark blue void) → Panel 2 (purple-pink neon) → Panel 3 (soft cyan glow)
+
+═══════════════════════════════════════════════════════════════════════
+🎨 STYLE DIFFERENTIATION TABLE
+═══════════════════════════════════════════════════════════════════════
+
+**Minimal (极简梦):**
+- Light: Negative space, line-based, order
+- Color: Monochrome or low saturation
+- Rhythm: Calm, clean, cold rhythm
+- Elements: Spatial geometry, single objects, minimal color
+
+**Film (胶片梦):**
+- Light: Soft focus, grain, natural light, vignette
+- Color: Warm gray-brown, yellow-blue tones
+- Rhythm: Layered, with realistic traces
+- Elements: Dust, reflections, light-shadow planes, solitude
+
+**Cyber (赛博梦):**
+- Light: Strong contrast, reflection, neon, flow
+- Color: Blue-purple-pink-gold gradients
+- Rhythm: Speed, symmetry, geometric structures
+- Elements: Light beams, reflections, metal, shadows, energy lines
+
+**Pastel (粉彩梦):**
+- Light: Soft light, warm colors, fairy tale feel
+- Color: Pink-orange-blue-purple
+- Rhythm: Soft, light, intimate feel
+- Elements: Plants, fruits, fabric, soft light lines
 
 ═══════════════════════════════════════════════════════════════════════
 💎 STYLE-SPECIFIC BEAUTY REQUIREMENTS

@@ -3,11 +3,11 @@
 export const STYLES = {
   minimal: {
     name: 'Minimal Sketch',
-    // Composition templates for 象征→跳切→内化 structure
+    // Composition templates for 象征→空间→情绪 structure (起承转合)
     compositionGuide: {
-      panel1: 'extreme close-up of geometric pattern or texture, 70% negative space, stark black and white contrast, abstract detail shot, minimalist line work',
-      panel2: 'same pattern in impossible location (vertical surface, inverted space), disorienting angle, minimalist impossible geometry, clean lines defying logic',
-      panel3: 'pattern crystallized as arranged objects (pencils, sticks, minimal items), uncanny precision still life, geometric wrongness, stark shadows',
+      panel1: 'WIDE SHOT: abstract geometric space with 70% negative space, distant minimal objects establishing calm mood, stark black and white contrast, line-based order',
+      panel2: 'MID SHOT: impossible spatial arrangement (objects on vertical wall, inverted gravity), disorienting angle showing dream logic, clean lines with tension',
+      panel3: 'CLOSE-UP: intimate detail of dissolving lines or fragmenting geometry, negative space dominates, emotional dissolution through minimal elements fading',
     },
     // Sketch-first: Clean line art, simple composition
     sketchPrompt: 'simple line art sketch, clean black ink on white, minimal strokes, elegant composition, architectural drawing style, precise linework, uncluttered, few elements, professional illustration',
@@ -17,11 +17,11 @@ export const STYLES = {
   },
   film: {
     name: 'Film Grain',
-    // Composition templates for 象征→跳切→内化 structure
+    // Composition templates for 象征→空间→情绪 structure (起承转合)
     compositionGuide: {
-      panel1: 'grainy macro shot of organic texture or pattern, shallow depth of field, film grain heavy, close-up on material surface, cinematic detail',
-      panel2: 'same texture in gravity-defying context (on ceiling, vertical wall, floating), cinematic wide angle with vignette, impossible spatial orientation, film grain',
-      panel3: 'texture materialized as everyday objects arranged with uncanny logic, hyper-real still life, film grain overlay, subtle wrongness in precision',
+      panel1: 'WIDE SHOT: distant solitary scene with film grain, natural light, vignette framing, calm establishing mood, layered depth with realistic traces',
+      panel2: 'MID SHOT: atmospheric environmental conflict, impossible gravity or scale, cinematic wide angle, dust particles in light, tension with soft focus edges',
+      panel3: 'CLOSE-UP: intimate detail dissolving or blurring, film grain heavy, emotional release through soft focus, particles fading, nostalgic dissolution',
     },
     // Sketch-first: Quick film-style composition
     sketchPrompt: 'film photograph sketch, simple composition, rule of thirds guide, vignette framing, basic tonal values, vintage camera aesthetic',
@@ -31,11 +31,11 @@ export const STYLES = {
   },
   cyber: {
     name: 'Cyber Mist',
-    // Composition templates for 象征→跳切→内化 structure (ENHANCED for dreamlike quality)
+    // Composition templates for 象征→空间→情绪 structure (起承转合 - DREAMLIKE)
     compositionGuide: {
-      panel1: 'extreme close-up of neon abstract pattern in dark void, purple-cyan dominant color, volumetric fog glow, reflective wet surface macro, deep blacks with bright neon accents, low angle or top-down view',
-      panel2: 'same neon pattern in impossible architecture (vertical gravity-defying space, infinite corridor), vertiginous LOW ANGLE perspective, heavy atmospheric fog, mirror floor reflections, strong depth with foreground-midground-background',
-      panel3: 'neon elements crystallized as glowing objects floating in void, uncanny still life with dramatic lighting, soft bloom effect, glossy surfaces, negative space with darkness, intimate detail shot',
+      panel1: 'WIDE SHOT: vast dark void with distant neon elements, purple-cyan dominant color, establishing calm cyber dream space, volumetric fog, deep blacks with bright accents, symmetry',
+      panel2: 'MID SHOT: impossible neon architecture (vertical corridor, infinite reflections), LOW ANGLE vertiginous perspective, heavy atmospheric fog, mirror floor, chaotic energy with strong foreground-midground-background depth',
+      panel3: 'CLOSE-UP: neon elements dissolving into light particles or code streams, soft bloom glow, emotional release through dispersion, floating fragments fading into darkness, negative space dominates',
     },
     // Sketch-first: Basic neon composition
     sketchPrompt: 'cyberpunk scene layout, neon light placement, fog atmosphere guide, reflective surface indication, basic color zones purple and cyan',
@@ -45,11 +45,11 @@ export const STYLES = {
   },
   pastel: {
     name: 'Pastel Fairytale',
-    // Composition templates for 象征→跳切→内化 structure
+    // Composition templates for 象征→空间→情绪 structure (起承转合)
     compositionGuide: {
-      panel1: 'soft-focus abstract shape or color field, pastel gradient texture, gentle bokeh, dreamy close-up on soft pattern',
-      panel2: 'same soft shape in surreal context (floating, inverted, defying physics), gentle impossibility, misty atmosphere, pastel color continuity',
-      panel3: 'shape solidified into soft objects with dream logic, pastel still life with uncanny arrangement, gentle wrongness, whimsical precision',
+      panel1: 'WIDE SHOT: dreamy distant soft-colored landscape or abstract space, pastel gradient sky, gentle bokeh, calm fairy tale mood, whimsical elements far away',
+      panel2: 'MID SHOT: soft impossible space (floating objects, inverted gravity), misty atmosphere with warm colors, gentle tension, layered pastel tones',
+      panel3: 'CLOSE-UP: soft elements dissolving into particles or light, gentle blur, emotional release through soft focus fading, pastel streaks dispersing, intimate tender ending',
     },
     // Sketch-first: Soft composition guide
     sketchPrompt: 'soft watercolor sketch, gentle composition, pastel color zones, delicate light indication, whimsical fairytale layout, simple soft edges',
