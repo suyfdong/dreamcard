@@ -344,3 +344,4 @@ MIT License
 - [ ] More art styles
 - [ ] Batch generation
 # Auto-deployment test - Sat Nov  1 08:11:00 CST 2025
+# Test manual webhook configuration
