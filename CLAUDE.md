@@ -359,4 +359,6 @@ Auto-deployment works correctly for both Vercel and Railway:
 
 ---
 
-**Last Updated**: 2025-11-01 (Verifying auto-deployment after repository privacy change)
+**Last Updated**: 2025-11-01
+
+**Repository Status**: Public (Private mode caused Vercel auto-deployment issues - keeping Public for reliable CI/CD)
