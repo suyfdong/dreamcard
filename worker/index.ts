@@ -100,41 +100,106 @@ Respond ONLY with valid JSON:
 }
 
 /**
- * Step 2: Generate image with Replicate FLUX
+ * Step 2A: Generate SKETCH (fast, 10-15s total for 3 panels)
+ * Use SDXL Lightning for speed - 2 inference steps
  */
-async function generateImage(
+async function generateSketch(
   prompt: string,
   style: string
 ): Promise<string> {
   const styleConfig = STYLES[style as keyof typeof STYLES];
 
-  // MAXIMUM ARTISTIC QUALITY - styles now have comprehensive prompts built-in
-  const fullPrompt = `cinematic establishing shot: ${prompt}. ${styleConfig.prompt}`;
+  // Use sketch-specific prompts (simpler, faster)
+  const fullPrompt = `${prompt}. ${styleConfig.sketchPrompt}`;
   const negativePrompt = styleConfig.negative;
 
-  console.log('Generating ENHANCED image, prompt preview:', fullPrompt.substring(0, 150) + '...');
+  console.log('Generating SKETCH (fast), prompt:', fullPrompt.substring(0, 100) + '...');
 
   const output = await replicate.run(
-    'black-forest-labs/flux-schnell' as any,
+    'bytedance/sdxl-lightning-4step' as any,
     {
       input: {
         prompt: fullPrompt,
         negative_prompt: negativePrompt,
-        num_inference_steps: 4, // FLUX schnell optimized for 4 steps
+        num_inference_steps: 2, // Lightning optimized for 2-4 steps, use 2 for speed
         width: GENERATION_CONFIG.IMAGE_WIDTH,
         height: GENERATION_CONFIG.IMAGE_HEIGHT,
+        scheduler: 'K_EULER',
         output_format: 'png',
-        output_quality: 95, // Maximum quality
+        output_quality: 80, // Lower quality for sketch
       },
     }
   ) as any;
 
-  // FLUX schnell returns an array of URLs
   if (Array.isArray(output) && output.length > 0) {
     return output[0];
   }
 
-  throw new Error('No image generated');
+  throw new Error('No sketch generated');
+}
+
+/**
+ * Step 2B: Generate FINAL RENDER (higher quality, 30-60s total)
+ * Use FLUX.1-dev for better quality (slower but much better results)
+ */
+async function generateFinalImage(
+  prompt: string,
+  style: string
+): Promise<string> {
+  const styleConfig = STYLES[style as keyof typeof STYLES];
+
+  // Use full detailed prompts for final render
+  const fullPrompt = `masterpiece, best quality, highly detailed: ${prompt}. ${styleConfig.prompt}`;
+  const negativePrompt = styleConfig.negative;
+
+  console.log('Generating FINAL RENDER (high quality), prompt:', fullPrompt.substring(0, 100) + '...');
+
+  try {
+    // Try FLUX.1-dev (better quality than schnell)
+    const output = await replicate.run(
+      'black-forest-labs/flux-dev' as any,
+      {
+        input: {
+          prompt: fullPrompt,
+          guidance: 3.5, // Guidance scale for dev model
+          num_inference_steps: 28, // Good balance of speed/quality
+          width: GENERATION_CONFIG.IMAGE_WIDTH,
+          height: GENERATION_CONFIG.IMAGE_HEIGHT,
+          output_format: 'png',
+          output_quality: 100, // Maximum quality for final
+        },
+      }
+    ) as any;
+
+    if (Array.isArray(output) && output.length > 0) {
+      return output[0];
+    }
+  } catch (error) {
+    console.warn('FLUX-dev failed, falling back to SDXL:', error);
+
+    // Fallback to SDXL if FLUX-dev fails
+    const output = await replicate.run(
+      'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b' as any,
+      {
+        input: {
+          prompt: fullPrompt,
+          negative_prompt: negativePrompt,
+          num_inference_steps: 40,
+          width: GENERATION_CONFIG.IMAGE_WIDTH,
+          height: GENERATION_CONFIG.IMAGE_HEIGHT,
+          scheduler: 'DPMSolverMultistep',
+          output_format: 'png',
+          output_quality: 100,
+        },
+      }
+    ) as any;
+
+    if (Array.isArray(output) && output.length > 0) {
+      return output[0];
+    }
+  }
+
+  throw new Error('No final image generated');
 }
 
 /**
@@ -164,23 +229,24 @@ async function processImageGeneration(job: Job<ImageGenJobData>) {
     });
     await job.updateProgress(PROGRESS_STAGES.PARSING * 100);
 
-    // Step 2: Generate images for each panel
-    console.log('Step 2: Generating images...');
+    // Step 2: TWO-STAGE GENERATION (v2.md spec)
+    console.log('Step 2: Generating SKETCHES (fast preview)...');
     const panels = [];
 
+    // STAGE 1: Generate sketches for all 3 panels (10-15s total)
     for (let i = 0; i < structure.panels.length; i++) {
       const panelData = structure.panels[i];
 
-      console.log(`Generating panel ${i + 1}/3...`);
+      console.log(`Generating SKETCH ${i + 1}/3...`);
 
-      // Generate image
-      const imageUrl = await generateImage(panelData.scene, style);
+      // Generate quick sketch
+      const sketchImageUrl = await generateSketch(panelData.scene, style);
 
-      // Upload to Supabase
-      const filename = `${projectId}/panel-${i}-${uuidv4()}.png`;
-      const uploadedUrl = await uploadImageFromUrl(imageUrl, filename);
+      // Upload sketch to Supabase
+      const sketchFilename = `${projectId}/sketch-${i}-${uuidv4()}.png`;
+      const uploadedSketchUrl = await uploadImageFromUrl(sketchImageUrl, sketchFilename);
 
-      // Create panel in database
+      // Create panel in database with sketch only (imageUrl null for now)
       const panel = await prisma.panel.create({
         data: {
           id: uuidv4(),
@@ -188,18 +254,18 @@ async function processImageGeneration(job: Job<ImageGenJobData>) {
           order: i,
           scene: panelData.scene,
           caption: panelData.caption,
-          imageUrl: uploadedUrl,
-          sketchUrl: null, // We're using FLUX schnell directly, no sketch phase
+          imageUrl: null, // Will be updated with final render
+          sketchUrl: uploadedSketchUrl, // Sketch available immediately
         },
       });
 
       panels.push(panel);
 
-      // Update progress
+      // Update progress through SKETCHING phase (0.1 → 0.35)
       const progress =
         PROGRESS_STAGES.PARSING +
         ((i + 1) / GENERATION_CONFIG.NUM_PANELS) *
-          (PROGRESS_STAGES.RENDERING - PROGRESS_STAGES.PARSING);
+          (PROGRESS_STAGES.SKETCHING - PROGRESS_STAGES.PARSING);
 
       await prisma.project.update({
         where: { id: projectId },
@@ -208,7 +274,53 @@ async function processImageGeneration(job: Job<ImageGenJobData>) {
       await job.updateProgress(progress * 100);
     }
 
-    console.log('Step 3: All panels generated successfully');
+    console.log('✓ All sketches ready! Users can see preview now.');
+    console.log('Step 3: Generating FINAL RENDERS (high quality)...');
+
+    // STAGE 2: Generate final high-quality renders (30-60s total)
+    for (let i = 0; i < panels.length; i++) {
+      const panel = panels[i];
+      const panelData = structure.panels[i];
+
+      console.log(`Generating FINAL RENDER ${i + 1}/3...`);
+
+      try {
+        // Generate high-quality final image
+        const finalImageUrl = await generateFinalImage(panelData.scene, style);
+
+        // Upload final image to Supabase
+        const finalFilename = `${projectId}/panel-${i}-${uuidv4()}.png`;
+        const uploadedFinalUrl = await uploadImageFromUrl(finalImageUrl, finalFilename);
+
+        // Update panel with final image URL
+        await prisma.panel.update({
+          where: { id: panel.id },
+          data: { imageUrl: uploadedFinalUrl },
+        });
+
+      } catch (error) {
+        console.warn(`Final render failed for panel ${i + 1}, keeping sketch:`, error);
+        // If final render fails, keep the sketch as the final image
+        await prisma.panel.update({
+          where: { id: panel.id },
+          data: { imageUrl: panel.sketchUrl }, // Use sketch as fallback
+        });
+      }
+
+      // Update progress through RENDERING phase (0.35 → 0.8)
+      const progress =
+        PROGRESS_STAGES.SKETCHING +
+        ((i + 1) / GENERATION_CONFIG.NUM_PANELS) *
+          (PROGRESS_STAGES.RENDERING - PROGRESS_STAGES.SKETCHING);
+
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { progress },
+      });
+      await job.updateProgress(progress * 100);
+    }
+
+    console.log('✓ All final renders complete!');
 
     // Mark project as complete
     await prisma.project.update({

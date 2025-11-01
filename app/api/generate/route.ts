@@ -5,10 +5,10 @@ import { prisma } from '@/lib/db';
 import { imageGenQueue } from '@/lib/redis';
 import { STYLES } from '@/lib/constants';
 
-// Validation schema
+// Validation schema - Updated to match v2.md original styles
 const generateSchema = z.object({
   inputText: z.string().min(10).max(1000),
-  style: z.enum(['memory', 'surreal', 'lucid', 'fantasy']),
+  style: z.enum(['minimal', 'film', 'cyber', 'pastel']),
   symbols: z.array(z.string()).optional().default([]),
   mood: z.string().optional(),
   visibility: z.enum(['private', 'public']).optional().default('private'),
@@ -28,22 +28,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create project in database
-    const project = await prisma.project.create({
-      data: {
-        id: uuidv4(),
-        inputText: data.inputText,
-        style: data.style,
-        symbols: data.symbols,
-        mood: data.mood,
-        visibility: data.visibility,
-        status: 'pending',
-        progress: 0,
-      },
-    });
+    const projectId = uuidv4();
+    const jobUuid = uuidv4();
 
-    // Add job to queue
-    const job = await imageGenQueue.add(
+    // Single database transaction - create project with initial status 'queued'
+    const [project, job] = await prisma.$transaction([
+      prisma.project.create({
+        data: {
+          id: projectId,
+          inputText: data.inputText,
+          style: data.style,
+          symbols: data.symbols,
+          mood: data.mood,
+          visibility: data.visibility,
+          status: 'queued', // Start as queued directly
+          progress: 0,
+        },
+      }),
+      prisma.job.create({
+        data: {
+          id: jobUuid,
+          projectId: projectId,
+          bullmqJobId: jobUuid, // Will be updated with actual BullMQ ID
+          status: 'queued',
+          progress: 0,
+        },
+      }),
+    ]);
+
+    // Add job to queue (non-blocking, fire and forget)
+    imageGenQueue.add(
       'generate-images',
       {
         projectId: project.id,
@@ -53,25 +67,15 @@ export async function POST(request: NextRequest) {
         mood: data.mood,
       },
       {
-        jobId: uuidv4(),
+        jobId: jobUuid,
       }
-    );
-
-    // Save job info
-    await prisma.job.create({
-      data: {
-        id: uuidv4(),
-        projectId: project.id,
-        bullmqJobId: job.id!,
-        status: 'queued',
-        progress: 0,
-      },
-    });
-
-    // Update project status
-    await prisma.project.update({
-      where: { id: project.id },
-      data: { status: 'queued' },
+    ).catch(error => {
+      console.error('Failed to add job to queue:', error);
+      // Update project status to failed in background
+      prisma.project.update({
+        where: { id: projectId },
+        data: { status: 'failed', errorMsg: 'Failed to queue job' },
+      }).catch(console.error);
     });
 
     return NextResponse.json({

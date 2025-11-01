@@ -3,7 +3,8 @@
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-export type DreamStyle = "memory" | "surreal" | "lucid" | "fantasy";
+// Updated to match v2.md original style system
+export type DreamStyle = "minimal" | "film" | "cyber" | "pastel";
 
 interface DreamStyleCardProps {
   style: DreamStyle;
@@ -12,33 +13,33 @@ interface DreamStyleCardProps {
 }
 
 const styleConfig = {
-  memory: {
-    title: "Memory Dream",
-    description: "Warm and nostalgic",
+  minimal: {
+    title: "Minimal Sketch",
+    description: "Clean line art",
+    imageUrl: "https://images.pexels.com/photos/6444/pencil-typography-black-design.jpg?auto=compress&cs=tinysrgb&w=800",
+    gradient: "from-slate-200/70 via-gray-300/50 to-transparent",
+    bgColor: "from-slate-300/30",
+  },
+  film: {
+    title: "Film Grain",
+    description: "Vintage cinematic",
     imageUrl: "https://images.pexels.com/photos/1209843/pexels-photo-1209843.jpeg?auto=compress&cs=tinysrgb&w=800",
     gradient: "from-amber-500/70 via-orange-500/50 to-transparent",
     bgColor: "from-orange-600/30",
   },
-  surreal: {
-    title: "Surreal Dream",
-    description: "Haunting and ethereal",
-    imageUrl: "https://images.pexels.com/photos/1616403/pexels-photo-1616403.jpeg?auto=compress&cs=tinysrgb&w=800",
-    gradient: "from-slate-500/70 via-gray-600/50 to-transparent",
-    bgColor: "from-slate-700/30",
-  },
-  lucid: {
-    title: "Lucid Dream",
-    description: "Cyber and mysterious",
-    imageUrl: "https://replicate.delivery/xezq/tjZXUEFBevVDJaAgtyIoqMRwdB6Rm7WqnkCQ1wvFIzjQHejVA/out-0.webp",
-    gradient: "from-cyan-500/70 via-blue-600/50 to-transparent",
+  cyber: {
+    title: "Cyber Mist",
+    description: "Neon cyberpunk",
+    imageUrl: "https://images.pexels.com/photos/2422259/pexels-photo-2422259.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gradient: "from-cyan-500/70 via-purple-600/50 to-transparent",
     bgColor: "from-cyan-600/30",
   },
-  fantasy: {
-    title: "Fantasy Dream",
-    description: "Magical and whimsical",
-    imageUrl: "https://replicate.delivery/xezq/KskDYLE5M2rFJteUuph9J741X8HJpdyYGVFxftT1w9doB8jVA/out-0.webp",
-    gradient: "from-pink-500/70 via-purple-600/50 to-transparent",
-    bgColor: "from-pink-600/30",
+  pastel: {
+    title: "Pastel Fairytale",
+    description: "Soft and dreamy",
+    imageUrl: "https://images.pexels.com/photos/1292115/pexels-photo-1292115.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gradient: "from-pink-400/70 via-purple-400/50 to-transparent",
+    bgColor: "from-pink-500/30",
   },
 };
 

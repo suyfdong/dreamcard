@@ -20,7 +20,7 @@ export default function Home() {
   const router = useRouter();
   const { toast } = useToast();
   const [dreamText, setDreamText] = useState("");
-  const [style, setStyle] = useState<DreamStyle>("surreal");
+  const [style, setStyle] = useState<DreamStyle>("film"); // Default to film (v2.md spec)
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>("9:16");
   const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
   const [mood, setMood] = useState<Mood>("Calm");
@@ -31,33 +31,31 @@ export default function Home() {
 
     setIsGenerating(true);
 
-    try {
-      // Convert symbols to lowercase for backend
-      const symbols = selectedSymbols.map(s => s.toLowerCase());
+    // Convert symbols to lowercase for backend
+    const symbols = selectedSymbols.map(s => s.toLowerCase());
 
-      // Call API to generate dream card
-      const response = await apiClient.generate({
-        inputText: dreamText,
-        style,
-        symbols,
-        mood: mood.toLowerCase(),
-        visibility: 'private',
-      });
-
-      // Store jobId in sessionStorage so result page can poll for status
+    // Start API call but DON'T wait for it - navigate immediately
+    apiClient.generate({
+      inputText: dreamText,
+      style,
+      symbols,
+      mood: mood.toLowerCase(),
+      visibility: 'private',
+    }).then(response => {
+      // Store jobId in sessionStorage for polling
       sessionStorage.setItem('currentJobId', response.jobId);
 
-      // Navigate to result page
+      // Navigate immediately to result page (don't wait for generation)
       router.push(`/result/${response.projectId}`);
-    } catch (error) {
+    }).catch(error => {
       console.error('Error generating dream card:', error);
+      setIsGenerating(false);
       toast({
         title: "Generation Failed",
         description: error instanceof Error ? error.message : "Failed to generate dream card. Please try again.",
         variant: "destructive",
       });
-      setIsGenerating(false);
-    }
+    });
   };
 
   return (
@@ -88,7 +86,7 @@ export default function Home() {
           <Card className="rounded-2xl p-6">
             <label className="mb-4 block text-base font-semibold tracking-wide text-foreground/90 uppercase" style={{ letterSpacing: '0.08em' }}>Dream Style</label>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {(["memory", "surreal", "lucid", "fantasy"] as DreamStyle[]).map((s) => (
+              {(["minimal", "film", "cyber", "pastel"] as DreamStyle[]).map((s) => (
                 <DreamStyleCard
                   key={s}
                   style={s}

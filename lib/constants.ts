@@ -1,25 +1,37 @@
-// Style presets for image generation - ENHANCED FOR MAXIMUM ARTISTIC IMPACT
-// Maps frontend styles (memory/surreal/lucid/fantasy) to prompts
+// Style presets based on ORIGINAL v2.md design
+// 4 core styles: minimal (line art) / film (grain) / cyber (neon) / pastel (soft)
 export const STYLES = {
-  memory: {
-    name: 'Memory Dream',
-    prompt: 'ethereal nostalgic dreamscape, vintage film aesthetic, golden hour lighting with god rays, soft bokeh depth of field, delicate film grain texture, emotional cinematic atmosphere, award-winning fine art photography, masterful composition with rule of thirds, warm amber and sepia tones, intimate storytelling mood, Kodak Portra 400 film quality, haunting beautiful nostalgia',
-    negative: 'sharp digital, modern smartphone photo, cold harsh lighting, artificial, flat, overexposed, underexposed, amateur composition, cluttered, text, watermark, logo, signature, low quality, blurry, pixelated',
+  minimal: {
+    name: 'Minimal Sketch',
+    // Sketch-first: Clean line art, simple composition
+    sketchPrompt: 'simple line art sketch, clean black ink on white, minimal strokes, elegant composition, architectural drawing style, precise linework, uncluttered, few elements, professional illustration',
+    // Final render: Refined minimal aesthetic
+    prompt: 'minimal line art illustration, clean geometric shapes, simple elegant composition, white and neutral tones, few carefully placed strokes, professional graphic design, uncluttered negative space, modern minimalist aesthetic, precise clean lines, sophisticated simplicity',
+    negative: 'complex busy, cluttered, photorealistic, color noise, texture heavy, chaotic, messy lines, sketchy rough, amateur doodle, text, watermark',
   },
-  surreal: {
-    name: 'Surreal Dream',
-    prompt: 'surrealist masterpiece in the style of Salvador Dali and Rene Magritte, impossible dreamlike geometry, mind-bending perspective, ethereal floating elements, mysterious chiaroscuro lighting, deep shadows and luminous highlights, metaphysical atmosphere, symbolic dream imagery, cinematic wide-angle composition, fine art museum quality, otherworldly color palette, haunting poetic mood, dramatic depth and scale',
-    negative: 'realistic mundane scene, ordinary everyday, photorealistic, conventional, boring composition, flat lighting, amateur snapshot, cluttered busy, text, watermark, low quality, blurry',
+  film: {
+    name: 'Film Grain',
+    // Sketch-first: Quick film-style composition
+    sketchPrompt: 'film photograph sketch, simple composition, rule of thirds guide, vignette framing, basic tonal values, vintage camera aesthetic',
+    // Final render: Full film aesthetic
+    prompt: 'analog film photography, natural film grain texture, subtle vignette, cinematic composition with rule of thirds, cool and warm color balance, Kodak Portra aesthetic, dust particles in light, authentic vintage photo quality, symmetrical framing, nostalgic mood, professional cinematography',
+    negative: 'digital clean, oversaturated, HDR, artificial, modern smartphone, flat, overprocessed, text, watermark, low quality',
   },
-  lucid: {
-    name: 'Lucid Dream',
-    prompt: 'visionary cyberpunk dreamscape, electric neon atmosphere, vivid cyan magenta and purple color grading, wet reflective surfaces with light trails, volumetric fog and god rays, holographic elements, futuristic noir aesthetic, cinematic blade runner mood, glossy materials and chrome accents, moody atmospheric lighting, award-winning sci-fi concept art, mysterious depth, ultra-detailed textures',
-    negative: 'natural daylight, warm earthy tones, rustic vintage, flat matte surfaces, conventional photography, amateur, overlit, washed out, text, watermark, low quality',
+  cyber: {
+    name: 'Cyber Mist',
+    // Sketch-first: Basic neon composition
+    sketchPrompt: 'cyberpunk scene layout, neon light placement, fog atmosphere guide, reflective surface indication, basic color zones purple and cyan',
+    // Final render: Full cyberpunk aesthetic
+    prompt: 'cyberpunk neon dreamscape, purple and cyan color palette, thin atmospheric fog, wet reflective floor surfaces, glowing neon haze, glossy materials, futuristic noir mood, volumetric light rays, cinematic sci-fi atmosphere, moody lighting, blade runner aesthetic',
+    negative: 'natural daylight, warm colors, dry matte, bright cheerful, rustic vintage, organic natural, text, watermark, low quality',
   },
-  fantasy: {
-    name: 'Fantasy Dream',
-    prompt: 'enchanted magical realm, Studio Ghibli inspired atmosphere, soft iridescent pastel colors, glowing bioluminescent elements, ethereal fairy lights, whimsical dreamlike composition, gentle volumetric lighting with sparkles, storybook illustration quality, mystical enchanted mood, delicate watercolor textures, award-winning fantasy concept art, emotional wonder and discovery, cinematic depth of field',
-    negative: 'realistic gritty, dark horror, harsh shadows, cold industrial, photorealistic mundane, amateur snapshot, overexposed, flat composition, cluttered, text, watermark, low quality',
+  pastel: {
+    name: 'Pastel Fairytale',
+    // Sketch-first: Soft composition guide
+    sketchPrompt: 'soft watercolor sketch, gentle composition, pastel color zones, delicate light indication, whimsical fairytale layout, simple soft edges',
+    // Final render: Full pastel dreamscape
+    prompt: 'soft pastel dreamscape, gentle diffused lighting, low saturation watercolor tones, delicate grain texture, soft blurred edges, whimsical fairytale atmosphere, tender emotional mood, Studio Ghibli inspired gentleness, dreamy bokeh, peaceful enchanted feeling',
+    negative: 'harsh contrast, oversaturated, sharp edges, dark gritty, photorealistic, industrial cold, bold graphic, text, watermark, low quality',
   },
 } as const;
 
