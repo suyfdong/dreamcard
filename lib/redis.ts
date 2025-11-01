@@ -14,9 +14,10 @@ export interface ImageGenJobData {
 const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
 
 // Create Redis connection (only once, not lazily)
-function createConnection(): Redis | null {
+function createConnection(): Redis {
   if (isBuildTime) {
-    return null;
+    // Return a mock Redis instance during build
+    return {} as Redis;
   }
 
   const redisUrl = process.env.UPSTASH_REDIS_URL;
@@ -35,22 +36,20 @@ function createConnection(): Redis | null {
 export const connection = createConnection();
 
 // Create queue
-export const imageGenQueue = connection
-  ? new Queue<ImageGenJobData>('image-generation', {
-      connection,
-      defaultJobOptions: {
-        attempts: 2,
-        backoff: {
-          type: 'exponential',
-          delay: 5000,
-        },
-        removeOnComplete: {
-          age: 3600, // keep completed jobs for 1 hour
-          count: 100,
-        },
-        removeOnFail: {
-          age: 7200, // keep failed jobs for 2 hours
-        },
-      },
-    })
-  : (null as any); // Build time mock
+export const imageGenQueue = new Queue<ImageGenJobData>('image-generation', {
+  connection,
+  defaultJobOptions: {
+    attempts: 2,
+    backoff: {
+      type: 'exponential',
+      delay: 5000,
+    },
+    removeOnComplete: {
+      age: 3600, // keep completed jobs for 1 hour
+      count: 100,
+    },
+    removeOnFail: {
+      age: 7200, // keep failed jobs for 2 hours
+    },
+  },
+});
