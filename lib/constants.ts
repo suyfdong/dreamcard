@@ -3,11 +3,11 @@
 export const STYLES = {
   minimal: {
     name: 'Minimal Sketch',
-    // Composition templates for 因-境-势 structure
+    // Composition templates for 象征→跳切→内化 structure
     compositionGuide: {
-      panel1: 'close-up macro shot, 2/3 negative space, symbolic object in corner, high contrast black and white, minimalist geometry',
-      panel2: 'wide shot with central void, extreme negative space, minimalist geometric environment, low horizon line, clean lines',
-      panel3: 'diagonal motion line across frame, dynamic angle, high contrast, single flowing element, abstract movement',
+      panel1: 'extreme close-up of geometric pattern or texture, 70% negative space, stark black and white contrast, abstract detail shot, minimalist line work',
+      panel2: 'same pattern in impossible location (vertical surface, inverted space), disorienting angle, minimalist impossible geometry, clean lines defying logic',
+      panel3: 'pattern crystallized as arranged objects (pencils, sticks, minimal items), uncanny precision still life, geometric wrongness, stark shadows',
     },
     // Sketch-first: Clean line art, simple composition
     sketchPrompt: 'simple line art sketch, clean black ink on white, minimal strokes, elegant composition, architectural drawing style, precise linework, uncluttered, few elements, professional illustration',
@@ -17,11 +17,11 @@ export const STYLES = {
   },
   film: {
     name: 'Film Grain',
-    // Composition templates for 因-境-势 structure
+    // Composition templates for 象征→跳切→内化 structure
     compositionGuide: {
-      panel1: 'off-center detail shot, shallow depth of field, rule of thirds, bokeh background, cinematic framing, film grain texture',
-      panel2: 'symmetrical low-angle landscape, vignette framing, wide environmental shot, dramatic sky, vintage film aesthetic',
-      panel3: 'dynamic motion blur, diagonal composition, lens flare, panning shot effect, high shutter drag, film grain',
+      panel1: 'grainy macro shot of organic texture or pattern, shallow depth of field, film grain heavy, close-up on material surface, cinematic detail',
+      panel2: 'same texture in gravity-defying context (on ceiling, vertical wall, floating), cinematic wide angle with vignette, impossible spatial orientation, film grain',
+      panel3: 'texture materialized as everyday objects arranged with uncanny logic, hyper-real still life, film grain overlay, subtle wrongness in precision',
     },
     // Sketch-first: Quick film-style composition
     sketchPrompt: 'film photograph sketch, simple composition, rule of thirds guide, vignette framing, basic tonal values, vintage camera aesthetic',
@@ -31,11 +31,11 @@ export const STYLES = {
   },
   cyber: {
     name: 'Cyber Mist',
-    // Composition templates for 因-境-势 structure
+    // Composition templates for 象征→跳切→内化 structure
     compositionGuide: {
-      panel1: 'reflective surface close-up, neon light accents, mirror or wet ground, purple-cyan glow, macro detail shot',
-      panel2: 'wide neon-lit environment, strong perspective lines, atmospheric fog, reflective floor, futuristic architecture, low angle',
-      panel3: 'motion trails with neon streaks, diagonal speed lines, reflective surfaces, dynamic angle, light trails, cyberpunk energy',
+      panel1: 'neon-lit abstract pattern or reflection close-up, purple-cyan color field, glossy texture macro shot, reflective surface detail',
+      panel2: 'same neon pattern in impossible architecture (vertical corridor, inverted space), vertiginous perspective, atmospheric fog, spatial paradox with reflections',
+      panel3: 'neon elements crystallized as solid objects in uncanny arrangement, glossy still life with cyberpunk lighting, geometric precision with wrongness',
     },
     // Sketch-first: Basic neon composition
     sketchPrompt: 'cyberpunk scene layout, neon light placement, fog atmosphere guide, reflective surface indication, basic color zones purple and cyan',
@@ -45,11 +45,11 @@ export const STYLES = {
   },
   pastel: {
     name: 'Pastel Fairytale',
-    // Composition templates for 因-境-势 structure
+    // Composition templates for 象征→跳切→内化 structure
     compositionGuide: {
-      panel1: 'soft-focus detail, center composition, gentle bokeh, pastel colors, macro shot, dreamy atmosphere',
-      panel2: 'dreamy wide shot, low saturation landscape, misty atmosphere, soft lighting, ethereal environment, gentle colors',
-      panel3: 'ethereal motion, soft edges, floating particles, gentle blur, pastel streaks, whimsical movement',
+      panel1: 'soft-focus abstract shape or color field, pastel gradient texture, gentle bokeh, dreamy close-up on soft pattern',
+      panel2: 'same soft shape in surreal context (floating, inverted, defying physics), gentle impossibility, misty atmosphere, pastel color continuity',
+      panel3: 'shape solidified into soft objects with dream logic, pastel still life with uncanny arrangement, gentle wrongness, whimsical precision',
     },
     // Sketch-first: Soft composition guide
     sketchPrompt: 'soft watercolor sketch, gentle composition, pastel color zones, delicate light indication, whimsical fairytale layout, simple soft edges',
