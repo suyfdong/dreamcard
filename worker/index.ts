@@ -26,21 +26,33 @@ async function parseDreamWithLLM(
   symbols: string[],
   mood?: string
 ): Promise<ThreeActStructure> {
-  const systemPrompt = `You are a dream interpreter creating visual narratives. Given a dream description, extract exactly 3 key moments that tell a story.
+  const systemPrompt = `You are a visionary dream artist interpreting subconscious imagery. Transform the dream into 3 powerful visual moments that form a compelling narrative arc.
 
-For each moment, provide:
-1. "scene": A detailed visual description (2-3 sentences) suitable for image generation
-2. "caption": A poetic caption (8-40 characters) capturing the emotional essence
+For each panel, create:
+1. "scene": A vivid, artistic visual description (3-4 sentences) rich in:
+   - Symbolic imagery and metaphorical elements
+   - Dramatic lighting, colors, and atmosphere
+   - Surreal or dreamlike compositions
+   - Emotional depth and psychological meaning
+   - Cinematic framing and perspective
 
-Consider the style "${style}" and incorporate these symbols if relevant: ${symbols.join(', ')}.
-${mood ? `The overall mood should be "${mood}".` : ''}
+2. "caption": A poetic, evocative caption (8-40 characters) that captures the essence
 
-Respond ONLY with valid JSON in this exact format:
+IMPORTANT GUIDELINES:
+- Be HIGHLY imaginative and artistic - think like a surrealist painter or visionary filmmaker
+- Use rich sensory details: colors, textures, light, shadow, movement
+- Incorporate dream symbolism and metaphor naturally
+- Create visual contrast and emotional progression across the 3 panels
+- Style: "${style}" - infuse this aesthetic throughout
+${symbols.length > 0 ? `- Weave in these symbolic elements: ${symbols.join(', ')}` : ''}
+${mood ? `- Overall emotional tone: "${mood}"` : ''}
+
+Respond ONLY with valid JSON:
 {
   "panels": [
-    {"scene": "description", "caption": "short text"},
-    {"scene": "description", "caption": "short text"},
-    {"scene": "description", "caption": "short text"}
+    {"scene": "highly detailed artistic description", "caption": "poetic text"},
+    {"scene": "highly detailed artistic description", "caption": "poetic text"},
+    {"scene": "highly detailed artistic description", "caption": "poetic text"}
   ]
 }`;
 
@@ -58,8 +70,8 @@ Respond ONLY with valid JSON in this exact format:
         { role: 'system', content: systemPrompt },
         { role: 'user', content: inputText },
       ],
-      temperature: 0.7,
-      max_tokens: 1000,
+      temperature: 0.9, // Higher temperature for more creative interpretations
+      max_tokens: 1500, // More tokens for detailed descriptions
     }),
   });
 
@@ -88,8 +100,9 @@ async function generateImage(
 ): Promise<string> {
   const styleConfig = STYLES[style as keyof typeof STYLES];
 
-  const fullPrompt = `${prompt}. ${styleConfig.prompt}`;
-  const negativePrompt = styleConfig.negative;
+  // Enhanced prompt with artistic quality boosters
+  const fullPrompt = `${prompt}. ${styleConfig.prompt}. masterpiece, highly detailed, professional photography, award-winning composition, dramatic depth of field, rich atmospheric lighting`;
+  const negativePrompt = `${styleConfig.negative}, low quality, blurry, amateur, poorly composed, flat lighting, overexposed, underexposed, pixelated, artifacts`;
 
   console.log('Generating image with prompt:', fullPrompt);
 

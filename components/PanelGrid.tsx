@@ -45,11 +45,13 @@ export function PanelGrid({ panels, aspectRatio, onTextChange }: PanelGridProps)
 
   return (
     <div className="space-y-4">
-      <div className={cn("grid gap-4", isVertical ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-3")}>
+      {/* 三张图横向排列，适配不同屏幕 */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {panels.map((panel) => (
           <div key={panel.position} className="space-y-3">
             <Card className="overflow-hidden rounded-2xl">
-              <div className={cn("relative", isVertical ? "aspect-[9/16]" : "aspect-square")}>
+              {/* 固定合理的高度，保持 9:16 比例 */}
+              <div className="relative aspect-[9/16] max-h-[500px]">
                 <img
                   src={showFinal ? panel.imageUrl : panel.sketchUrl}
                   alt={`Panel ${panel.position}`}
@@ -60,12 +62,9 @@ export function PanelGrid({ panels, aspectRatio, onTextChange }: PanelGridProps)
                 />
               </div>
             </Card>
-            <Input
-              value={panelTexts[panel.position] || ""}
-              onChange={(e) => handleTextChange(panel.position, e.target.value)}
-              placeholder="Add caption..."
-              className="rounded-xl text-center"
-            />
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">{panelTexts[panel.position] || ""}</p>
+            </div>
           </div>
         ))}
       </div>
