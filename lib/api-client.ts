@@ -4,7 +4,7 @@
 
 export interface GenerateRequest {
   inputText: string;
-  style: 'memory' | 'surreal' | 'lucid' | 'fantasy';
+  style: 'minimal' | 'film' | 'cyber' | 'pastel';
   symbols?: string[];
   mood?: string;
   visibility?: 'private' | 'public';
