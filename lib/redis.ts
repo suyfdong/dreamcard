@@ -13,19 +13,10 @@ export interface ImageGenJobData {
 // Check if we're in build time (skip Redis connection during build)
 const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
 
-// Lazy initialization to avoid connecting during build time
-let _connection: Redis | null = null;
-let _imageGenQueue: Queue<ImageGenJobData> | null = null;
-
-// Get or create Redis connection
-function getConnection(): Redis {
+// Create Redis connection (only once, not lazily)
+function createConnection(): Redis | null {
   if (isBuildTime) {
-    // Return a mock connection during build time
-    return {} as Redis;
-  }
-
-  if (_connection) {
-    return _connection;
+    return null;
   }
 
   const redisUrl = process.env.UPSTASH_REDIS_URL;
@@ -34,57 +25,32 @@ function getConnection(): Redis {
     throw new Error('UPSTASH_REDIS_URL environment variable is required');
   }
 
-  // BullMQ 4.x with Upstash Redis configuration
-  // Upstash uses TLS by default
-  _connection = new Redis(redisUrl, {
+  return new Redis(redisUrl, {
     maxRetriesPerRequest: null,
     enableReadyCheck: false,
   });
-
-  return _connection;
 }
 
-// Get or create queue
-function getQueue(): Queue<ImageGenJobData> {
-  if (isBuildTime) {
-    // Return a mock queue during build time
-    return {} as Queue<ImageGenJobData>;
-  }
+// Create connection immediately (not lazy)
+export const connection = createConnection();
 
-  if (_imageGenQueue) {
-    return _imageGenQueue;
-  }
-
-  _imageGenQueue = new Queue<ImageGenJobData>('image-generation', {
-    connection: getConnection(),
-    defaultJobOptions: {
-      attempts: 2,
-      backoff: {
-        type: 'exponential',
-        delay: 5000,
+// Create queue
+export const imageGenQueue = connection
+  ? new Queue<ImageGenJobData>('image-generation', {
+      connection,
+      defaultJobOptions: {
+        attempts: 2,
+        backoff: {
+          type: 'exponential',
+          delay: 5000,
+        },
+        removeOnComplete: {
+          age: 3600, // keep completed jobs for 1 hour
+          count: 100,
+        },
+        removeOnFail: {
+          age: 7200, // keep failed jobs for 2 hours
+        },
       },
-      removeOnComplete: {
-        age: 3600, // keep completed jobs for 1 hour
-        count: 100,
-      },
-      removeOnFail: {
-        age: 7200, // keep failed jobs for 2 hours
-      },
-    },
-  });
-
-  return _imageGenQueue;
-}
-
-// Export lazy-loaded instances
-export const connection = new Proxy({} as Redis, {
-  get(_target, prop) {
-    return getConnection()[prop as keyof Redis];
-  },
-});
-
-export const imageGenQueue = new Proxy({} as Queue<ImageGenJobData>, {
-  get(_target, prop) {
-    return getQueue()[prop as keyof Queue<ImageGenJobData>];
-  },
-});
+    })
+  : (null as any); // Build time mock
