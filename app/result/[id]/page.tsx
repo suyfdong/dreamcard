@@ -72,53 +72,86 @@ export default function ResultPage() {
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    // Get jobId from sessionStorage
-    const jobId = sessionStorage.getItem('currentJobId');
+    // Check if we have a temp projectId (instant navigation)
+    const tempId = sessionStorage.getItem('tempProjectId');
+    const actualId = sessionStorage.getItem('actualProjectId');
+    const generateError = sessionStorage.getItem('generateError');
 
-    if (!jobId) {
-      // If no jobId, try to load project directly (in case page was refreshed)
-      loadProject();
+    // If there's a generation error, show it
+    if (generateError) {
+      setError(generateError);
+      sessionStorage.removeItem('generateError');
       return;
     }
 
-    // Poll for status updates
-    let cancelled = false;
+    // Wait for the API call to complete and get the real jobId
+    const waitForJobId = () => {
+      const jobId = sessionStorage.getItem('currentJobId');
 
-    const pollStatus = async () => {
-      try {
-        const status = await apiClient.getStatus(jobId);
-
-        if (cancelled) return;
-
-        // Update progress
-        setProgress(Math.round(status.progress * 100));
-        setCurrentStage(getCurrentStage(status.progress));
-        setStages(progressToStages(status.progress));
-
-        if (status.status === 'success') {
-          setIsComplete(true);
-          await loadProject();
-          sessionStorage.removeItem('currentJobId');
-        } else if (status.status === 'failed') {
-          setError(status.error || 'Generation failed');
-          sessionStorage.removeItem('currentJobId');
-        } else {
-          // Continue polling
-          setTimeout(pollStatus, 2000);
+      if (!jobId) {
+        // If we have a temp ID, keep waiting for the API response
+        if (tempId && projectId === tempId) {
+          setTimeout(waitForJobId, 100); // Check every 100ms
+          return;
         }
-      } catch (err) {
-        console.error('Error polling status:', err);
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load status');
-        }
+        // Otherwise try to load project directly (page refresh case)
+        loadProject();
+        return;
       }
+
+      // Got jobId, start polling
+      startPolling(jobId);
     };
 
-    pollStatus();
+    const startPolling = (jobId: string) => {
+      let cancelled = false;
 
-    return () => {
-      cancelled = true;
+      const pollStatus = async () => {
+        try {
+          const status = await apiClient.getStatus(jobId);
+
+          if (cancelled) return;
+
+          // Update progress
+          setProgress(Math.round(status.progress * 100));
+          setCurrentStage(getCurrentStage(status.progress));
+          setStages(progressToStages(status.progress));
+
+          if (status.status === 'success') {
+            setIsComplete(true);
+            await loadProject();
+            sessionStorage.removeItem('currentJobId');
+            sessionStorage.removeItem('tempProjectId');
+            sessionStorage.removeItem('actualProjectId');
+          } else if (status.status === 'failed') {
+            setError(status.error || 'Generation failed');
+            sessionStorage.removeItem('currentJobId');
+            sessionStorage.removeItem('tempProjectId');
+            sessionStorage.removeItem('actualProjectId');
+          } else {
+            // Continue polling
+            setTimeout(pollStatus, 2000);
+          }
+        } catch (err) {
+          console.error('Error polling status:', err);
+          if (!cancelled) {
+            setError(err instanceof Error ? err.message : 'Failed to load status');
+          }
+        }
+      };
+
+      pollStatus();
+
+      return () => {
+        cancelled = true;
+      };
     };
+
+    // Start the process
+    waitForJobId();
+
+    // Cleanup function (empty because waitForJobId handles its own cleanup)
+    return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
