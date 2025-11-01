@@ -34,13 +34,24 @@ function getConnection(): Redis {
     throw new Error('UPSTASH_REDIS_URL environment variable is required');
   }
 
-  // BullMQ 5.x requires specific ioredis configuration
-  // Parse the Redis URL to handle TLS correctly
-  _connection = new Redis(redisUrl, {
+  // BullMQ 5.x with Upstash Redis requires specific configuration
+  // Upstash uses TLS by default on port 6379
+  const redisOptions = {
     maxRetriesPerRequest: null,
     enableReadyCheck: false,
     enableOfflineQueue: false,
-  });
+  };
+
+  // If the URL includes upstash.io, it uses TLS
+  if (redisUrl.includes('upstash.io')) {
+    Object.assign(redisOptions, {
+      tls: {
+        rejectUnauthorized: false, // Upstash certificates are valid but some environments need this
+      },
+    });
+  }
+
+  _connection = new Redis(redisUrl, redisOptions);
 
   return _connection;
 }
