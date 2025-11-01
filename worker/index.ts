@@ -115,16 +115,16 @@ async function generateSketch(
 
   console.log('Generating SKETCH (fast), prompt:', fullPrompt.substring(0, 100) + '...');
 
+  // Use SDXL-Turbo for fast sketches (Replicate's fastest model)
   const output = await replicate.run(
-    'bytedance/sdxl-lightning-4step' as any,
+    'stability-ai/sdxl-turbo' as any,
     {
       input: {
         prompt: fullPrompt,
         negative_prompt: negativePrompt,
-        num_inference_steps: 2, // Lightning optimized for 2-4 steps, use 2 for speed
+        num_inference_steps: 1, // Turbo optimized for 1 step
         width: GENERATION_CONFIG.IMAGE_WIDTH,
         height: GENERATION_CONFIG.IMAGE_HEIGHT,
-        scheduler: 'K_EULER',
         output_format: 'png',
         output_quality: 80, // Lower quality for sketch
       },

@@ -26,15 +26,21 @@ export default function Home() {
   const [mood, setMood] = useState<Mood>("Calm");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     if (!dreamText.trim()) return;
 
     setIsGenerating(true);
 
     // Convert symbols to lowercase for backend
-    const symbols = selectedSymbols.map(s => s.toLowerCase());
+    const symbols = selectedSymbols.map((s: string) => s.toLowerCase());
 
-    // Start API call but DON'T wait for it - navigate immediately
+    // Generate a temporary projectId for immediate navigation
+    const tempProjectId = `temp-${Date.now()}`;
+
+    // Navigate IMMEDIATELY (no waiting!)
+    router.push(`/result/${tempProjectId}`);
+
+    // Call API in background (fire and forget)
     apiClient.generate({
       inputText: dreamText,
       style,
@@ -42,19 +48,14 @@ export default function Home() {
       mood: mood.toLowerCase(),
       visibility: 'private',
     }).then(response => {
-      // Store jobId in sessionStorage for polling
+      // Store both IDs for result page to use
       sessionStorage.setItem('currentJobId', response.jobId);
-
-      // Navigate immediately to result page (don't wait for generation)
-      router.push(`/result/${response.projectId}`);
+      sessionStorage.setItem('actualProjectId', response.projectId);
+      sessionStorage.setItem('tempProjectId', tempProjectId);
     }).catch(error => {
       console.error('Error generating dream card:', error);
-      setIsGenerating(false);
-      toast({
-        title: "Generation Failed",
-        description: error instanceof Error ? error.message : "Failed to generate dream card. Please try again.",
-        variant: "destructive",
-      });
+      // Store error for result page to show
+      sessionStorage.setItem('generateError', error instanceof Error ? error.message : 'Failed to start generation');
     });
   };
 
