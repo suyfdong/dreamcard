@@ -125,7 +125,9 @@ export default function ResultPage() {
 
           if (status.status === 'success') {
             setIsComplete(true);
-            await loadProject();
+            // Use actualProjectId if we have it, otherwise use current projectId
+            const realProjectId = sessionStorage.getItem('actualProjectId') || projectId;
+            await loadProject(realProjectId);
             sessionStorage.removeItem('currentJobId');
             sessionStorage.removeItem('tempProjectId');
             sessionStorage.removeItem('actualProjectId');
@@ -161,9 +163,9 @@ export default function ResultPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
-  const loadProject = async () => {
+  const loadProject = async (idToLoad?: string) => {
     try {
-      const projectData = await apiClient.getProject(projectId);
+      const projectData = await apiClient.getProject(idToLoad || projectId);
       setProject(projectData);
       setIsPrivate(projectData.visibility === 'private');
 
