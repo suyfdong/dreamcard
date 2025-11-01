@@ -37,7 +37,8 @@ function getConnection(): Redis {
   _connection = new Redis(redisUrl, {
     maxRetriesPerRequest: null,
     enableReadyCheck: false,
-    family: 6, // Use IPv6
+    // Remove family: 6 to allow automatic IPv4/IPv6 detection
+    // Railway environment may not support IPv6 DNS resolution
     tls: {
       rejectUnauthorized: false,
     },
