@@ -4,14 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DreamCard is an AI-powered dream card generator that transforms user dream descriptions into beautiful 3-panel visual cards. The architecture follows a strict separation of concerns:
+DreamCard is an AI-powered dream card generator that transforms user dream descriptions into beautiful 3-panel visual cards with abstract symbolic interpretation. The architecture follows a strict separation of concerns:
 
 - **Vercel (Frontend + Lightweight API)**: Handles UI, creates jobs, queries status
 - **Upstash Redis (Queue)**: BullMQ job queue
 - **Railway Worker (Heavy Processing)**: Consumes queue, calls AI services, processes images
 - **Supabase**: PostgreSQL database + image storage
 
-**Critical Design Principle**: Vercel API routes are intentionally lightweight (only queue operations and status checks). ALL heavy processing (LLM calls, image generation, storage uploads) happens in the Railway Worker.
+**Critical Design Principles**:
+1. Vercel API routes are intentionally lightweight (only queue operations and status checks). ALL heavy processing (LLM calls, image generation, storage uploads) happens in the Railway Worker.
+2. **Abstract Dream Interpretation**: The LLM transforms dreams into symbolic, metaphorical visual narratives rather than literal illustrations (e.g., "老虎追我" becomes abstract representations of fear and pursuit, NOT literal tiger images).
+3. **Modern Art Style Enforcement**: Aggressive blocking of traditional Asian art styles (watercolor, ink wash, calligraphy) in favor of contemporary digital art aesthetics.
 
 ## Architecture Flow
 
@@ -81,14 +84,14 @@ npm run setup         # Install deps + generate Prisma + check env
 **`worker/index.ts`**: Main processing pipeline
 
 **Processing Steps**:
-1. **Parse** (Progress: 0.1): OpenRouter Llama 3.3 70B parses dream into 3-panel structure
-2. **Generate Images** (Progress: 0.35-0.8): Replicate FLUX Schnell generates 3 images (768x1024)
+1. **Parse** (Progress: 0.1): OpenRouter Llama 3.3 70B parses dream into abstract 3-panel symbolic narrative
+2. **Generate Images** (Progress: 0.35-0.8): Replicate SDXL generates 3 images (768x1024) with modern art style enforcement
 3. **Upload** (Progress: 0.8-1.0): Uploads to Supabase Storage, creates Panel records
 4. **Complete** (Progress: 1.0): Updates Project status to 'success'
 
 **Key Functions**:
-- `parseDreamWithLLM()`: Calls OpenRouter, expects JSON with `panels: [{scene, caption}]`
-- `generateImage()`: Calls Replicate FLUX Schnell with style-specific prompts
+- `parseDreamWithLLM()`: Calls OpenRouter with abstract interpretation prompt. LLM MUST include modern art style keywords in every scene description (e.g., "Contemporary digital art:", "Surrealist photography:")
+- `generateImage()`: Calls Replicate SDXL with aggressive modern art prefix and comprehensive negative prompts blocking traditional Asian art
 - `processImageGeneration()`: Main job processor, handles entire pipeline
 
 **Worker Configuration**:
@@ -101,7 +104,7 @@ npm run setup         # Install deps + generate Prisma + check env
 **Project**: Main entity
 - `status`: pending → queued → running → success/failed
 - `progress`: 0.0 to 1.0 (matches PROGRESS_STAGES in constants)
-- `style`: memory | surreal | lucid | fantasy
+- `style`: minimal | film | cyber | pastel
 - One-to-many relationship with Panel
 
 **Panel**: Individual image panels
@@ -118,9 +121,11 @@ npm run setup         # Install deps + generate Prisma + check env
 ### 4. Style System
 
 Styles defined in `lib/constants.ts`:
-- Each style has: name, prompt (positive), negative (negative prompt)
-- Frontend uses style keys: memory | surreal | lucid | fantasy
-- Worker merges style prompts with LLM scene descriptions
+- **4 core styles**: minimal (line art) | film (grain) | cyber (neon) | pastel (soft)
+- Each style has: name, prompt (positive), negative (negative prompt), sketchPrompt (currently unused)
+- **CRITICAL**: Worker uses `style.prompt` (NOT sketchPrompt) for final image generation
+- Modern art enforcement: Every prompt starts with "contemporary digital art, modern 21st century aesthetic, photorealistic CGI rendering, cinematic photography" prefix
+- Aggressive negative prompts block ALL traditional art styles (watercolor, ink wash, chinese brush painting, sumi-e, calligraphy, seal stamps, etc.)
 
 ### 5. Storage
 
@@ -165,10 +170,11 @@ DATABASE_URL=postgresql://postgres:...        # Prisma connection
 
 ### Adding a New Style
 
-1. Add style definition to `lib/constants.ts` STYLES object
-2. Update frontend `DreamStyleCard.tsx` styleConfig
-3. Update TypeScript types if needed
-4. Test with worker to ensure prompts work well
+1. Add style definition to `lib/constants.ts` STYLES object with: name, prompt, negative, sketchPrompt
+2. Update frontend `DreamStyleCard.tsx` styleConfig with: title, description, imageUrl, gradient
+3. Update TypeScript types in `lib/api-client.ts` GenerateRequest interface
+4. **IMPORTANT**: Ensure `prompt` (not `sketchPrompt`) is used in `worker/index.ts` `generateImage()` function
+5. Test with worker to ensure modern art style enforcement works (no traditional Asian art)
 
 ### Debugging Generation Failures
 
@@ -177,11 +183,22 @@ DATABASE_URL=postgresql://postgres:...        # Prisma connection
    - Look at Project.status and errorMsg
    - Verify Panel records were created
 3. Common issues:
-   - OpenRouter: Check account balance
-   - Replicate: Verify payment method added
-   - Storage: Ensure bucket exists and is public
-   - Worker: Ensure process is running
-   - Redis: Verify `UPSTASH_REDIS_URL` is set correctly (not REST URL)
+   - **OpenRouter**: Check account balance, verify model `meta-llama/llama-3.3-70b-instruct` is available
+   - **Replicate**: Verify payment method added, check SDXL model `stability-ai/sdxl:39ed52f2a78e...` exists
+   - **Storage**: Ensure bucket `dreamcard-images` exists and is public
+   - **Worker**: Ensure process is running (Railway logs should show "Worker started and listening for jobs...")
+   - **Redis**: Verify `UPSTASH_REDIS_URL` is set correctly (Redis protocol `redis://...`, NOT REST URL)
+   - **Traditional art style**: If images show watercolor/calligraphy, check that modern art prefix and negative prompts are in place
+
+### Debugging Traditional Asian Art Style Issues
+
+If generated images show traditional Chinese paintings, calligraphy, or ink wash style:
+
+1. **Check LLM output**: Ensure LLM scenes start with modern art style keywords ("Contemporary digital art:", "Surrealist photography:", etc.)
+2. **Check SDXL prompts**: Verify `generateImage()` adds modern art prefix at the BEGINNING of the prompt
+3. **Check negative prompts**: Ensure comprehensive blocking of: watercolor painting, ink wash painting, chinese brush painting, sumi-e, calligraphy, seal stamps, traditional art
+4. **Check SDXL parameters**: Ensure `guidance_scale >= 8.5`, `num_inference_steps >= 30` for strong style control
+5. **Root cause**: SDXL has strong bias toward traditional art when processing vague abstract descriptions - solution is explicit modern art keywords in both LLM and SDXL prompts
 
 ### Build-Time Redis Connection Issues
 
@@ -227,14 +244,17 @@ npm run worker
 
 ## Frontend Integration
 
-**Frontend → API Flow**:
-1. User submits form → `apiClient.generate()` → POST `/api/generate`
-2. Receives `{ projectId, jobId }`
-3. Stores `jobId` in `sessionStorage`
-4. Navigates to `/result/[projectId]`
-5. Result page polls `GET /api/status?jobId=xxx` every 2 seconds
-6. When status='success', fetches `GET /api/project?projectId=xxx`
-7. Displays panels with images
+**Frontend → API Flow** (Instant Navigation Pattern):
+1. User submits form → Generate temp ID (`temp-${Date.now()}`)
+2. **Navigate IMMEDIATELY** to `/result/temp-xxx` (no waiting)
+3. API call fires in background: `apiClient.generate()` → POST `/api/generate`
+4. Store `jobId`, `actualProjectId`, `tempProjectId` in `sessionStorage`
+5. Result page detects temp ID, waits for `jobId` without trying to load project
+6. Result page polls `GET /api/status?jobId=xxx` every 2 seconds
+7. When status='success', fetches `GET /api/project?projectId=xxx` using **actualProjectId** (not temp ID)
+8. Displays panels with images
+
+**CRITICAL**: This instant navigation pattern prevents 7-second delay on homepage. API calls happen in background while user sees progress screen.
 
 **API Client** (`lib/api-client.ts`):
 - Provides typed methods: `generate()`, `getStatus()`, `getProject()`
@@ -244,73 +264,95 @@ npm run worker
 ## Cost Considerations
 
 - OpenRouter (Llama 3.3 70B): ~$0.01-0.05 per generation
-- Replicate (FLUX Schnell): ~$0.003 per image × 3 = ~$0.01 per generation
-- Total: ~$0.02-0.06 per dream card generation
+- Replicate (SDXL): ~$0.01-0.02 per image × 3 = ~$0.03-0.06 per generation
+- Total: ~$0.04-0.11 per dream card generation
 
 Set budget limits in OpenRouter and Replicate dashboards.
 
+## Abstract Dream Interpretation System
+
+**Philosophy**: Dreams are symbolic, metaphorical, and layered with meaning. DO NOT create literal illustrations.
+
+**LLM Transformation Rules** (`worker/index.ts` `parseDreamWithLLM()`):
+1. **Abstract literal elements**: "tiger" → fear, power, wildness, danger (not literal tiger image)
+2. **Visual metaphors**: Show FEELING, ATMOSPHERE, EMOTIONAL TRUTH (not literal subject)
+3. **Symbolic imagery**: Use colors, shapes, shadows, spaces to convey dream's essence
+4. **Cinematic thinking**: Each panel = MOOD, not just a scene
+5. **MANDATORY modern art style keywords**: Every scene description MUST start with explicit style (e.g., "Contemporary digital art:", "Surrealist photography:")
+
+**Example Transformation**:
+- ❌ BAD (literal): "老虎在森林中追我" → "Tiger running", "Tiger closer", "Tiger catches"
+- ✅ GOOD (abstract): "Contemporary digital art: Piercing amber geometric forms emerge from deep indigo void" → "Surrealist photography: Vertical streaks of motion blur in forest green" → "Modern abstract expressionism: Fragmented orange shards scattered across shadow"
+
+**Three-Panel Structure**:
+- Panel 1: THE FEELING (initial emotion/atmosphere)
+- Panel 2: THE TENSION (conflict/transformation through visual metaphor)
+- Panel 3: THE REVELATION (resolution through symbolic imagery)
+
+## Manga-Style Collage System
+
+**Feature**: Combines 3 panels into irregular manga-style layout with rotation and depth.
+
+**Implementation** (`components/ShareButtons.tsx`):
+- **9:16 format**: 3 panels with rotation (-2°, +1.5°, -1°), different sizes, drop shadows, film grain texture, radial speed lines
+- **1:1 format**: Irregular panel arrangement with overlapping, dark gradient background
+- Uses client-side Canvas API for compositing
+- Exports as high-quality PNG
+
+**Design Elements**:
+- Dark gradient background (radial gradient from #1a1a2e to #0a0a0a)
+- Film grain noise overlay (0.03 opacity, 5000 random pixels)
+- Panel rotation for dynamic composition
+- Drop shadows for depth (rgba(0,0,0,0.6), 30px blur)
+- White borders around each panel (8px)
+
 ## Key Files Reference
 
-- `worker/index.ts` - All AI processing logic
-- `lib/constants.ts` - Styles, symbols, generation config
-- `lib/redis.ts` - BullMQ queue setup
+- `worker/index.ts` - All AI processing logic, abstract interpretation prompts, modern art enforcement
+- `lib/constants.ts` - 4 styles (minimal/film/cyber/pastel), symbols, generation config
+- `lib/redis.ts` - BullMQ queue setup with lazy initialization
 - `lib/storage.ts` - Supabase Storage helpers
-- `lib/api-client.ts` - Frontend API wrapper
-- `app/api/*/route.ts` - Lightweight API endpoints
-- `prisma/schema.prisma` - Database models
+- `lib/api-client.ts` - Frontend API wrapper with TypeScript types
+- `app/api/generate/route.ts` - Single-transaction project creation
+- `app/api/status/route.ts` - Job status polling
+- `app/api/project/route.ts` - Project retrieval
+- `app/page.tsx` - Homepage with instant navigation pattern
+- `app/result/[id]/page.tsx` - Result page with temp ID handling
+- `components/ShareButtons.tsx` - Manga-style collage generation
+- `components/DreamStyleCard.tsx` - Style selection with preview images
+- `prisma/schema.prisma` - Database models (Project, Panel, Job)
 
 ---
 
-## IMPORTANT: Known Issues and Ongoing Work (Updated 2025-11-01)
+## Known Issues and Ongoing Work
 
-### ✅ RESOLVED: Auto-Deployment Working (2025-11-01)
+### ✅ RESOLVED: Auto-Deployment (2025-11-01)
 
-**Problem (RESOLVED)**: Initially appeared that Vercel auto-deployment was not working.
-
-**Root Cause**: Misunderstanding of how Vercel GitHub App integration works.
-
-**Key Learning**:
-- **Vercel uses GitHub App mechanism, NOT traditional webhooks**
+Auto-deployment works correctly for both Vercel and Railway:
+- Vercel uses GitHub App mechanism (NOT traditional webhooks)
 - GitHub repository `settings/hooks` being empty is **NORMAL and EXPECTED**
-- Vercel subscribes to repository events through GitHub Checks API
-- No visible webhook needed for auto-deployment to work
+- Both platforms auto-deploy on every push to main branch
+- Repository: `https://github.com/suyfdong/dreamcard` (Public)
 
-**Solution That Worked**:
-1. Changed repository from Private to Public (`dreamcard-ui` → `dreamcard`)
-2. Disconnected and reconnected Vercel Git integration
-3. Verified Vercel GitHub App has correct permissions:
-   - Repository access: All repositories
-   - Permissions: Read & write access to repository hooks, deployments, etc.
-4. Waited a few minutes for permissions to sync
+### 🔧 RECENT FIX: Traditional Asian Art Style Prevention (2025-11-01)
 
-**Current Status**:
-- ✅ **Repository**: `https://github.com/suyfdong/dreamcard` (Public)
-- ✅ **Vercel**: Auto-deployment working perfectly
-- ✅ **Railway**: Auto-deployment working perfectly
-- ✅ **Verified**: Multiple test commits deployed automatically (d71e14c, e99c2cb)
+**Problem**: SDXL was generating traditional Chinese paintings, calligraphy, ink wash art instead of modern abstract art.
 
-**Important Notes**:
-- DO NOT expect to see webhooks in GitHub `settings/hooks` - this is normal for GitHub App integrations
-- Auto-deployment may take 1-2 minutes to activate after changing repository visibility or reconnecting Git
-- Both Vercel and Railway now auto-deploy on every push to main branch
+**Root Cause**: SDXL has strong bias toward traditional art when processing vague abstract Chinese descriptions.
 
-**Environment Variables** (All Configured in Both Vercel and Railway):
-```bash
-OPENROUTER_API_KEY=...
-REPLICATE_API_TOKEN=...
-SUPABASE_URL=...
-SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...
-UPSTASH_REDIS_URL=...
-UPSTASH_REDIS_REST_URL=... (optional)
-UPSTASH_REDIS_REST_TOKEN=... (optional)
-DATABASE_URL=...
-```
+**Solution Implemented** (commit 81739cc):
+1. **LLM Prompt Enhancement**:
+   - Added mandatory modern art style keywords requirement
+   - Every scene MUST start with explicit style: "Contemporary digital art:", "Surrealist photography:", etc.
+   - Forbidden traditional art references: "painting", "watercolor", "ink", "brush", "classical"
 
-**What Works Now**:
-- ✅ Vercel auto-deployment from GitHub push
-- ✅ Railway auto-deployment from GitHub push
-- ✅ All three platforms (GitHub, Vercel, Railway) stay in sync
-- ✅ No manual intervention needed
+2. **SDXL Generation Enhancement**:
+   - Modern art prefix at prompt beginning: "contemporary digital art, modern 21st century aesthetic, photorealistic CGI rendering, cinematic photography"
+   - Aggressive negative prompt blocking ALL traditional Asian art styles
+   - Increased guidance_scale to 8.5 (stronger style control)
+   - Increased steps to 30 (better adherence)
+   - Higher quality output (95%)
 
-**Status**: **RESOLVED** - Auto-deployment fully functional
+**Current Status**: Implemented and deployed to Railway. Testing in progress.
+
+**If Issue Persists**: See "Debugging Traditional Asian Art Style Issues" section for troubleshooting steps.
