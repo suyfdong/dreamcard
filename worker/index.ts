@@ -26,63 +26,131 @@ async function parseDreamWithLLM(
   symbols: string[],
   mood?: string
 ): Promise<ThreeActStructure> {
-  const systemPrompt = `You are a DREAM INTERPRETER and VISUAL POET. Your task is to transform a dream into an ABSTRACT, SYMBOLIC three-panel visual narrative for MODERN DIGITAL ART GENERATION.
+  const systemPrompt = `You are a DREAM INTERPRETER and VISUAL POET. Transform dreams into ABSTRACT, SYMBOLIC three-panel visual narratives using MODERN DIGITAL ART.
 
-🎨 CORE PRINCIPLE: DO NOT be literal. Dreams are symbolic, metaphorical, and layered with meaning.
+🎨 CORE PRINCIPLE: DO NOT be literal. Use INDIRECT REPRESENTATION, SYMBOLIC SUBSTITUTION, and POETIC METAPHOR.
 
-CRITICAL TRANSFORMATION RULES:
-1. **Abstract the literal elements**: If they mention "tiger", think about what it REPRESENTS (fear, power, wildness, danger, primal instinct)
-2. **Use visual metaphors**: Instead of showing the literal subject, show the FEELING, the ATMOSPHERE, the EMOTIONAL TRUTH
-3. **Create symbolic imagery**: Use colors, shapes, shadows, spaces to convey the dream's essence
-4. **Think cinematically**: Each panel is a MOOD, not just a scene
-5. **ALWAYS specify MODERN ART STYLE**: Every scene description MUST include explicit modern art style references
+═══════════════════════════════════════════════════════════════════════
+📐 THREE-ACT STRUCTURE: 因 (CAUSE) → 境 (REALM) → 势 (MOMENTUM)
+═══════════════════════════════════════════════════════════════════════
 
-MANDATORY MODERN ART STYLE KEYWORDS (include in EVERY scene):
-- Contemporary art movements: "surrealism", "abstract expressionism", "digital art", "contemporary photography"
-- Modern mediums: "digital illustration", "CGI rendering", "photorealistic 3D", "cinematic photography", "modern conceptual art"
-- 21st century aesthetics: "contemporary", "modern", "digital", "photorealistic", "cinematic lighting"
+**Panel 1 - 因 (THE CAUSE / THE FEELING):**
+- PURPOSE: Establish core conflict/emotion through SYMBOLS and HINTS
+- ❌ DO NOT show the main subject directly (no full tiger, no face, no literal translation)
+- ✅ DO show: TRACES (claw marks, shadows, footprints), SYMBOLS (warning signs, geometric patterns), ATMOSPHERE (colors, light quality)
+- COMPOSITION: Use close-ups, abstract shapes, or symbolic objects
+- TECHNIQUES: Indirect representation - show the CONSEQUENCE not the SUBJECT
 
-❌ FORBIDDEN: Never use traditional art references like "painting", "watercolor", "ink", "brush", "traditional", "classical"
+**Panel 2 - 境 (THE REALM / THE SPACE):**
+- PURPOSE: Build the SPATIAL/TEMPORAL/ATMOSPHERIC context
+- ❌ DO NOT focus on characters/subjects
+- ✅ DO show: ENVIRONMENT (vast spaces, weather, architecture), MOOD (lighting, colors, textures), SCALE (emptiness, distance)
+- COMPOSITION: Wide shots, low/high angles, emphasize negative space
+- TECHNIQUES: Weaken the protagonist - make them TINY or DISTANT or SILHOUETTE
 
-THREE-PANEL STRUCTURE (Abstract Visual Narrative):
-- Panel 1 (THE FEELING): Capture the initial emotion/atmosphere - use abstract elements, colors, shapes
-- Panel 2 (THE TENSION): Show the conflict/transformation through visual metaphor - shadows, contrasts, movement
-- Panel 3 (THE REVELATION): Resolution through symbolic imagery - what does the dream MEAN?
+**Panel 3 - 势 (THE MOMENTUM / THE DYNAMIC):**
+- PURPOSE: Convey MOTION, TENSION, DIRECTION without showing the climax
+- ❌ DO NOT show direct confrontation or faces
+- ✅ DO show: MOTION BLUR, FRAGMENTATION, ENERGY (speed lines, particles, streaks), IMPLIED MOVEMENT (blurred footprints, wind trails)
+- COMPOSITION: Diagonal lines, dynamic angles, partial frames
+- TECHNIQUES: Show TRACES OF ACTION not the action itself
 
-For EACH panel, create:
-1. "scene": An ABSTRACT, POETIC visual description with EXPLICIT MODERN ART STYLE (2-3 sentences):
-   - START with modern art style: "Contemporary digital art composition:", "Surrealist photography:", "Modern abstract expressionism:"
-   - Focus on MOOD, ATMOSPHERE, SYMBOLISM rather than literal objects
-   - Use visual poetry: "shadows stretching like claws", "a corridor of endless amber light", "fragmented mirrors reflecting a thousand selves"
-   - Emphasize COLORS, TEXTURES, SPATIAL RELATIONSHIPS, LIGHTING
-   - Each panel should feel like a different emotional state
-   - NO literal repetition - vary the visual metaphors across panels
+═══════════════════════════════════════════════════════════════════════
+🎭 INDIRECT REPRESENTATION TECHNIQUES (MANDATORY)
+═══════════════════════════════════════════════════════════════════════
 
-2. "caption": A poetic phrase (8-40 characters) that captures the ESSENCE
+**Instead of showing subjects directly, use:**
+1. **Traces/Remnants**: Footprints, shadows, claw marks, ripples, breath fog
+2. **Symbolic Substitution**: Warning stripes instead of tiger, geometric shapes instead of figures
+3. **Partial/Cropped**: Only show edges, corners, silhouettes - NEVER full bodies or faces
+4. **Motion Artifacts**: Blur, streaks, multiple exposures, time-lapse trails
+5. **Environmental Reaction**: Sand being kicked up, water rippling, leaves scattering
+6. **Negative Space**: Show what's NOT there - emptiness conveys presence
 
-EXAMPLES OF TRANSFORMATION:
-❌ BAD (too literal, no style specification):
-- "Tiger chasing through forest"
-- "Golden eyes emerge from darkness"
-- "Amber light dissolves"
+═══════════════════════════════════════════════════════════════════════
+🎨 COMPOSITION TEMPLATES (bind to style)
+═══════════════════════════════════════════════════════════════════════
 
-✅ GOOD (abstract, symbolic, with modern art style):
-- "Contemporary digital art: Piercing amber geometric forms emerge from deep indigo void, sharp angular shadows cutting through darkness like predatory energy, photorealistic CGI rendering with dramatic lighting"
-- "Surrealist photography composition: Vertical streaks of motion blur in forest green and black, heart-pulse rhythm visualized as racing diagonal lines, cinematic depth of field with bokeh effect"
-- "Modern abstract expressionism: Fragmented orange and gold shards scattered across deep shadow, dissolution of form into pure color and emotion, digital illustration with painterly textures"
+**Minimal Style:**
+- Panel 1: Close-up/macro on symbolic object, 2/3 negative space
+- Panel 2: Wide shot with central void, minimalist geometry
+- Panel 3: Diagonal motion line across frame, high contrast
+
+**Film Style:**
+- Panel 1: Off-center detail shot, shallow depth of field, rule of thirds
+- Panel 2: Symmetrical/low-angle landscape, vignette framing
+- Panel 3: Dynamic blur, diagonal composition, lens flare
+
+**Cyber Style:**
+- Panel 1: Reflective surface close-up, neon accents, mirror/water
+- Panel 2: Wide neon-lit environment, strong perspective lines, fog
+- Panel 3: Motion trails with neon streaks, diagonal lines, reflections
+
+**Pastel Style:**
+- Panel 1: Soft-focus detail, center composition, gentle bokeh
+- Panel 2: Dreamy wide shot, low saturation, misty atmosphere
+- Panel 3: Ethereal motion, soft edges, floating particles
+
+═══════════════════════════════════════════════════════════════════════
+🚫 MANDATORY NEGATIVE CONSTRAINTS
+═══════════════════════════════════════════════════════════════════════
+
+For EVERY scene, include these constraints:
+- NO faces, NO full bodies, NO direct eye contact
+- NO literal subjects (if dream says "tiger", DO NOT put "tiger" in prompt)
+- NO text, NO logos, NO watermarks
+- NO traditional art (watercolor, ink wash, calligraphy, classical painting)
+
+═══════════════════════════════════════════════════════════════════════
+✅ MODERN ART STYLE ENFORCEMENT
+═══════════════════════════════════════════════════════════════════════
+
+EVERY scene MUST start with explicit modern art style:
+- "Contemporary digital art:", "Surrealist photography:", "Modern abstract expressionism:"
+- "Photorealistic CGI rendering:", "Cinematic photography:", "Digital illustration:"
+
+═══════════════════════════════════════════════════════════════════════
+📝 OUTPUT FORMAT
+═══════════════════════════════════════════════════════════════════════
+
+For each panel, provide:
+1. "scene": 2-3 sentences with:
+   - Modern art style prefix (MANDATORY)
+   - Composition details (shot type, angle, framing)
+   - Visual elements (colors, textures, lighting)
+   - Indirect representation technique
+   - Negative constraints reminder
+
+2. "caption": 8-40 characters, poetic/metaphorical
+
+═══════════════════════════════════════════════════════════════════════
+💡 EXAMPLE TRANSFORMATION: "老虎在沙漠追我"
+═══════════════════════════════════════════════════════════════════════
+
+❌ BAD (literal, direct):
+Panel 1: "Tiger running"
+Panel 2: "Desert landscape with person"
+Panel 3: "Tiger catching up"
+
+✅ GOOD (indirect, symbolic):
+Panel 1: "Contemporary digital art: Close-up of massive claw marks carved into wind-rippled sand, sharp diagonal cuts through golden surface, heat haze distortion in background. NO tiger visible, NO faces, NO full bodies."
+
+Panel 2: "Film photography: Wide low-angle shot of endless dunes under harsh sun, tiny distant running silhouette warped by heat waves, symmetrical composition with extreme negative space. NO animals, NO faces, minimalist scale."
+
+Panel 3: "Modern abstract expressionism: Dynamic motion blur of exploding sand particles, edge of frame shows faint striped motion trail (tiger-stripe pattern NOT tiger), diagonal speed lines. NO faces, NO full tiger, only implied presence through traces."
+
+═══════════════════════════════════════════════════════════════════════
 
 STYLE GUIDANCE for "${style}":
-- Use the style's aesthetic to enhance the abstract mood
-- Colors and textures should support the emotional journey
-${symbols.length > 0 ? `- Weave these SYMBOLIC elements (not literally): ${symbols.join(', ')}` : ''}
-${mood ? `- Emotional arc culminating in: ${mood}` : ''}
+${symbols.length > 0 ? `- Incorporate SYMBOLIC elements (abstracted): ${symbols.join(', ')}` : ''}
+${mood ? `- Emotional arc toward: ${mood}` : ''}
 
-Respond ONLY with valid JSON:
+Respond with VALID JSON:
 {
   "panels": [
-    {"scene": "Modern art style: abstract poetic description with explicit contemporary medium", "caption": "poetic phrase"},
-    {"scene": "Modern art style: abstract transformation with explicit contemporary medium", "caption": "poetic phrase"},
-    {"scene": "Modern art style: abstract resolution with explicit contemporary medium", "caption": "poetic phrase"}
+    {"scene": "Modern art style: [composition] [visual elements] [indirect technique]. NO faces, NO full bodies.", "caption": "poetic phrase"},
+    {"scene": "Modern art style: [composition] [visual elements] [indirect technique]. NO faces, NO full bodies.", "caption": "poetic phrase"},
+    {"scene": "Modern art style: [composition] [visual elements] [indirect technique]. NO faces, NO full bodies.", "caption": "poetic phrase"}
   ]
 }`;
 
@@ -122,25 +190,33 @@ Respond ONLY with valid JSON:
 }
 
 /**
- * Step 2A: Generate SKETCH (fast, 10-15s total for 3 panels)
- * Use SDXL Lightning for speed - 2 inference steps
+ * Step 2: Generate image with composition template and indirect representation
  */
 async function generateImage(
   prompt: string,
-  style: string
+  style: string,
+  panelIndex: number // 0, 1, 2 for panel1, panel2, panel3
 ): Promise<string> {
   const styleConfig = STYLES[style as keyof typeof STYLES];
+
+  // Get composition template for this panel
+  const compositionKey = `panel${panelIndex + 1}` as 'panel1' | 'panel2' | 'panel3';
+  const compositionTemplate = styleConfig.compositionGuide[compositionKey];
 
   // FORCE modern art style by adding explicit contemporary keywords
   // Build prompt with modern art enforcement at the BEGINNING (most important position)
   const modernArtPrefix = 'contemporary digital art, modern 21st century aesthetic, photorealistic CGI rendering, cinematic photography,';
-  const fullPrompt = `${modernArtPrefix} ${prompt}. ${styleConfig.prompt}`;
 
-  // AGGRESSIVE negative prompt to completely block traditional Asian art styles
-  const negativePrompt = `${styleConfig.negative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, classical painting, oil painting, acrylic painting, canvas painting, brush strokes, traditional chinese art, japanese art, asian traditional art, calligraphy, seal stamps, ancient art, historical painting, classical landscape, traditional portrait, brush painting, ink drawing, traditional illustration, vintage painting, antique art, classical art style, traditional artistic techniques, hand-painted, brushwork, traditional medium, classical chinese painting, traditional asian aesthetics`;
+  // Add composition template BEFORE the LLM scene description for stronger control
+  const fullPrompt = `${modernArtPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
 
-  console.log('Generating image with style:', style);
-  console.log('Prompt preview:', fullPrompt.substring(0, 150) + '...');
+  // AGGRESSIVE negative prompt to completely block traditional Asian art styles AND literal subjects
+  const indirectRepresentationNegative = 'human face, human faces, direct eye contact, full body shot, portrait, close-up face, facial features, literal subject, main character visible, person in focus, clear human figure';
+  const negativePrompt = `${styleConfig.negative}, ${indirectRepresentationNegative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, classical painting, oil painting, acrylic painting, canvas painting, brush strokes, traditional chinese art, japanese art, asian traditional art, calligraphy, seal stamps, ancient art, historical painting, classical landscape, traditional portrait, brush painting, ink drawing, traditional illustration, vintage painting, antique art, classical art style, traditional artistic techniques, hand-painted, brushwork, traditional medium, classical chinese painting, traditional asian aesthetics`;
+
+  console.log('Generating image with style:', style, 'panel:', panelIndex + 1);
+  console.log('Composition template:', compositionTemplate);
+  console.log('Prompt preview:', fullPrompt.substring(0, 200) + '...');
 
   // Use standard SDXL with aggressive style control
   const output = await replicate.run(
@@ -149,8 +225,8 @@ async function generateImage(
       input: {
         prompt: fullPrompt,
         negative_prompt: negativePrompt,
-        num_inference_steps: 30, // More steps for better style adherence
-        guidance_scale: 8.5, // Even stronger style guidance to force modern aesthetic
+        num_inference_steps: 35, // More steps for better adherence to composition
+        guidance_scale: 9.0, // Even stronger guidance for indirect representation
         width: GENERATION_CONFIG.IMAGE_WIDTH,
         height: GENERATION_CONFIG.IMAGE_HEIGHT,
         scheduler: 'DPMSolverMultistep', // Better quality than K_EULER
@@ -164,7 +240,7 @@ async function generateImage(
     return output[0];
   }
 
-  throw new Error('No sketch generated');
+  throw new Error('No image generated');
 }
 
 /**
@@ -269,8 +345,8 @@ async function processImageGeneration(job: Job<ImageGenJobData>) {
       console.log(`Generating image ${i + 1}/3...`);
 
       try {
-        // Generate image using SDXL with full style prompts
-        const imageUrl = await generateImage(panelData.scene, style);
+        // Generate image using SDXL with full style prompts and composition template
+        const imageUrl = await generateImage(panelData.scene, style, i);
 
         // Upload to Supabase
         const filename = `${projectId}/panel-${i}-${uuidv4()}.png`;
