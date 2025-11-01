@@ -2,14 +2,15 @@
 
 Transform your dreams into beautiful visual cards using AI.
 
-**✅ Auto-Deploy Status**: WORKING - Verified on 2025-11-01 at multiple commits
+**✅ Auto-Deploy Status**: ACTIVE - Repository is PUBLIC, auto-deployment working (Last verified: 2025-11-01)
 
 ## 🌟 Features
 
-- **AI-Powered Dream Interpretation**: LLM analyzes your dream text and creates a 3-panel story
-- **Multiple Art Styles**: Choose from Memory, Surreal, Lucid, or Fantasy styles
+- **AI-Powered Dream Interpretation**: LLM analyzes your dream text and creates an abstract 3-panel symbolic narrative
+- **Multiple Art Styles**: Choose from Minimal, Film Grain, Cyber Mist, or Pastel Fairytale styles
 - **Real-Time Progress**: Watch your dream come to life with live progress updates
-- **High-Quality Images**: Generated using FLUX Schnell model via Replicate
+- **High-Quality Images**: Generated using SDXL model via Replicate with modern art style enforcement
+- **Manga-Style Collage**: Combine 3 panels into irregular layout with rotation and depth effects
 - **Export & Share**: Download your dream cards and share on social media
 
 ## 🛠 Tech Stack
@@ -28,8 +29,8 @@ Transform your dreams into beautiful visual cards using AI.
 - **Supabase Storage** (Image storage)
 
 ### AI Services
-- **OpenRouter** (meta-llama/llama-3.3-70b-instruct) - Dream interpretation
-- **Replicate** (black-forest-labs/flux-schnell) - Image generation
+- **OpenRouter** (meta-llama/llama-3.3-70b-instruct) - Abstract dream interpretation with symbolic narrative generation
+- **Replicate** (stability-ai/sdxl) - High-quality image generation with modern art style enforcement
 
 ## 📋 Prerequisites
 
@@ -173,10 +174,10 @@ Visit [http://localhost:3000](http://localhost:3000) to see your app!
 
 | Style | Description |
 |-------|-------------|
-| **Memory** | Warm, nostalgic, vintage photography feel |
-| **Surreal** | Haunting, ethereal, dreamlike atmosphere |
-| **Lucid** | Cyberpunk aesthetic with neon colors |
-| **Fantasy** | Magical, whimsical, fairy tale mood |
+| **Minimal Sketch** | Clean line art, simple elegant composition, minimal strokes |
+| **Film Grain** | Analog film photography, natural grain texture, cinematic composition |
+| **Cyber Mist** | Cyberpunk neon dreamscape, purple and cyan palette, atmospheric fog |
+| **Pastel Fairytale** | Soft pastel dreamscape, gentle diffused lighting, whimsical mood |
 
 ## 🚢 Deployment
 
