@@ -34,14 +34,12 @@ function getConnection(): Redis {
     throw new Error('UPSTASH_REDIS_URL environment variable is required');
   }
 
+  // BullMQ 5.x requires specific ioredis configuration
+  // Parse the Redis URL to handle TLS correctly
   _connection = new Redis(redisUrl, {
     maxRetriesPerRequest: null,
     enableReadyCheck: false,
-    // Remove family: 6 to allow automatic IPv4/IPv6 detection
-    // Railway environment may not support IPv6 DNS resolution
-    tls: {
-      rejectUnauthorized: false,
-    },
+    enableOfflineQueue: false,
   });
 
   return _connection;
