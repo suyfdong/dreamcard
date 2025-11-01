@@ -326,9 +326,31 @@ Set budget limits in OpenRouter and Replicate dashboards.
 
 ## Known Issues and Ongoing Work
 
-### ✅ RESOLVED: Auto-Deployment (2025-11-01)
+### ⚠️ CRITICAL: Repository Must Remain Public for Auto-Deployment (2025-11-01)
 
-Auto-deployment works correctly for both Vercel and Railway:
+**Issue**: Private repository mode breaks Vercel auto-deployment synchronization.
+
+**Symptoms**:
+- When repository is set to **Private**: Vercel does NOT detect new commits, auto-deployment fails
+- When repository is set to **Public**: Auto-deployment works perfectly for both Vercel and Railway
+
+**Root Cause**:
+- Vercel GitHub App requires additional permissions for private repositories
+- Permission configuration is complex and unreliable
+- Public mode uses standard GitHub App mechanism (NOT webhooks)
+
+**Solution**: Keep repository **Public**
+
+**Security Verification** (2025-11-01):
+- ✅ `.gitignore` correctly excludes `.env` files
+- ✅ No API keys or secrets in git history
+- ✅ All documentation uses placeholder values (`xxx`, `your_key_here`)
+- ✅ No hardcoded credentials in source code
+- ✅ All sensitive data stored in Vercel/Railway environment variables only
+
+**Confirmed Safe**: Repository can remain Public without security risks.
+
+**Auto-Deployment Configuration**:
 - Vercel uses GitHub App mechanism (NOT traditional webhooks)
 - GitHub repository `settings/hooks` being empty is **NORMAL and EXPECTED**
 - Both platforms auto-deploy on every push to main branch
