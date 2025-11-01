@@ -116,31 +116,35 @@ Respond ONLY with valid JSON:
  * Step 2A: Generate SKETCH (fast, 10-15s total for 3 panels)
  * Use SDXL Lightning for speed - 2 inference steps
  */
-async function generateSketch(
+async function generateImage(
   prompt: string,
   style: string
 ): Promise<string> {
   const styleConfig = STYLES[style as keyof typeof STYLES];
 
-  // Use sketch-specific prompts (simpler, faster)
-  const fullPrompt = `${prompt}. ${styleConfig.sketchPrompt}`;
-  const negativePrompt = styleConfig.negative;
+  // Use FULL style prompts for better quality and style control
+  const fullPrompt = `${prompt}. ${styleConfig.prompt}`;
 
-  console.log('Generating SKETCH (fast), prompt:', fullPrompt.substring(0, 100) + '...');
+  // Enhanced negative prompt to prevent unwanted styles
+  const negativePrompt = `${styleConfig.negative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, painting, sketch, drawing, illustration style, anime, cartoon`;
 
-  // Use standard SDXL for sketches (fast with low steps)
+  console.log('Generating image with style:', style);
+  console.log('Prompt preview:', fullPrompt.substring(0, 120) + '...');
+
+  // Use standard SDXL with good balance of speed and quality
   const output = await replicate.run(
     'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b' as any,
     {
       input: {
         prompt: fullPrompt,
         negative_prompt: negativePrompt,
-        num_inference_steps: 20, // Low steps for speed (vs 40 for final)
+        num_inference_steps: 25, // Good balance of speed and quality
+        guidance_scale: 7.5, // Strong style guidance
         width: GENERATION_CONFIG.IMAGE_WIDTH,
         height: GENERATION_CONFIG.IMAGE_HEIGHT,
-        scheduler: 'K_EULER',
+        scheduler: 'DPMSolverMultistep', // Better quality than K_EULER
         output_format: 'png',
-        output_quality: 80, // Lower quality for sketch
+        output_quality: 90, // High quality
       },
     }
   ) as any;
@@ -254,8 +258,8 @@ async function processImageGeneration(job: Job<ImageGenJobData>) {
       console.log(`Generating image ${i + 1}/3...`);
 
       try {
-        // Generate image using SDXL
-        const imageUrl = await generateSketch(panelData.scene, style);
+        // Generate image using SDXL with full style prompts
+        const imageUrl = await generateImage(panelData.scene, style);
 
         // Upload to Supabase
         const filename = `${projectId}/panel-${i}-${uuidv4()}.png`;
