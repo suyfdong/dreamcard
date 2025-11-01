@@ -381,6 +381,141 @@ Set budget limits in OpenRouter and Replicate dashboards.
 
 ---
 
-**Last Updated**: 2025-11-01
+## 📅 Recent Updates Log
+
+### 2025-11-02: Major System Overhaul - "Painting Dreams" Logic
+
+**Problem Identified**:
+用户反馈："出图达不到想要的理解梦的意境、潜意识的感觉的画面"（生成的图像无法表达梦境的诗意和潜意识感）
+
+**Root Cause Analysis**:
+1. LLM 提示词过于理论化，缺少实操性的"如何画梦"指导
+2. 没有明确的镜头语言系统（远中特景别）
+3. 缺少节奏递进规则（情绪起承转合）
+4. 风格差异不够明显，容易生成"通用插图"
+5. 美学标准模糊，LLM 不知道什么是"好看"
+
+**Solution Implemented** (3 Major Commits):
+
+#### Commit 1: "因-境-势"三幕艺术系统 (3cbdac5)
+- 重构 LLM 提示词：实施因(情绪)-境(空间)-势(动态)三幕结构
+- 间接表现技巧：用痕迹/符号/残影替代直接主体
+- 构图模板系统：为 minimal/film/cyber/pastel 四种风格绑定固定景别/角度/留白规则
+- 增强 SDXL 负面约束：屏蔽人脸/全身照/字面主体
+
+#### Commit 2: "象征→跳切→内化"梦境逻辑系统 (81f3a4d)
+- 理念升级：从"因-境-势"(现实叙事) → "象征→跳切→内化"(纯梦境逻辑)
+- 视觉DNA连续性：三格共享图案但语境突变
+- 强制禁止 A→B→C 时间线叙事
+- 梦句文案系统：8-12字诗性碎片（"光跑在前"/"脚印在屋顶"）
+
+#### Commit 3: 美学标准系统 - 定义"好看"和"创意" (4b1fb83)
+**基于用户Cyber风格测试反馈**，明确定义：
+- **好看** = 情绪冲击 + 空间深度 + 视觉节奏 + 留白
+- **创意** = 意料之外 + 情绪共鸣
+- Cyber风格特别优化：
+  - 问题：用户测试发现"不够梦幻/缺少深度"
+  - 解决：强制要求深度(前中后景) + 负空间(暗部留白) + 氛围(雾气/光晕)
+  - 色彩：主色调紫蓝或青粉（禁止过饱和彩虹色）
+  - 构图：低角度或极端特写（禁止无聊中景）
+  - 负面词新增：cluttered, oversaturated rainbow, generic street, boring mid-shot, flat, no depth
+
+#### Commit 4: 系统化"画梦"逻辑 - 象征→空间→情绪 + 镜头语言 (94be3e6)
+**最终架构**（基于GPT完整方法论）：
+- **三层梦境结构重构**：
+  - Panel 1 (象征层/起): 远景建立空间 + 冷静情绪 + 抽象符号
+  - Panel 2 (空间层/承): 中景环境冲突 + 混乱张力 + 不可能空间
+  - Panel 3 (情绪层/转合): 特写情绪释放 + 消散留白 + 视觉溶解
+- **镜头语言系统**（新增）：
+  - WIDE SHOT (远景): 建立梦境空间,抽象,冷静
+  - MID SHOT (中景): 环境冲突,混乱,错乱
+  - CLOSE-UP (特写): 象征性结尾,亲密,溶解
+- **节奏递进强制规则**：
+  - Panel 1: CALM (冷,静,建立)
+  - Panel 2: CHAOS (冲突,张力,眩晕)
+  - Panel 3: DISSOLUTION (负空间,模糊,消散)
+- **画梦准则**（新增）：
+  1. 不直译文字："老虎追我" ≠ 画老虎 = 画被追的感觉(阴影/脚印/撕裂光线)
+  2. 空间错乱但统一：沙漠里的教室 / 水下的楼梯 / 漂浮的桌椅
+  3. 镜头递进：远→中→特
+  4. 节奏递进：冷静→混乱→消散
+  5. 色调统一但明度变化
+
+**Current Architecture Summary**:
+```
+LLM 系统提示词结构 (worker/index.ts):
+1. 美学标准 (What Makes a Dream Card "BEAUTIFUL")
+2. 三层梦境结构 (象征→空间→情绪)
+3. 镜头语言 & 节奏递进 (远中特 + 冷静混乱消散)
+4. 风格差异化表 (Minimal/Film/Cyber/Pastel)
+5. 构图呼吸感原则 + 色彩递进控制
+6. 完整示例（"考试焦急梦"Cyber风格）
+```
+
+**Technical Changes**:
+- `worker/index.ts`: 2500+ lines LLM prompt with structured dream painting methodology
+- `lib/constants.ts`: All `compositionGuide` rewritten with explicit shot types (WIDE/MID/CLOSE-UP)
+- Cyber style: Enhanced `prompt` (dreamlike, NOT generic street) + stronger `negative` (cluttered, flat, no depth)
+
+---
+
+### 2025-11-02: UI Improvements - Progress Bar Enhancement
+
+**User Feedback**: "进度条要更宽、更好看，进度要一直在变化（不要跳跃式），让用户有期待感"
+
+**Solution Implemented**:
+1. **Wider Progress Bar**: Height increased from 2px → 16px (4倍宽度)
+2. **Smooth Animation**:
+   - Progress increments smoothly every 100ms (no jumps)
+   - Adds tiny "fake progress" (0.1-0.3%) every 800ms when stuck
+   - Creates expectation and prevents user boredom
+3. **Visual Enhancements**:
+   - Gradient fill: `from-[#6E67FF] to-[#00D4FF]`
+   - Animated shimmer effect (2s infinite loop)
+   - Shadow-inner for depth
+   - Current stage: `animate-pulse` effect
+4. **Better Status Messages**:
+   - Large percentage display: `{displayProgress.toFixed(1)}%` (shows decimal)
+   - Dynamic messages based on progress:
+     - 0-10%: "Interpreting your dream..."
+     - 10-35%: "Crafting visual metaphors..."
+     - 35-80%: "Generating dream imagery..."
+     - 80-100%: "Finalizing your dream card..."
+5. **UX Psychology**:
+   - Progress never decreases (only increases)
+   - Fake micro-increments prevent "stuck" feeling
+   - Stops fake progress at 95% (don't lie near completion)
+
+**Files Modified**:
+- `components/ProgressBar.tsx`: Added smooth animation logic + visual redesign
+- `app/globals.css`: Added `@keyframes shimmer` animation
+
+---
+
+## ⚠️ Current Known Issues
+
+### 1. **Image Quality Still Not Meeting Expectations** (CRITICAL)
+**Problem**: 用户反馈"出图达不到想要的理解梦的意境、潜意识的感觉的画面"
+**Status**: Partially addressed with today's system overhaul
+**Remaining Issues**:
+- LLM 可能仍然生成过于字面的描述
+- SDXL 可能无法完全遵循复杂的美学指导
+- 需要实测验证新系统效果
+
+**Next Steps**:
+1. 等待用户测试新系统（4次commit后）
+2. 收集具体案例（哪个梦境 + 哪种风格 + 具体问题）
+3. 根据反馈微调 LLM 提示词或 SDXL 参数
+4. 考虑替换更强大的图像模型（FLUX.1-pro, Midjourney API）
+
+### 2. **Vercel Build Warnings** (Minor)
+TypeScript type errors in `worker/index.ts`:
+- Missing type definitions: bullmq, replicate, uuid
+- Solution: These don't affect runtime, only IDE/build-time warnings
+- Can fix with: `npm i --save-dev @types/node @types/uuid`
+
+---
+
+**Last Updated**: 2025-11-02
 
 **Repository Status**: Public (Private mode caused Vercel auto-deployment issues - keeping Public for reliable CI/CD)
