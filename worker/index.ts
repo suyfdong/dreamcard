@@ -26,7 +26,7 @@ async function parseDreamWithLLM(
   symbols: string[],
   mood?: string
 ): Promise<ThreeActStructure> {
-  const systemPrompt = `You are a DREAM INTERPRETER and VISUAL POET. Your task is to transform a dream into an ABSTRACT, SYMBOLIC three-panel visual narrative.
+  const systemPrompt = `You are a DREAM INTERPRETER and VISUAL POET. Your task is to transform a dream into an ABSTRACT, SYMBOLIC three-panel visual narrative for MODERN DIGITAL ART GENERATION.
 
 🎨 CORE PRINCIPLE: DO NOT be literal. Dreams are symbolic, metaphorical, and layered with meaning.
 
@@ -35,6 +35,14 @@ CRITICAL TRANSFORMATION RULES:
 2. **Use visual metaphors**: Instead of showing the literal subject, show the FEELING, the ATMOSPHERE, the EMOTIONAL TRUTH
 3. **Create symbolic imagery**: Use colors, shapes, shadows, spaces to convey the dream's essence
 4. **Think cinematically**: Each panel is a MOOD, not just a scene
+5. **ALWAYS specify MODERN ART STYLE**: Every scene description MUST include explicit modern art style references
+
+MANDATORY MODERN ART STYLE KEYWORDS (include in EVERY scene):
+- Contemporary art movements: "surrealism", "abstract expressionism", "digital art", "contemporary photography"
+- Modern mediums: "digital illustration", "CGI rendering", "photorealistic 3D", "cinematic photography", "modern conceptual art"
+- 21st century aesthetics: "contemporary", "modern", "digital", "photorealistic", "cinematic lighting"
+
+❌ FORBIDDEN: Never use traditional art references like "painting", "watercolor", "ink", "brush", "traditional", "classical"
 
 THREE-PANEL STRUCTURE (Abstract Visual Narrative):
 - Panel 1 (THE FEELING): Capture the initial emotion/atmosphere - use abstract elements, colors, shapes
@@ -42,25 +50,26 @@ THREE-PANEL STRUCTURE (Abstract Visual Narrative):
 - Panel 3 (THE REVELATION): Resolution through symbolic imagery - what does the dream MEAN?
 
 For EACH panel, create:
-1. "scene": An ABSTRACT, POETIC visual description (2-3 sentences):
+1. "scene": An ABSTRACT, POETIC visual description with EXPLICIT MODERN ART STYLE (2-3 sentences):
+   - START with modern art style: "Contemporary digital art composition:", "Surrealist photography:", "Modern abstract expressionism:"
    - Focus on MOOD, ATMOSPHERE, SYMBOLISM rather than literal objects
    - Use visual poetry: "shadows stretching like claws", "a corridor of endless amber light", "fragmented mirrors reflecting a thousand selves"
-   - Emphasize COLORS, TEXTURES, SPATIAL RELATIONSHIPS
+   - Emphasize COLORS, TEXTURES, SPATIAL RELATIONSHIPS, LIGHTING
    - Each panel should feel like a different emotional state
-   - NO literal repetition - if Panel 1 mentions a forest, Panel 2 should show "tangled shadows" or "vertical darkness"
+   - NO literal repetition - vary the visual metaphors across panels
 
 2. "caption": A poetic phrase (8-40 characters) that captures the ESSENCE
 
 EXAMPLES OF TRANSFORMATION:
-❌ BAD (too literal):
+❌ BAD (too literal, no style specification):
 - "Tiger chasing through forest"
-- "Tiger getting closer"
-- "Tiger catches me"
+- "Golden eyes emerge from darkness"
+- "Amber light dissolves"
 
-✅ GOOD (abstract, symbolic):
-- "Golden eyes emerge from darkness, ancient and wild"
-- "Vertical shadows racing, heartbeat in the trees"
-- "Amber light dissolves into scattered fragments of fear"
+✅ GOOD (abstract, symbolic, with modern art style):
+- "Contemporary digital art: Piercing amber geometric forms emerge from deep indigo void, sharp angular shadows cutting through darkness like predatory energy, photorealistic CGI rendering with dramatic lighting"
+- "Surrealist photography composition: Vertical streaks of motion blur in forest green and black, heart-pulse rhythm visualized as racing diagonal lines, cinematic depth of field with bokeh effect"
+- "Modern abstract expressionism: Fragmented orange and gold shards scattered across deep shadow, dissolution of form into pure color and emotion, digital illustration with painterly textures"
 
 STYLE GUIDANCE for "${style}":
 - Use the style's aesthetic to enhance the abstract mood
@@ -71,9 +80,9 @@ ${mood ? `- Emotional arc culminating in: ${mood}` : ''}
 Respond ONLY with valid JSON:
 {
   "panels": [
-    {"scene": "abstract poetic description of opening mood", "caption": "poetic phrase"},
-    {"scene": "abstract transformation/tension description", "caption": "poetic phrase"},
-    {"scene": "abstract resolution/revelation description", "caption": "poetic phrase"}
+    {"scene": "Modern art style: abstract poetic description with explicit contemporary medium", "caption": "poetic phrase"},
+    {"scene": "Modern art style: abstract transformation with explicit contemporary medium", "caption": "poetic phrase"},
+    {"scene": "Modern art style: abstract resolution with explicit contemporary medium", "caption": "poetic phrase"}
   ]
 }`;
 
@@ -122,29 +131,31 @@ async function generateImage(
 ): Promise<string> {
   const styleConfig = STYLES[style as keyof typeof STYLES];
 
-  // Use FULL style prompts for better quality and style control
-  const fullPrompt = `${prompt}. ${styleConfig.prompt}`;
+  // FORCE modern art style by adding explicit contemporary keywords
+  // Build prompt with modern art enforcement at the BEGINNING (most important position)
+  const modernArtPrefix = 'contemporary digital art, modern 21st century aesthetic, photorealistic CGI rendering, cinematic photography,';
+  const fullPrompt = `${modernArtPrefix} ${prompt}. ${styleConfig.prompt}`;
 
-  // Enhanced negative prompt to prevent unwanted styles
-  const negativePrompt = `${styleConfig.negative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, painting, sketch, drawing, illustration style, anime, cartoon`;
+  // AGGRESSIVE negative prompt to completely block traditional Asian art styles
+  const negativePrompt = `${styleConfig.negative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, classical painting, oil painting, acrylic painting, canvas painting, brush strokes, traditional chinese art, japanese art, asian traditional art, calligraphy, seal stamps, ancient art, historical painting, classical landscape, traditional portrait, brush painting, ink drawing, traditional illustration, vintage painting, antique art, classical art style, traditional artistic techniques, hand-painted, brushwork, traditional medium, classical chinese painting, traditional asian aesthetics`;
 
   console.log('Generating image with style:', style);
-  console.log('Prompt preview:', fullPrompt.substring(0, 120) + '...');
+  console.log('Prompt preview:', fullPrompt.substring(0, 150) + '...');
 
-  // Use standard SDXL with good balance of speed and quality
+  // Use standard SDXL with aggressive style control
   const output = await replicate.run(
     'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b' as any,
     {
       input: {
         prompt: fullPrompt,
         negative_prompt: negativePrompt,
-        num_inference_steps: 25, // Good balance of speed and quality
-        guidance_scale: 7.5, // Strong style guidance
+        num_inference_steps: 30, // More steps for better style adherence
+        guidance_scale: 8.5, // Even stronger style guidance to force modern aesthetic
         width: GENERATION_CONFIG.IMAGE_WIDTH,
         height: GENERATION_CONFIG.IMAGE_HEIGHT,
         scheduler: 'DPMSolverMultistep', // Better quality than K_EULER
         output_format: 'png',
-        output_quality: 90, // High quality
+        output_quality: 95, // Higher quality
       },
     }
   ) as any;
