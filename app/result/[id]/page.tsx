@@ -94,6 +94,12 @@ export default function ResultPage() {
           setTimeout(waitForJobId, 100); // Check every 100ms
           return;
         }
+        // If projectId looks like a temp ID, don't try to load it (would get 404)
+        if (projectId.startsWith('temp-')) {
+          // Just keep waiting, don't set error
+          setTimeout(waitForJobId, 100);
+          return;
+        }
         // Otherwise try to load project directly (page refresh case)
         loadProject();
         return;
