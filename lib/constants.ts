@@ -1,25 +1,25 @@
-// Style presets for image generation
+// Style presets for image generation - ENHANCED FOR MAXIMUM ARTISTIC IMPACT
 // Maps frontend styles (memory/surreal/lucid/fantasy) to prompts
 export const STYLES = {
   memory: {
     name: 'Memory Dream',
-    prompt: 'nostalgic vintage photograph, warm sepia tones, soft focus, film grain, gentle lighting, emotional atmosphere, reminiscent mood',
-    negative: 'sharp, modern, digital, cold colors, harsh lighting, text, watermark',
+    prompt: 'ethereal nostalgic dreamscape, vintage film aesthetic, golden hour lighting with god rays, soft bokeh depth of field, delicate film grain texture, emotional cinematic atmosphere, award-winning fine art photography, masterful composition with rule of thirds, warm amber and sepia tones, intimate storytelling mood, Kodak Portra 400 film quality, haunting beautiful nostalgia',
+    negative: 'sharp digital, modern smartphone photo, cold harsh lighting, artificial, flat, overexposed, underexposed, amateur composition, cluttered, text, watermark, logo, signature, low quality, blurry, pixelated',
   },
   surreal: {
     name: 'Surreal Dream',
-    prompt: 'surrealist art, dreamlike atmosphere, impossible geometry, haunting ethereal mood, mysterious shadows, cinematic composition, fine art photography',
-    negative: 'realistic, ordinary, mundane, text, watermark, cluttered',
+    prompt: 'surrealist masterpiece in the style of Salvador Dali and Rene Magritte, impossible dreamlike geometry, mind-bending perspective, ethereal floating elements, mysterious chiaroscuro lighting, deep shadows and luminous highlights, metaphysical atmosphere, symbolic dream imagery, cinematic wide-angle composition, fine art museum quality, otherworldly color palette, haunting poetic mood, dramatic depth and scale',
+    negative: 'realistic mundane scene, ordinary everyday, photorealistic, conventional, boring composition, flat lighting, amateur snapshot, cluttered busy, text, watermark, low quality, blurry',
   },
   lucid: {
     name: 'Lucid Dream',
-    prompt: 'cyberpunk aesthetic, neon lights, cyan and purple colors, wet reflections, thin fog, glossy surfaces, futuristic atmosphere, mysterious mood',
-    negative: 'natural, daylight, warm colors, rustic, text, watermark',
+    prompt: 'visionary cyberpunk dreamscape, electric neon atmosphere, vivid cyan magenta and purple color grading, wet reflective surfaces with light trails, volumetric fog and god rays, holographic elements, futuristic noir aesthetic, cinematic blade runner mood, glossy materials and chrome accents, moody atmospheric lighting, award-winning sci-fi concept art, mysterious depth, ultra-detailed textures',
+    negative: 'natural daylight, warm earthy tones, rustic vintage, flat matte surfaces, conventional photography, amateur, overlit, washed out, text, watermark, low quality',
   },
   fantasy: {
     name: 'Fantasy Dream',
-    prompt: 'magical fantasy art, soft pastel colors, whimsical atmosphere, fairy tale mood, gentle lighting, dreamy glow, enchanted environment',
-    negative: 'realistic, dark, gritty, harsh, text, watermark',
+    prompt: 'enchanted magical realm, Studio Ghibli inspired atmosphere, soft iridescent pastel colors, glowing bioluminescent elements, ethereal fairy lights, whimsical dreamlike composition, gentle volumetric lighting with sparkles, storybook illustration quality, mystical enchanted mood, delicate watercolor textures, award-winning fantasy concept art, emotional wonder and discovery, cinematic depth of field',
+    negative: 'realistic gritty, dark horror, harsh shadows, cold industrial, photorealistic mundane, amateur snapshot, overexposed, flat composition, cluttered, text, watermark, low quality',
   },
 } as const;
 

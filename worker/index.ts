@@ -108,11 +108,11 @@ async function generateImage(
 ): Promise<string> {
   const styleConfig = STYLES[style as keyof typeof STYLES];
 
-  // Enhanced prompt with artistic quality boosters
-  const fullPrompt = `${prompt}. ${styleConfig.prompt}. masterpiece, highly detailed, professional photography, award-winning composition, dramatic depth of field, rich atmospheric lighting`;
-  const negativePrompt = `${styleConfig.negative}, low quality, blurry, amateur, poorly composed, flat lighting, overexposed, underexposed, pixelated, artifacts`;
+  // MAXIMUM ARTISTIC QUALITY - styles now have comprehensive prompts built-in
+  const fullPrompt = `cinematic establishing shot: ${prompt}. ${styleConfig.prompt}`;
+  const negativePrompt = styleConfig.negative;
 
-  console.log('Generating image with prompt:', fullPrompt);
+  console.log('Generating ENHANCED image, prompt preview:', fullPrompt.substring(0, 150) + '...');
 
   const output = await replicate.run(
     'black-forest-labs/flux-schnell' as any,
@@ -120,11 +120,11 @@ async function generateImage(
       input: {
         prompt: fullPrompt,
         negative_prompt: negativePrompt,
-        num_inference_steps: GENERATION_CONFIG.NUM_INFERENCE_STEPS,
+        num_inference_steps: 4, // FLUX schnell optimized for 4 steps
         width: GENERATION_CONFIG.IMAGE_WIDTH,
         height: GENERATION_CONFIG.IMAGE_HEIGHT,
         output_format: 'png',
-        output_quality: 90,
+        output_quality: 95, // Maximum quality
       },
     }
   ) as any;
