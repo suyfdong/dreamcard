@@ -38,13 +38,14 @@ export function ShareButtons({ aspectRatio, isPrivate, onPrivacyToggle, panels, 
       const panelHeight = 1024;
 
       if (ratio === "9:16") {
-        // 三张图横向排列
-        canvas.width = panelWidth * 3;
-        canvas.height = panelHeight;
-      } else {
-        // 1:1 正方形，三张图纵向排列
+        // 9:16 = 纵向长图，三张图上下拼接
         canvas.width = panelWidth;
-        canvas.height = panelHeight * 3;
+        canvas.height = panelHeight * 3; // 768 x 3072
+      } else {
+        // 1:1 = 正方形，缩小三张图并排列
+        const squareSize = 1024;
+        canvas.width = squareSize;
+        canvas.height = squareSize;
       }
 
       // 加载并绘制所有图片
@@ -67,11 +68,14 @@ export function ShareButtons({ aspectRatio, isPrivate, onPrivacyToggle, panels, 
         const img = await loadImage(panels[i].imageUrl);
 
         if (ratio === "9:16") {
-          // 横向排列
-          ctx.drawImage(img, i * panelWidth, 0, panelWidth, panelHeight);
-        } else {
-          // 纵向排列
+          // 纵向排列：三张图上下堆叠
           ctx.drawImage(img, 0, i * panelHeight, panelWidth, panelHeight);
+        } else {
+          // 1:1 正方形：三张图缩小后横向排列
+          const smallWidth = 1024 / 3;
+          const smallHeight = (panelHeight * smallWidth) / panelWidth;
+          const offsetY = (1024 - smallHeight) / 2;
+          ctx.drawImage(img, i * smallWidth, offsetY, smallWidth, smallHeight);
         }
       }
 

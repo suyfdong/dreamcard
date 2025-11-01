@@ -41,13 +41,16 @@ For EACH panel, create:
    - Surreal or dreamlike elements that feel mysterious
    - Visual details that DIFFER from other panels (avoid repetition!)
 
-2. "caption": A poetic caption (8-40 characters) capturing this moment's essence
+2. "caption": A poetic, meaningful caption (8-40 characters) that TELLS the story moment
 
 STORY GUIDELINES:
 - Each panel must be VISUALLY DISTINCT (different angle, distance, lighting, mood)
 - Show narrative PROGRESSION: start → transformation → conclusion
-- Use cinematic techniques: wide shot → close-up → reveal, etc.
-- Incorporate dream logic: impossible transitions, symbolic metamorphosis
+- Maintain VISUAL COHERENCE: same protagonist/setting, but evolving
+- Use cinematic techniques: establishing shot → action → revelation
+- Keep the SAME MAIN SUBJECT/CHARACTER across all 3 panels (if applicable)
+- Show transformation through environment, not completely different scenes
+- Captions should be story-like: "The door appears" → "Entering the depths" → "Among the wonders"
 - Style: "${style}" - maintain aesthetic consistency while varying composition
 ${symbols.length > 0 ? `- Weave these symbols into the narrative: ${symbols.join(', ')}` : ''}
 ${mood ? `- Emotional journey ending in: "${mood}"` : ''}

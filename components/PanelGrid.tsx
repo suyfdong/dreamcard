@@ -62,9 +62,13 @@ export function PanelGrid({ panels, aspectRatio, onTextChange }: PanelGridProps)
                 />
               </div>
             </Card>
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground">{panelTexts[panel.position] || ""}</p>
-            </div>
+            <Input
+              value={panelTexts[panel.position] || ""}
+              onChange={(e) => handleTextChange(panel.position, e.target.value)}
+              placeholder="Add your caption..."
+              className="rounded-xl text-center text-sm"
+              maxLength={40}
+            />
           </div>
         ))}
       </div>
