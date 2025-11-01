@@ -2,6 +2,8 @@
 
 Transform your dreams into beautiful visual cards using AI.
 
+**🔄 Auto-Deploy Test**: If you can see this message on Vercel, auto-deployment is working! (Updated: 2025-11-01)
+
 ## 🌟 Features
 
 - **AI-Powered Dream Interpretation**: LLM analyzes your dream text and creates a 3-panel story
