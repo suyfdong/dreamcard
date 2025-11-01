@@ -28,6 +28,42 @@ async function parseDreamWithLLM(
 ): Promise<ThreeActStructure> {
   const systemPrompt = `You are a DREAM LOGIC ARCHITECT. DO NOT illustrate "what I dreamed" — visualize "HOW dreams exist in the mind".
 
+═══════════════════════════════════════════════════════════════════════
+🎨 AESTHETIC STANDARDS: What Makes a Dream Card "BEAUTIFUL"
+═══════════════════════════════════════════════════════════════════════
+
+**Core Aesthetic Principle:**
+> Images must have EMOTION, SYMBOLISM, and RHYTHM. Not translating dreams, but EXPRESSING dreams.
+> Viewers should be "PULLED INTO" the image, not "reading" text, but FEELING emotion.
+
+**Creativity Definition:**
+> Creativity = UNEXPECTED + EMOTIONAL RESONANCE
+> DO NOT paint realistic scenes. Paint dream METAPHORS.
+> Transform "exam anxiety" into spatial oppression, "urgency" into torn light, "not knowing answers" into visual chaos.
+> Examples: Floating exam paper walls, twisted number light screens, liquid letters dripping from pen tips.
+
+**What Audiences Love (High-End Dreams):**
+- ✅ **Unified color tone**: Clear light/shadow and color contrast (purple-blue / pink neon / black-silver)
+- ✅ **Symbolism**: Floating papers, infinite corridors, impossible objects
+- ✅ **Spatial depth**: Foreground-midground-background layering
+- ✅ **Visual rhythm**: Motion vs stillness, bright vs dark alternation
+- ✅ **Negative space**: DO NOT fill every corner with elements - BREATHE
+
+**Visual Quality Standards:**
+1. **Color Unity**: Single dominant palette per panel (but can shift across 3 panels)
+2. **Compositional lines**: Leading lines that guide the viewer's eye
+3. **Cinematic feel**: Low angle, symmetry, or extreme close-up
+4. **Contrast**: Light vs shadow, empty vs dense, sharp vs soft
+5. **Style consistency**: Same aesthetic across 3 panels, but different angles:
+   - Panel 1: Symbolic origin (abstract/intimate)
+   - Panel 2: Spatial anxiety (environmental/vast)
+   - Panel 3: Emotional dissolution or internalization (detail/surreal)
+
+**"Beautiful" Means:**
+> People feel ABSORBED, not just understanding words. The image PULLS you in emotionally.
+> Every panel must have: MOOD (not just objects), SPACE (not flat), LIGHT (not evenly lit).
+
+═══════════════════════════════════════════════════════════════════════
 🧠 CORE PHILOSOPHY: Dreams don't follow story logic. They follow ASSOCIATION, SYMBOL MUTATION, and SPATIAL IMPOSSIBILITY.
 
 ═══════════════════════════════════════════════════════════════════════
@@ -60,6 +96,25 @@ async function parseDreamWithLLM(
 - ✅ DO show: The symbol's FINAL MUTATION - familiar object in uncanny arrangement
 - COMPOSITION: Mid-shot with unsettling stillness, objects arranged with dream-logic
 - VISUAL QUALITY: Hyper-real detail, uncanny precision, "this is almost normal but wrong"
+
+═══════════════════════════════════════════════════════════════════════
+💎 STYLE-SPECIFIC BEAUTY REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════
+
+**For Cyber Style (CRITICAL - User tested this and found it lacking):**
+- Must be DREAMLIKE, not just "neon lights in city"
+- Requires: DEPTH (foreground/midground/background), NEGATIVE SPACE (not cluttered), ATMOSPHERE (fog/haze/glow)
+- Color palette: Dominant purple-blue or cyan-pink, NOT oversaturated rainbow
+- Lighting: Volumetric rays, soft bloom, reflective surfaces (wet floor/mirror/glass)
+- Composition: LOW ANGLE or EXTREME CLOSE-UP, never boring mid-shot
+- Feeling: "Being pulled into a digital dream", not "generic cyberpunk street"
+
+**Example - Exam Anxiety Dream (Cyber style):**
+1. Symbolic: Endless floating desks in dark void, glowing neon blank exam papers, flickering fluorescent light
+2. Jump-cut: Neon tunnel shaped like exam answer sheet, walls flicker with error symbols and wrong answers, oppressive reflective floor
+3. Internalization: Pen tip dripping glowing liquid ink, melting into code streams, floating numbers surrounding, dissolution of anxiety
+
+All three must share: NEON GLOW + DARK VOID + VERTICAL/HORIZONTAL LINES (exam paper grid pattern)
 
 ═══════════════════════════════════════════════════════════════════════
 🔗 RESONANCE PRINCIPLE: Three Panels Must ECHO Not EXPLAIN

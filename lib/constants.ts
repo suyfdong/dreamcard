@@ -31,17 +31,17 @@ export const STYLES = {
   },
   cyber: {
     name: 'Cyber Mist',
-    // Composition templates for 象征→跳切→内化 structure
+    // Composition templates for 象征→跳切→内化 structure (ENHANCED for dreamlike quality)
     compositionGuide: {
-      panel1: 'neon-lit abstract pattern or reflection close-up, purple-cyan color field, glossy texture macro shot, reflective surface detail',
-      panel2: 'same neon pattern in impossible architecture (vertical corridor, inverted space), vertiginous perspective, atmospheric fog, spatial paradox with reflections',
-      panel3: 'neon elements crystallized as solid objects in uncanny arrangement, glossy still life with cyberpunk lighting, geometric precision with wrongness',
+      panel1: 'extreme close-up of neon abstract pattern in dark void, purple-cyan dominant color, volumetric fog glow, reflective wet surface macro, deep blacks with bright neon accents, low angle or top-down view',
+      panel2: 'same neon pattern in impossible architecture (vertical gravity-defying space, infinite corridor), vertiginous LOW ANGLE perspective, heavy atmospheric fog, mirror floor reflections, strong depth with foreground-midground-background',
+      panel3: 'neon elements crystallized as glowing objects floating in void, uncanny still life with dramatic lighting, soft bloom effect, glossy surfaces, negative space with darkness, intimate detail shot',
     },
     // Sketch-first: Basic neon composition
     sketchPrompt: 'cyberpunk scene layout, neon light placement, fog atmosphere guide, reflective surface indication, basic color zones purple and cyan',
-    // Final render: Full cyberpunk aesthetic
-    prompt: 'cyberpunk neon dreamscape, purple and cyan color palette, thin atmospheric fog, wet reflective floor surfaces, glowing neon haze, glossy materials, futuristic noir mood, volumetric light rays, cinematic sci-fi atmosphere, moody lighting, blade runner aesthetic',
-    negative: 'natural daylight, warm colors, dry matte, bright cheerful, rustic vintage, organic natural, text, watermark, low quality, faces, full bodies, literal subjects',
+    // Final render: DREAMLIKE cyberpunk (NOT generic street scene)
+    prompt: 'dreamlike cyberpunk atmosphere, dominant purple-blue or cyan-pink color palette (NOT rainbow), heavy volumetric fog, deep blacks with bright neon accents, wet mirror-like reflective surfaces, soft bloom glow, cinematic depth of field with foreground-midground-background layering, moody atmospheric lighting, blade runner aesthetic, NEGATIVE SPACE with darkness, being pulled into digital dream feeling',
+    negative: 'natural daylight, warm colors, dry matte, bright cheerful, rustic vintage, organic natural, text, watermark, low quality, faces, full bodies, literal subjects, cluttered, oversaturated rainbow colors, generic cyberpunk street, boring mid-shot, flat composition, no depth',
   },
   pastel: {
     name: 'Pastel Fairytale',
