@@ -200,6 +200,11 @@ export default function ResultPage() {
                 aspectRatio="9:16"
                 isPrivate={isPrivate}
                 onPrivacyToggle={() => setIsPrivate(!isPrivate)}
+                panels={project.panels.map(p => ({
+                  imageUrl: p.imageUrl || '',
+                  caption: p.caption
+                }))}
+                projectId={projectId}
               />
             </Card>
           )}
