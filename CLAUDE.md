@@ -263,40 +263,36 @@ Set budget limits in OpenRouter and Replicate dashboards.
 
 ## IMPORTANT: Known Issues and Ongoing Work (Updated 2025-11-01)
 
-### Repository Changed to Public (2025-11-01)
+### ✅ RESOLVED: Auto-Deployment Working (2025-11-01)
 
-**Status**: Changed repository from Private to Public to resolve webhook issues.
-- Testing auto-deployment functionality after visibility change.
+**Problem (RESOLVED)**: Initially appeared that Vercel auto-deployment was not working.
 
-### Critical Issue: Vercel Auto-Deployment Not Working
+**Root Cause**: Misunderstanding of how Vercel GitHub App integration works.
 
-**Problem**: Vercel does NOT automatically create GitHub webhooks when connecting to repositories, causing auto-deployment to fail.
+**Key Learning**:
+- **Vercel uses GitHub App mechanism, NOT traditional webhooks**
+- GitHub repository `settings/hooks` being empty is **NORMAL and EXPECTED**
+- Vercel subscribes to repository events through GitHub Checks API
+- No visible webhook needed for auto-deployment to work
 
-**Symptoms**:
-- After connecting a GitHub repository to Vercel, no webhook appears in GitHub repository settings
-- Manual git pushes do not trigger Vercel deployments
-- Vercel shows successful "Connected" status but deployments don't trigger automatically
-
-**What We've Tried** (All Failed):
-1. ✗ Disconnecting and reconnecting Vercel Git integration multiple times
-2. ✗ Verifying GitHub App permissions (Vercel has "All repositories" access)
-3. ✗ Checking GitHub App installation at https://github.com/settings/installations (correctly installed)
-4. ✗ Manually creating webhooks (webhook returns 201 but doesn't trigger deployment)
-5. ✗ Using Vercel Deploy Hooks (webhook receives request but no deployment triggered)
-6. ✗ Deleting and recreating GitHub repository (moved from `dreamcard-ui` to `dreamcard`)
-7. ✗ Deleting and recreating Vercel project
+**Solution That Worked**:
+1. Changed repository from Private to Public (`dreamcard-ui` → `dreamcard`)
+2. Disconnected and reconnected Vercel Git integration
+3. Verified Vercel GitHub App has correct permissions:
+   - Repository access: All repositories
+   - Permissions: Read & write access to repository hooks, deployments, etc.
+4. Waited a few minutes for permissions to sync
 
 **Current Status**:
-- **Old Repository**: `https://github.com/suyfdong/dreamcard-ui` (abandoned, has broken webhooks)
-- **New Repository**: `https://github.com/suyfdong/dreamcard` (current, same issue)
-- **Vercel Project**: Successfully deployed, connected to new repository, but NO auto-deployment
-- **Railway Worker**: Successfully reconnected to new repository, environment variables configured
+- ✅ **Repository**: `https://github.com/suyfdong/dreamcard` (Public)
+- ✅ **Vercel**: Auto-deployment working perfectly
+- ✅ **Railway**: Auto-deployment working perfectly
+- ✅ **Verified**: Multiple test commits deployed automatically (d71e14c, e99c2cb)
 
-**Attempted Workarounds**:
-1. **Manual Deploy Hooks**: Created in Vercel Settings → Git → Deploy Hooks
-   - Hook receives GitHub push events (returns 201 status)
-   - But does NOT trigger Vercel deployment
-   - No entries show in "Recent Triggers" section
+**Important Notes**:
+- DO NOT expect to see webhooks in GitHub `settings/hooks` - this is normal for GitHub App integrations
+- Auto-deployment may take 1-2 minutes to activate after changing repository visibility or reconnecting Git
+- Both Vercel and Railway now auto-deploy on every push to main branch
 
 **Environment Variables** (All Configured in Both Vercel and Railway):
 ```bash
@@ -311,29 +307,10 @@ UPSTASH_REDIS_REST_TOKEN=... (optional)
 DATABASE_URL=...
 ```
 
-**What Works**:
-- ✓ Vercel manual deployments (via Dashboard "Redeploy" button)
-- ✓ Railway Worker auto-deployment from GitHub (works normally)
-- ✓ GitHub webhooks for Railway (auto-created successfully)
-- ✓ First deployment after Vercel project creation (versions match)
+**What Works Now**:
+- ✅ Vercel auto-deployment from GitHub push
+- ✅ Railway auto-deployment from GitHub push
+- ✅ All three platforms (GitHub, Vercel, Railway) stay in sync
+- ✅ No manual intervention needed
 
-**Possible Root Causes** (Unconfirmed):
-1. Vercel account-specific GitHub App integration bug
-2. Vercel platform issue preventing webhook creation for this specific account
-3. Some cached/corrupted OAuth token between Vercel and GitHub
-4. Regional or service-tier limitation (needs investigation)
-
-**Next Steps to Try**:
-1. Contact Vercel Support with detailed logs
-2. Try creating Vercel project from a different GitHub account (test if account-specific)
-3. Check Vercel system status for known webhook issues
-4. Review Vercel deployment logs for any hidden errors
-5. Try Vercel CLI deployment with `--prod` flag to see if triggers auto-deployment setup
-6. Check if there are any Vercel project settings blocking auto-deployment (Ignored Build Step, etc.)
-
-**Temporary Workaround**:
-- Must manually trigger deployments via Vercel Dashboard after each git push
-- Or investigate using Vercel CLI in CI/CD pipeline (GitHub Actions)
-
-**Last Attempted**: 2025-11-01
-**Status**: UNRESOLVED - Paused for further investigation
+**Status**: **RESOLVED** - Auto-deployment fully functional
