@@ -11,22 +11,128 @@ const replicate = new Replicate({
 });
 
 interface ThreeActStructure {
+  abstraction_level: number; // 0.0-1.0, how abstract vs concrete
+  global_palette: string; // Main color palette description
   panels: Array<{
     scene: string;
     caption: string;
+    compose: 'center' | 'thirds' | 'diagonal' | 'symmetry'; // Composition hook
+    distance: 'wide' | 'medium' | 'close'; // Camera distance (WIDE/MID/CLOSE-UP)
+    concrete_ratio?: number; // Percentage of concrete nouns (for validation)
   }>;
 }
 
 /**
+ * Quality validation function - checks if LLM output meets abstract art standards
+ */
+interface QualityCheckResult {
+  passed: boolean;
+  failures: string[];
+}
+
+function validateAbstractQuality(structure: ThreeActStructure): QualityCheckResult {
+  const failures: string[] = [];
+
+  // Rule 1: Abstraction level >= 0.65
+  if (structure.abstraction_level < 0.65) {
+    failures.push(`Abstraction level too low: ${structure.abstraction_level} (need ≥0.65)`);
+  }
+
+  // Rule 2: All 3 panels present with required fields
+  if (structure.panels.length !== 3) {
+    failures.push(`Must have exactly 3 panels, got ${structure.panels.length}`);
+  }
+
+  // Rule 3: Check each panel's concrete ratio
+  structure.panels.forEach((panel, i) => {
+    if (panel.concrete_ratio && panel.concrete_ratio > 0.30) {
+      failures.push(`Panel ${i + 1} has too many concrete objects: ${(panel.concrete_ratio * 100).toFixed(0)}% (need ≤30%)`);
+    }
+  });
+
+  // Rule 4: Three-act structure complete (distance progression)
+  const distances = structure.panels.map(p => p.distance);
+  const expectedDistances = ['wide', 'medium', 'close'];
+  const hasCorrectProgression = distances.every((d, i) => d === expectedDistances[i]);
+  if (!hasCorrectProgression) {
+    failures.push(`Panel distances must follow wide→medium→close progression, got: ${distances.join('→')}`);
+  }
+
+  // Rule 5: Global palette exists
+  if (!structure.global_palette || structure.global_palette.trim().length < 10) {
+    failures.push('Global palette description missing or too short');
+  }
+
+  // Rule 6: All panels have composition hooks
+  structure.panels.forEach((panel, i) => {
+    if (!panel.compose) {
+      failures.push(`Panel ${i + 1} missing 'compose' field`);
+    }
+    if (!panel.distance) {
+      failures.push(`Panel ${i + 1} missing 'distance' field`);
+    }
+    if (!panel.scene || panel.scene.length < 50) {
+      failures.push(`Panel ${i + 1} scene description too short (need detailed abstract language)`);
+    }
+    if (!panel.caption || panel.caption.length < 4) {
+      failures.push(`Panel ${i + 1} caption missing or too short`);
+    }
+  });
+
+  return {
+    passed: failures.length === 0,
+    failures,
+  };
+}
+
+/**
  * Step 1: Parse dream text with LLM to create 3-act structure
+ * Includes automatic quality validation and retry (up to 2 retries)
  */
 async function parseDreamWithLLM(
   inputText: string,
   style: string,
   symbols: string[],
-  mood?: string
+  mood?: string,
+  retryCount: number = 0
 ): Promise<ThreeActStructure> {
+  const MAX_RETRIES = 2;
+
   const systemPrompt = `You are a DREAM LOGIC ARCHITECT. DO NOT illustrate "what I dreamed" — visualize "HOW dreams exist in the mind".
+
+═══════════════════════════════════════════════════════════════════════
+🎨 VISUAL LANGUAGE PRIORITY: Paint with COLOR, LIGHT, TEXTURE, SPACE
+═══════════════════════════════════════════════════════════════════════
+
+**YOUR FIRST LANGUAGE IS:**
+> COLOR FIELDS (色域) / BRUSHSTROKES (笔触) / LIGHT QUALITIES (光线) / NEGATIVE SPACE (留白) / DIRECTIONAL FLOW (方向性)
+
+**Concrete objects are HINTS ONLY — maximum 30% of visual information.**
+
+**Language Paradigm (HOW TO DESCRIBE):**
+
+✅ USE THESE WORDS:
+- "flowing / dissolving / reflecting / residual warmth / particles / light mist / impasto / swirling brushstrokes / color field blocks"
+- "cobalt blue gradient bleeding into white" (NOT "blue sky")
+- "vertical amber streaks like melting metal" (NOT "sunset")
+- "geometric void with one thin horizontal line" (NOT "horizon")
+
+✅ TRANSFORM CONCRETE SUBJECTS:
+- "火车" (train) → "blue-gold linear flow like rails" + "rectangular light bands like window memories"
+- "海" (ocean) → "horizon swallowed by fog" + "blue fluid consuming sightline"
+- "老虎追我" (tiger chasing) → "inverted orange shadow pursuing upward" + "warm color field surging to engulf space"
+- "楼梯" (stairs) → "parallel ascending light beams" + "diagonal rhythm marks"
+- "镜子" (mirror) → "duplicated color void with slight shift" + "reflection as second reality"
+
+❌ FORBIDDEN:
+- Direct concrete descriptions: "a tiger running", "ocean waves", "a staircase"
+- More than 2 concrete nouns per panel
+- Any human faces, full bodies, or recognizable characters
+
+**ABSTRACTION RULES:**
+- Each panel must be at least 70% described using "color field + brushstroke + light quality"
+- Concrete elements appear ONLY as "suggestive symbols" (window frames / shadows / reflections / silhouettes)
+- If you must name an object, immediately convert it to abstract quality: "desk → horizontal plane catching light"
 
 ═══════════════════════════════════════════════════════════════════════
 🎨 AESTHETIC STANDARDS: What Makes a Dream Card "BEAUTIFUL"
@@ -38,21 +144,21 @@ async function parseDreamWithLLM(
 
 **Creativity Definition:**
 > Creativity = UNEXPECTED + EMOTIONAL RESONANCE
-> DO NOT paint realistic scenes. Paint dream METAPHORS.
+> DO NOT paint realistic scenes. Paint dream METAPHORS using COLOR and LIGHT.
 > Transform "exam anxiety" into spatial oppression, "urgency" into torn light, "not knowing answers" into visual chaos.
-> Examples: Floating exam paper walls, twisted number light screens, liquid letters dripping from pen tips.
+> Examples: Floating geometric voids, twisted chromatic gradients, liquid light dripping from undefined edges.
 
 **What Audiences Love (High-End Dreams):**
 - ✅ **Unified color tone**: Clear light/shadow and color contrast (purple-blue / pink neon / black-silver)
-- ✅ **Symbolism**: Floating papers, infinite corridors, impossible objects
-- ✅ **Spatial depth**: Foreground-midground-background layering
+- ✅ **Symbolism**: Abstract patterns, impossible spaces, light phenomena
+- ✅ **Spatial depth**: Foreground-midground-background layering through COLOR and ATMOSPHERE
 - ✅ **Visual rhythm**: Motion vs stillness, bright vs dark alternation
 - ✅ **Negative space**: DO NOT fill every corner with elements - BREATHE
 
 **Visual Quality Standards:**
 1. **Color Unity**: Single dominant palette per panel (but can shift across 3 panels)
-2. **Compositional lines**: Leading lines that guide the viewer's eye
-3. **Cinematic feel**: Low angle, symmetry, or extreme close-up
+2. **Compositional lines**: Leading lines created by LIGHT and COLOR FLOW, not objects
+3. **Cinematic feel**: Low angle, symmetry, or extreme close-up OF ABSTRACT ELEMENTS
 4. **Contrast**: Light vs shadow, empty vs dense, sharp vs soft
 5. **Style consistency**: Same aesthetic across 3 panels, but different angles:
    - Panel 1: Symbolic origin (abstract/intimate)
@@ -60,8 +166,8 @@ async function parseDreamWithLLM(
    - Panel 3: Emotional dissolution or internalization (detail/surreal)
 
 **"Beautiful" Means:**
-> People feel ABSORBED, not just understanding words. The image PULLS you in emotionally.
-> Every panel must have: MOOD (not just objects), SPACE (not flat), LIGHT (not evenly lit).
+> People feel ABSORBED by COLOR and LIGHT, not recognizing objects. The image PULLS you in emotionally through ATMOSPHERE.
+> Every panel must have: MOOD (through color/light), SPACE (through depth/atmosphere), LIGHT (directional, volumetric).
 
 ═══════════════════════════════════════════════════════════════════════
 🧠 CORE PHILOSOPHY: Dreams don't follow story logic. They follow ASSOCIATION, SYMBOL MUTATION, and SPATIAL IMPOSSIBILITY.
@@ -238,47 +344,88 @@ EVERY scene MUST start with explicit modern art style:
 - "Photorealistic CGI rendering:", "Cinematic photography:", "Digital illustration:"
 
 ═══════════════════════════════════════════════════════════════════════
-📝 OUTPUT FORMAT
+📝 OUTPUT FORMAT (JSON SCHEMA)
 ═══════════════════════════════════════════════════════════════════════
 
-For each panel, provide:
-1. "scene": 2-3 sentences with:
-   - Modern art style prefix (MANDATORY: "Contemporary digital art:", "Surrealist photography:", etc.)
-   - Panel layer type (象征层/跳切层/内化层)
-   - Visual DNA element (the pattern/texture/shape that mutates across panels)
-   - Composition details (extreme close-up / impossible angle / still life)
-   - NO literal dream subjects, NO faces, NO full bodies
+You MUST return a JSON object with this exact structure:
 
-2. "caption": 8-12 characters, DREAM SENTENCE (梦句) format:
-   - NOT literal description, NOT explanation
-   - Poetic fragment that RESONATES with the visual
-   - Examples: "光跑在前" / "脚印在屋顶" / "铅笔排成路"
+{
+  "abstraction_level": 0.75,  // Number 0.0-1.0, how abstract (target: ≥0.70)
+  "global_palette": "Cobalt blue void, cold white edge light, steel gray gradients",  // Main color description
+  "panels": [
+    {
+      "scene": "...",  // 2-3 sentences (see rules below)
+      "caption": "...",  // 8-12 characters dream sentence
+      "compose": "symmetry",  // One of: center | thirds | diagonal | symmetry
+      "distance": "wide",  // One of: wide | medium | close (WIDE/MID/CLOSE-UP)
+      "concrete_ratio": 0.20  // Estimated % of concrete nouns (0.0-1.0, target: ≤0.30)
+    }
+  ]
+}
+
+**For each panel "scene" field, provide 2-3 sentences with:**
+1. Modern art style prefix (MANDATORY: "Contemporary digital art:", "Surrealist photography:", etc.)
+2. Panel layer type (象征层/跳切层/内化层)
+3. Visual DNA element (the pattern/texture/shape that mutates across panels)
+4. Composition details using ABSTRACT LANGUAGE (color fields, light direction, atmospheric depth)
+5. NO literal dream subjects, NO faces, NO full bodies
+6. At least 70% description must be color/light/texture/space
+
+**For "caption" field:**
+- 8-12 characters, DREAM SENTENCE (梦句) format
+- NOT literal description, NOT explanation
+- Poetic fragment that RESONATES with the visual
+- Examples: "光跑在前" / "脚印在屋顶" / "铅笔排成路"
+
+**For "compose" field:**
+- Choose based on emotional intent: symmetry (calm/order), diagonal (tension), thirds (natural), center (focus)
+
+**For "distance" field:**
+- Panel 1 should be "wide" (establish space)
+- Panel 2 should be "medium" (atmospheric conflict)
+- Panel 3 should be "close" (intimate dissolution)
 
 ═══════════════════════════════════════════════════════════════════════
 💡 EXAMPLE: "追不上的火车" (Can't Catch the Train)
 ═══════════════════════════════════════════════════════════════════════
 
-❌ BAD (literal A→B→C story):
+❌ BAD (literal story with concrete objects):
 Panel 1: "Train departing from station"
 Panel 2: "Person running on platform"
 Panel 3: "Train disappearing into distance"
 
-✅ EXCELLENT (象征→跳切→内化 with visual DNA):
+✅ EXCELLENT (Abstract-first with COLOR/LIGHT/SPACE priority):
 
-**Panel 1 - 象征层 (Extract symbol: PARALLEL LINES = train essence):**
-"Contemporary digital art: Extreme close-up of weathered parallel metal lines converging into infinite vanishing point, cold steel blue texture with rust oxidation, shallow depth of field focusing on industrial groove patterns. NO train visible, NO people, pure geometric abstraction."
-Caption: "追·光跑在前"
-
-**Panel 2 - 跳切层 (Same lines in IMPOSSIBLE context):**
-"Surrealist photography: Those same parallel lines appear as ceiling beams in a gravity-defying vertical corridor, footprints walking impossibly on the ceiling surface, disorienting Dutch angle perspective. NO train, NO faces, spatial paradox with film grain texture."
-Caption: "转·脚印在屋顶"
-
-**Panel 3 - 内化层 (Lines crystallize into mundane objects):**
-"Modern still life photography: Hyper-real close-up of wooden pencils arranged in perfect parallel rows like miniature train tracks on a desk surface, uncanny precision, soft shadows, pastel yellow and blue tones. NO train, NO people, everyday objects with dream logic wrongness."
-Caption: "学·铅笔排成路"
+{
+  "abstraction_level": 0.80,
+  "global_palette": "Steel blue gradients, cold amber accents, deep shadow voids, weathered metal texture",
+  "panels": [
+    {
+      "scene": "Contemporary digital art: 象征层 - Extreme close-up of weathered parallel color bands in steel blue and amber, converging into infinite perspective void, cold directional light creating diagonal shadow rhythms across textured metal surface. Abstracted essence of pursuit through receding lines, NO train visible, NO people, pure geometric color field with atmospheric depth.",
+      "caption": "光跑在前",
+      "compose": "diagonal",
+      "distance": "wide",
+      "concrete_ratio": 0.15
+    },
+    {
+      "scene": "Surrealist photography: 跳切层 - Those same parallel blue-amber bands now appear as ceiling structure in impossible vertical space, gravity-defying perspective with light beams flowing upward, disorienting Dutch angle revealing void below. Atmospheric haze between foreground and distant bands creates depth, NO train, NO faces, spatial paradox expressed through color and light direction.",
+      "caption": "脚印在天花板",
+      "compose": "diagonal",
+      "distance": "medium",
+      "concrete_ratio": 0.20
+    },
+    {
+      "scene": "Modern abstract photography: 内化层 - Intimate close-up of parallel amber light streaks dissolving into blue void, soft focus edges fading to darkness, residual warmth trails like memory fragments. Negative space dominates (70% deep blue-black), thin golden lines barely visible, dissolution of pursuit into color mist, NO objects, NO people, pure emotional release through light dispersion.",
+      "caption": "线消失在蓝里",
+      "compose": "center",
+      "distance": "close",
+      "concrete_ratio": 0.10
+    }
+  ]
+}
 
 **Visual DNA Continuity:**
-All three panels share PARALLEL LINES (metal grooves → ceiling beams → pencil arrangement), but context mutates impossibly.
+All three panels share PARALLEL BLUE-AMBER LINEAR FLOW (color bands → ceiling light → dissolving streaks), but abstraction level increases from textured geometry → impossible space → pure light dissolution.
 
 ═══════════════════════════════════════════════════════════════════════
 
@@ -287,31 +434,43 @@ ${symbols.length > 0 ? `- If these symbols appear in dream, transmute them into 
 ${mood ? `- Emotional undertone (NOT literal): ${mood}` : ''}
 
 CRITICAL REMINDERS:
-1. First, identify ONE visual DNA element from the dream (lines/circles/texture/color/pattern)
-2. Panel 1: Show it as PURE ABSTRACTION (close-up texture/pattern)
-3. Panel 2: Show it in IMPOSSIBLE CONTEXT (same pattern, wrong place/scale/gravity)
-4. Panel 3: Show it CRYSTALLIZED into mundane objects (arranged with uncanny precision)
-5. All three panels must ECHO the same visual DNA, but mutate across impossible contexts
+1. First, identify ONE visual DNA element from the dream — expressed as COLOR/LIGHT/TEXTURE (NOT object names)
+2. Panel 1 (wide): Show it as PURE COLOR FIELD / LIGHT PATTERN (abstract, atmospheric)
+3. Panel 2 (medium): Show it in IMPOSSIBLE SPACE (same color/light DNA, wrong context/gravity)
+4. Panel 3 (close): Show it DISSOLVING / DISPERSING (light particles, color mist, fading edges)
+5. All three panels must ECHO the same visual DNA through COLOR and LIGHT, not objects
+6. Abstraction level must be ≥0.70, concrete_ratio must be ≤0.30 per panel
 
-Respond with VALID JSON:
+Respond with VALID JSON (following the schema above):
 {
+  "abstraction_level": 0.75,
+  "global_palette": "Main color description (e.g., 'Cobalt blue, amber gold, deep shadow')",
   "panels": [
     {
-      "scene": "Contemporary/Surrealist/Modern [art style]: [象征层 description - pure abstraction, extreme close-up]. NO literal subjects, NO faces, NO bodies.",
-      "caption": "梦句 (8-12 characters)"
+      "scene": "Contemporary/Surrealist/Modern [art style]: [象征层] - Describe using COLOR FIELDS + LIGHT QUALITIES + ATMOSPHERIC DEPTH. At least 70% abstract language. NO literal subjects, NO faces, NO bodies.",
+      "caption": "梦句 (8-12 characters)",
+      "compose": "symmetry",
+      "distance": "wide",
+      "concrete_ratio": 0.20
     },
     {
-      "scene": "Contemporary/Surrealist/Modern [art style]: [跳切层 description - same visual DNA in impossible space]. NO literal subjects, NO faces, NO bodies.",
-      "caption": "梦句 (8-12 characters)"
+      "scene": "Contemporary/Surrealist/Modern [art style]: [跳切层] - Same visual DNA (color/light) in IMPOSSIBLE CONTEXT. Describe through SPACE and ATMOSPHERE. NO literal subjects, NO faces, NO bodies.",
+      "caption": "梦句 (8-12 characters)",
+      "compose": "diagonal",
+      "distance": "medium",
+      "concrete_ratio": 0.25
     },
     {
-      "scene": "Contemporary/Surrealist/Modern [art style]: [内化层 description - DNA crystallized as objects]. NO literal subjects, NO faces, NO bodies.",
-      "caption": "梦句 (8-12 characters)"
+      "scene": "Contemporary/Surrealist/Modern [art style]: [内化层] - Visual DNA DISSOLVING into pure light/color mist. Negative space dominates. NO objects, NO people.",
+      "caption": "梦句 (8-12 characters)",
+      "compose": "center",
+      "distance": "close",
+      "concrete_ratio": 0.10
     }
   ]
 }
 
-DO NOT illustrate "what happened in the dream". Visualize "HOW the dream EXISTS in consciousness".`;
+DO NOT illustrate "what happened in the dream". Paint "HOW the dream FEELS" using COLOR, LIGHT, and SPACE.`;
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -345,7 +504,39 @@ DO NOT illustrate "what happened in the dream". Visualize "HOW the dream EXISTS 
     throw new Error('Failed to parse LLM response as JSON');
   }
 
-  return JSON.parse(jsonMatch[0]);
+  const structure: ThreeActStructure = JSON.parse(jsonMatch[0]);
+
+  // Quality validation with auto-retry
+  const qualityCheck = validateAbstractQuality(structure);
+
+  if (!qualityCheck.passed) {
+    console.warn(`⚠️ Quality check failed (attempt ${retryCount + 1}/${MAX_RETRIES + 1}):`, qualityCheck.failures);
+
+    if (retryCount < MAX_RETRIES) {
+      console.log(`🔄 Retrying with feedback to LLM...`);
+
+      // Build retry prompt with specific failures
+      const retryPrompt = `${inputText}
+
+PREVIOUS ATTEMPT FAILED QUALITY CHECK. Issues found:
+${qualityCheck.failures.map((f, i) => `${i + 1}. ${f}`).join('\n')}
+
+Please regenerate with MORE ABSTRACT language, HIGHER abstraction_level (≥0.70), and LOWER concrete_ratio (≤0.25 per panel).
+Focus on COLOR FIELDS, LIGHT QUALITIES, and ATMOSPHERIC DEPTH rather than objects.`;
+
+      // Recursive retry
+      return parseDreamWithLLM(retryPrompt, style, symbols, mood, retryCount + 1);
+    } else {
+      // After max retries, lower abstraction requirements and accept fallback
+      console.warn('⚠️ Max retries reached. Accepting with lowered standards.');
+      console.warn('Quality issues:', qualityCheck.failures);
+      // Still return the structure (fallback mode)
+    }
+  } else {
+    console.log('✅ Quality check passed!');
+  }
+
+  return structure;
 }
 
 /**
