@@ -440,28 +440,57 @@ STYLE GUIDANCE for "${style}":
 ${symbols.length > 0 ? `- If these symbols appear in dream, transmute them into ABSTRACT PATTERNS: ${symbols.join(', ')}` : ''}
 ${mood ? `- Emotional undertone (NOT literal): ${mood}` : ''}
 
-🎨 THINK LIKE AN EXPRESSIONIST MASTER, NOT A SCENE DESIGNER:
+🎨 STYLE-SPECIFIC ARTISTIC PHILOSOPHY:
 
-You are Vincent van Gogh, Edvard Munch, and Francis Bacon combined. You paint RAW EMOTION through VIOLENT COLOR, TWISTED FORMS, and EXPRESSIVE BRUSHWORK.
+**You must adapt your artistic approach based on the style:**
 
-**Your Visual Vocabulary:**
-- Van Gogh: Swirling impasto brushstrokes, starry vortexes, vibrant color clashes (yellow-blue, orange-violet)
-- Munch: Wavy distorted forms, anxiety through color bleeding, psychological tension
-- Bacon: Visceral flesh tones, smeared paint, geometric cages, claustrophobic color fields
+═══════════════════════════════════════════════════════════════════════
+**MINIMAL STYLE → Rothko + Malevich (冷抽象/色域主义)**
+═══════════════════════════════════════════════════════════════════════
+- Mark Rothko: Large color field rectangles, soft-edge transitions, contemplative mood, emotional color blocks
+- Kazimir Malevich: Suprematist geometric forms, extreme negative space, pure abstraction, voids
+- **Color Approach**: Monochromatic or limited palette (cobalt blue, cold white, steel gray, black)
+- **Form Language**: Hard-edge rectangles, thin lines, geometric minimalism, 80%+ negative space
+- **Emotion**: Cold, meditative, existential emptiness, architectural silence
 
-CRITICAL REMINDERS:
-1. First, identify the dream's EMOTIONAL CORE (fear → nauseous greens, longing → bleeding reds, chaos → swirling yellows)
-2. Translate emotion into VISUAL DNA: Choose ONE color violence + ONE form distortion (e.g., "yellow vortex devouring blue" + "melting vertical streaks")
-3. Panel 1 (wide): Express as EXPRESSIVE COLOR STORM (Van Gogh swirls, thick paint texture, NO objects, NO spaces)
-4. Panel 2 (medium): Same visual DNA with DISTORTION INTENSITY (Munch wavy forms, color bleeding, emotional tension, NO architecture)
-5. Panel 3 (close): Final EMOTIONAL RELEASE (Bacon visceral smears, paint drips, raw gestural marks, 70%+ dark void)
-6. All three panels = ONE EMOTIONAL SCREAM with ZERO representational elements
+═══════════════════════════════════════════════════════════════════════
+**FILM STYLE → Gerhard Richter + Anselm Kiefer (抽象摄影/材料诗学)**
+═══════════════════════════════════════════════════════════════════════
+- Gerhard Richter: Blurred photo-paintings, dragged paint, soft-focus abstraction, memory-like haziness
+- Anselm Kiefer: Thick textured surfaces, weathered materials, historical weight, earth tones
+- **Color Approach**: Desaturated earth tones (sepia, burnt umber, ash gray, faded yellow)
+- **Form Language**: Soft blurred edges, layered textures, photo-like grain, material depth
+- **Emotion**: Nostalgic, melancholic, memory fragments, time-worn, faded dreams
 
-**Absolute Rule**: If you can NAME the object/space you're describing (corridor, room, tunnel, building, stairs), you FAILED. Describe only:
-- COLOR VIOLENCE (clashing, bleeding, devouring)
-- BRUSHWORK ENERGY (swirling, slashing, impasto)
-- FORM DISTORTION (melting, twisting, fragmenting)
-- EMOTIONAL TEXTURE (anxiety, ecstasy, dread)
+═══════════════════════════════════════════════════════════════════════
+**CYBER STYLE → Syd Mead + James Turrell (未来主义/光装置)**
+═══════════════════════════════════════════════════════════════════════
+- Syd Mead: Sleek futuristic forms, neon gradients, metallic reflections, sci-fi precision
+- James Turrell: Pure light installations, glowing color voids, perceptual phenomena, luminous spaces
+- **Color Approach**: Neon gradients (cyan-magenta-yellow), holographic iridescence, electric blues
+- **Form Language**: Clean geometric light forms, glowing edges, volumetric light beams, mirror reflections
+- **Emotion**: Cold futurism, digital sublime, synthetic beauty, luminous isolation
+
+═══════════════════════════════════════════════════════════════════════
+**PASTEL STYLE → Claude Monet + Pierre Bonnard (印象派/温暖色彩)**
+═══════════════════════════════════════════════════════════════════════
+- Claude Monet: Soft impressionist brushwork, light-dappled colors, atmospheric haze, water reflections
+- Pierre Bonnard: Intimate warm colors, gentle color harmonies, domestic poetry, soft patterns
+- **Color Approach**: Soft pastels (peach, lavender, mint, rose, butter yellow), warm harmonies
+- **Form Language**: Loose impressionist brushstrokes, dappled light patches, soft organic shapes
+- **Emotion**: Gentle, intimate, warm nostalgia, tender moments, soft comfort
+
+═══════════════════════════════════════════════════════════════════════
+
+CRITICAL REMINDERS FOR ALL STYLES:
+1. First, identify the dream's EMOTIONAL CORE
+2. Translate emotion into VISUAL DNA using YOUR STYLE'S artistic vocabulary
+3. Panel 1 (wide): Establish mood through color and form (style-specific approach)
+4. Panel 2 (medium): Develop tension or transformation (style-specific distortion)
+5. Panel 3 (close): Resolve or dissolve (style-specific dissolution, 70%+ void)
+6. All three panels = ONE EMOTIONAL POEM with ZERO representational elements
+
+**Absolute Rule**: If you can NAME the object/space you're describing (corridor, room, tunnel, building, stairs), you FAILED. Describe only style-appropriate abstract language.
 6. Abstraction level must be ≥0.70, concrete_ratio must be ≤0.30 per panel
 
 Respond with VALID JSON (following the schema above):
@@ -521,13 +550,29 @@ DO NOT illustrate "what happened in the dream". Paint "HOW the dream FEELS" usin
   const data = await response.json();
   const content = data.choices[0].message.content;
 
-  // Parse JSON response
+  // Parse JSON response with better error handling
   const jsonMatch = content.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     throw new Error('Failed to parse LLM response as JSON');
   }
 
-  const structure: ThreeActStructure = JSON.parse(jsonMatch[0]);
+  let structure: ThreeActStructure;
+  try {
+    // Clean JSON string: remove trailing commas and fix common issues
+    let jsonString = jsonMatch[0];
+
+    // Remove trailing commas before } or ]
+    jsonString = jsonString.replace(/,(\s*[}\]])/g, '$1');
+
+    // Fix incomplete numbers (like "0.")
+    jsonString = jsonString.replace(/:\s*(\d+\.)\s*([,}\]])/g, ': $10$2');
+
+    structure = JSON.parse(jsonString);
+  } catch (parseError: any) {
+    console.error('JSON parse error:', parseError.message);
+    console.error('Raw JSON:', jsonMatch[0].substring(0, 500));
+    throw new Error(`Failed to parse LLM JSON: ${parseError.message}`);
+  }
 
   // Quality validation with auto-retry
   const qualityCheck = validateAbstractQuality(structure);
@@ -576,12 +621,36 @@ async function generateImage(
   const compositionKey = `panel${panelIndex + 1}` as 'panel1' | 'panel2' | 'panel3';
   const compositionTemplate = styleConfig.compositionGuide[compositionKey];
 
-  // FORCE expressionist art style by adding explicit artist style references
-  // These artists are known for emotional violence and dramatic brushwork with ZERO literal subjects
-  const expressionistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh and Edvard Munch, thick impasto brushwork, violent color clashes, swirling paint texture, psychological distortion, Francis Bacon visceral intensity, dramatic brushstrokes, post-impressionist color violence, emotional expressionism,';
+  // FORCE style-specific artist references based on the dream card style
+  let artistPrefix: string;
+
+  switch (style) {
+    case 'minimal':
+      // Rothko + Malevich: Cold abstraction, color fields, geometric minimalism
+      artistPrefix = 'abstract masterpiece in the style of Mark Rothko and Kazimir Malevich, large color field rectangles, suprematist geometric forms, hard-edge abstraction, extreme negative space, contemplative color blocks, minimalist composition, monochromatic palette,';
+      break;
+
+    case 'film':
+      // Gerhard Richter + Anselm Kiefer: Blurred photo-paintings, textured materials
+      artistPrefix = 'abstract photo-painting in the style of Gerhard Richter and Anselm Kiefer, soft-focus blur, dragged paint texture, weathered surfaces, photographic grain, memory-like haziness, layered materials, earth tone palette, nostalgic abstraction,';
+      break;
+
+    case 'cyber':
+      // Syd Mead + James Turrell: Futuristic light installations, neon precision
+      artistPrefix = 'futuristic light installation in the style of James Turrell and Syd Mead, pure glowing color voids, volumetric light beams, neon gradients, holographic iridescence, sleek geometric forms, luminous abstract spaces, cyan-magenta palette, digital sublime,';
+      break;
+
+    case 'pastel':
+      // Claude Monet + Pierre Bonnard: Impressionist softness, warm color harmonies
+      artistPrefix = 'impressionist masterpiece in the style of Claude Monet and Pierre Bonnard, soft dappled brushwork, atmospheric haze, gentle color harmonies, light-filled abstraction, intimate warm tones, loose brushstrokes, pastel palette, tender impressionism,';
+      break;
+
+    default:
+      artistPrefix = 'abstract expressionist masterpiece, non-representational art, pure color and form,';
+  }
 
   // Add composition template BEFORE the LLM scene description for stronger control
-  const fullPrompt = `${expressionistPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
+  const fullPrompt = `${artistPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
 
   // AGGRESSIVE negative prompt to completely block ALL representational elements
   const representationalNegative = 'realistic, photorealistic, representational art, figurative art, recognizable objects, identifiable subjects, literal interpretation, concrete forms, physical objects, real-world elements';

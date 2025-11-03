@@ -53,8 +53,8 @@ export function ShareButtons({ isPrivate, onPrivacyToggle, panels, projectId }: 
       const images = await Promise.all(panels.map(p => loadImage(p.imageUrl)));
 
       if (ratio === "9:16") {
-        // MANGA/COMIC DYNAMIC LAYOUT for 9:16
-        // Inspired by manga panels: angled, overlapping, with depth
+        // MULTIPLE RANDOM MANGA/COMIC LAYOUTS for 9:16
+        // Choose random layout each time for variety
         canvas.width = 1080;
         canvas.height = 1920;
 
@@ -75,76 +75,190 @@ export function ShareButtons({ isPrivate, onPrivacyToggle, panels, projectId }: 
         }
         ctx.globalAlpha = 1;
 
-        // PANEL 1: Top-left, slightly rotated (dynamic energy)
-        ctx.save();
-        ctx.translate(100, 100);
-        ctx.rotate(-2 * Math.PI / 180); // -2 degrees tilt
+        // Choose random layout (5 different manga-style layouts)
+        const layoutType = Math.floor(Math.random() * 5);
 
-        // Shadow for depth
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-        ctx.shadowBlur = 30;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
+        if (layoutType === 0) {
+          // LAYOUT 1: Diagonal cascade (classic manga reading flow)
+          const panels = [
+            { x: 80, y: 100, w: 520, h: 680, rot: -2.5 },
+            { x: 520, y: 480, w: 500, h: 650, rot: 1.8 },
+            { x: 120, y: 1100, w: 800, h: 720, rot: -0.8 }
+          ];
+          panels.forEach((p, i) => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.shadowColor = 'rgba(0,0,0,0.7)';
+            ctx.shadowBlur = 35;
+            ctx.shadowOffsetX = i * 4 - 4;
+            ctx.shadowOffsetY = 12 + i * 3;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-8, -8, p.w + 16, p.h + 16);
+            ctx.shadowColor = 'transparent';
+            // Crop image to fit panel (object-fit: cover behavior)
+            const imgAspect = images[i].width / images[i].height;
+            const panelAspect = p.w / p.h;
+            let sw, sh, sx, sy;
+            if (imgAspect > panelAspect) {
+              sh = images[i].height;
+              sw = sh * panelAspect;
+              sx = (images[i].width - sw) / 2;
+              sy = 0;
+            } else {
+              sw = images[i].width;
+              sh = sw / panelAspect;
+              sx = 0;
+              sy = (images[i].height - sh) / 2;
+            }
+            ctx.drawImage(images[i], sx, sy, sw, sh, 0, 0, p.w, p.h);
+            ctx.restore();
+          });
 
-        // White border (manga style)
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(-8, -8, 500 + 16, 650 + 16);
+        } else if (layoutType === 1) {
+          // LAYOUT 2: Stacked with overlap (dramatic depth)
+          const panels = [
+            { x: 140, y: 80, w: 800, h: 520, rot: -1.2 },
+            { x: 200, y: 620, w: 680, h: 600, rot: 2.3 },
+            { x: 100, y: 1260, w: 880, h: 600, rot: -0.5 }
+          ];
+          panels.forEach((p, i) => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.shadowColor = 'rgba(0,0,0,0.6)';
+            ctx.shadowBlur = 30 + i * 5;
+            ctx.shadowOffsetX = -5 + i * 5;
+            ctx.shadowOffsetY = 10 + i * 4;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-8, -8, p.w + 16, p.h + 16);
+            ctx.shadowColor = 'transparent';
+            const imgAspect = images[i].width / images[i].height;
+            const panelAspect = p.w / p.h;
+            let sw, sh, sx, sy;
+            if (imgAspect > panelAspect) {
+              sh = images[i].height;
+              sw = sh * panelAspect;
+              sx = (images[i].width - sw) / 2;
+              sy = 0;
+            } else {
+              sw = images[i].width;
+              sh = sw / panelAspect;
+              sx = 0;
+              sy = (images[i].height - sh) / 2;
+            }
+            ctx.drawImage(images[i], sx, sy, sw, sh, 0, 0, p.w, p.h);
+            ctx.restore();
+          });
 
-        // Image
-        ctx.shadowColor = 'transparent';
-        ctx.drawImage(images[0], 0, 0, 500, 650);
-        ctx.restore();
+        } else if (layoutType === 2) {
+          // LAYOUT 3: L-shape composition (dynamic asymmetry)
+          const panels = [
+            { x: 100, y: 100, w: 460, h: 820, rot: -2.0 },
+            { x: 600, y: 80, w: 420, h: 560, rot: 1.5 },
+            { x: 520, y: 680, w: 500, h: 1120, rot: 0.8 }
+          ];
+          panels.forEach((p, i) => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.shadowColor = 'rgba(0,0,0,0.65)';
+            ctx.shadowBlur = 32;
+            ctx.shadowOffsetX = i === 2 ? -8 : 8;
+            ctx.shadowOffsetY = 12;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-8, -8, p.w + 16, p.h + 16);
+            ctx.shadowColor = 'transparent';
+            const imgAspect = images[i].width / images[i].height;
+            const panelAspect = p.w / p.h;
+            let sw, sh, sx, sy;
+            if (imgAspect > panelAspect) {
+              sh = images[i].height;
+              sw = sh * panelAspect;
+              sx = (images[i].width - sw) / 2;
+              sy = 0;
+            } else {
+              sw = images[i].width;
+              sh = sw / panelAspect;
+              sx = 0;
+              sy = (images[i].height - sh) / 2;
+            }
+            ctx.drawImage(images[i], sx, sy, sw, sh, 0, 0, p.w, p.h);
+            ctx.restore();
+          });
 
-        // PANEL 2: Right side, rotated opposite direction (tension)
-        ctx.save();
-        ctx.translate(580, 400);
-        ctx.rotate(1.5 * Math.PI / 180); // +1.5 degrees tilt
+        } else if (layoutType === 3) {
+          // LAYOUT 4: Zigzag rhythm (energetic flow)
+          const panels = [
+            { x: 580, y: 100, w: 460, h: 600, rot: 2.5 },
+            { x: 80, y: 520, w: 500, h: 660, rot: -2.0 },
+            { x: 140, y: 1200, w: 800, h: 660, rot: 0.5 }
+          ];
+          panels.forEach((p, i) => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.shadowColor = 'rgba(0,0,0,0.68)';
+            ctx.shadowBlur = 34;
+            ctx.shadowOffsetX = i % 2 === 0 ? 10 : -10;
+            ctx.shadowOffsetY = 15;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-8, -8, p.w + 16, p.h + 16);
+            ctx.shadowColor = 'transparent';
+            const imgAspect = images[i].width / images[i].height;
+            const panelAspect = p.w / p.h;
+            let sw, sh, sx, sy;
+            if (imgAspect > panelAspect) {
+              sh = images[i].height;
+              sw = sh * panelAspect;
+              sx = (images[i].width - sw) / 2;
+              sy = 0;
+            } else {
+              sw = images[i].width;
+              sh = sw / panelAspect;
+              sx = 0;
+              sy = (images[i].height - sh) / 2;
+            }
+            ctx.drawImage(images[i], sx, sy, sw, sh, 0, 0, p.w, p.h);
+            ctx.restore();
+          });
 
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-        ctx.shadowBlur = 35;
-        ctx.shadowOffsetX = -8;
-        ctx.shadowOffsetY = 12;
-
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(-8, -8, 480 + 16, 620 + 16);
-
-        ctx.shadowColor = 'transparent';
-        ctx.drawImage(images[1], 0, 0, 480, 620);
-        ctx.restore();
-
-        // PANEL 3: Bottom center, larger (climax emphasis)
-        ctx.save();
-        ctx.translate(180, 1180);
-        ctx.rotate(-1 * Math.PI / 180); // -1 degree tilt
-
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-        ctx.shadowBlur = 40;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 15;
-
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(-10, -10, 720 + 20, 680 + 20);
-
-        ctx.shadowColor = 'transparent';
-        ctx.drawImage(images[2], 0, 0, 720, 680);
-        ctx.restore();
-
-        // Optional: Add comic-style speed lines for drama (subtle)
-        ctx.globalAlpha = 0.08;
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 15; i++) {
-          const angle = (i / 15) * Math.PI * 2;
-          const x1 = 540 + Math.cos(angle) * 300;
-          const y1 = 960 + Math.sin(angle) * 500;
-          const x2 = 540 + Math.cos(angle) * 600;
-          const y2 = 960 + Math.sin(angle) * 1000;
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.stroke();
+        } else {
+          // LAYOUT 5: Center focus (spotlight on middle panel)
+          const panels = [
+            { x: 80, y: 100, w: 440, h: 580, rot: -3.0 },
+            { x: 300, y: 660, w: 660, h: 860, rot: 0.2 },
+            { x: 560, y: 120, w: 440, h: 560, rot: 2.5 }
+          ];
+          panels.forEach((p, i) => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.shadowColor = i === 1 ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.6)';
+            ctx.shadowBlur = i === 1 ? 45 : 28;
+            ctx.shadowOffsetX = i === 1 ? 0 : (i === 0 ? 8 : -8);
+            ctx.shadowOffsetY = 12;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-10, -10, p.w + 20, p.h + 20);
+            ctx.shadowColor = 'transparent';
+            const imgAspect = images[i].width / images[i].height;
+            const panelAspect = p.w / p.h;
+            let sw, sh, sx, sy;
+            if (imgAspect > panelAspect) {
+              sh = images[i].height;
+              sw = sh * panelAspect;
+              sx = (images[i].width - sw) / 2;
+              sy = 0;
+            } else {
+              sw = images[i].width;
+              sh = sw / panelAspect;
+              sx = 0;
+              sy = (images[i].height - sh) / 2;
+            }
+            ctx.drawImage(images[i], sx, sy, sw, sh, 0, 0, p.w, p.h);
+            ctx.restore();
+          });
         }
-        ctx.globalAlpha = 1;
 
       } else {
         // 1:1 MANGA LAYOUT (Instagram post)
