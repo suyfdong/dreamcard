@@ -440,57 +440,61 @@ STYLE GUIDANCE for "${style}":
 ${symbols.length > 0 ? `- If these symbols appear in dream, transmute them into ABSTRACT PATTERNS: ${symbols.join(', ')}` : ''}
 ${mood ? `- Emotional undertone (NOT literal): ${mood}` : ''}
 
-🎨 STYLE-SPECIFIC ARTISTIC PHILOSOPHY:
+🎨 STYLE-SPECIFIC ARTISTIC PHILOSOPHY (梵高系后印象派):
 
-**You must adapt your artistic approach based on the style:**
-
-═══════════════════════════════════════════════════════════════════════
-**MINIMAL STYLE → Rothko + Malevich (冷抽象/色域主义)**
-═══════════════════════════════════════════════════════════════════════
-- Mark Rothko: Large color field rectangles, soft-edge transitions, contemplative mood, emotional color blocks
-- Kazimir Malevich: Suprematist geometric forms, extreme negative space, pure abstraction, voids
-- **Color Approach**: Monochromatic or limited palette (cobalt blue, cold white, steel gray, black)
-- **Form Language**: Hard-edge rectangles, thin lines, geometric minimalism, 80%+ negative space
-- **Emotion**: Cold, meditative, existential emptiness, architectural silence
+**All styles use Van Gogh-inspired expressionism, but emphasize different aspects:**
 
 ═══════════════════════════════════════════════════════════════════════
-**FILM STYLE → Gerhard Richter + Anselm Kiefer (抽象摄影/材料诗学)**
+**MINIMAL STYLE → Van Gogh Early Period + Cézanne (极简表现主义)**
 ═══════════════════════════════════════════════════════════════════════
-- Gerhard Richter: Blurred photo-paintings, dragged paint, soft-focus abstraction, memory-like haziness
-- Anselm Kiefer: Thick textured surfaces, weathered materials, historical weight, earth tones
-- **Color Approach**: Desaturated earth tones (sepia, burnt umber, ash gray, faded yellow)
-- **Form Language**: Soft blurred edges, layered textures, photo-like grain, material depth
-- **Emotion**: Nostalgic, melancholic, memory fragments, time-worn, faded dreams
+- Van Gogh Early Dutch Period: Dark earth tones, heavy impasto, somber mood, peasant honesty
+- Paul Cézanne: Geometric structure, simplified forms, architectural brushwork, solid color planes
+- **Color Approach**: Limited palette (dark blue, ochre yellow, burnt sienna, deep shadow blacks)
+- **Brushwork**: Thick straight strokes, geometric impasto blocks, architectural paint application
+- **Emotion**: Somber, grounded, melancholic weight, existential solitude
+- **Key Works**: Van Gogh's《Potato Eaters》dark mood + Cézanne's《Mont Sainte-Victoire》geometric solidity
 
 ═══════════════════════════════════════════════════════════════════════
-**CYBER STYLE → Syd Mead + James Turrell (未来主义/光装置)**
+**FILM STYLE → Van Gogh Arles Period + Gauguin (明亮表现主义)**
 ═══════════════════════════════════════════════════════════════════════
-- Syd Mead: Sleek futuristic forms, neon gradients, metallic reflections, sci-fi precision
-- James Turrell: Pure light installations, glowing color voids, perceptual phenomena, luminous spaces
-- **Color Approach**: Neon gradients (cyan-magenta-yellow), holographic iridescence, electric blues
-- **Form Language**: Clean geometric light forms, glowing edges, volumetric light beams, mirror reflections
-- **Emotion**: Cold futurism, digital sublime, synthetic beauty, luminous isolation
+- Van Gogh Arles Period: Brilliant yellows, thick impasto sunflowers, intense light, joyful energy
+- Paul Gauguin: Bold flat color areas, symbolic simplification, warm tropical palette
+- **Color Approach**: Vibrant yellows, oranges, greens, ultramarine blue, high contrast
+- **Brushwork**: Thick impasto swirls, sunflower-style petal strokes, energetic paint application
+- **Emotion**: Ecstatic, luminous, overwhelming warmth, Mediterranean sun intensity
+- **Key Works**: Van Gogh's《Sunflowers》《The Yellow House》golden light + Gauguin's warm flat colors
 
 ═══════════════════════════════════════════════════════════════════════
-**PASTEL STYLE → Claude Monet + Pierre Bonnard (印象派/温暖色彩)**
+**CYBER STYLE → Van Gogh Starry Night Period + Munch (旋涡表现主义)**
 ═══════════════════════════════════════════════════════════════════════
-- Claude Monet: Soft impressionist brushwork, light-dappled colors, atmospheric haze, water reflections
-- Pierre Bonnard: Intimate warm colors, gentle color harmonies, domestic poetry, soft patterns
-- **Color Approach**: Soft pastels (peach, lavender, mint, rose, butter yellow), warm harmonies
-- **Form Language**: Loose impressionist brushstrokes, dappled light patches, soft organic shapes
-- **Emotion**: Gentle, intimate, warm nostalgia, tender moments, soft comfort
+- Van Gogh Starry Night: Swirling vortexes, turbulent sky, cosmic energy, electric blue-yellow contrast
+- Edvard Munch: Wavy distortions, psychological anxiety, screaming colors, emotional turbulence
+- **Color Approach**: Electric blue, vibrant yellow stars, deep purple-black voids, neon-like intensity
+- **Brushwork**: Swirling spirals, turbulent vortexes, cosmic energy patterns, wavy distortions
+- **Emotion**: Cosmic anxiety, turbulent energy, psychological vortex, electric tension
+- **Key Works**: Van Gogh's《Starry Night》swirling sky + Munch's《The Scream》wavy distortion
+
+═══════════════════════════════════════════════════════════════════════
+**PASTEL STYLE → Van Gogh Blossoms Period + Monet (柔和表现主义)**
+═══════════════════════════════════════════════════════════════════════
+- Van Gogh Blossoms: Soft pink-white almond blossoms, gentle impasto, tender brushwork, hope and renewal
+- Claude Monet: Impressionist softness, dappled light, atmospheric haze, gentle color transitions
+- **Color Approach**: Soft pastels (pink blossoms, mint green, lavender, peach, sky blue)
+- **Brushwork**: Gentle short strokes, soft impasto dabs, impressionist light touches, tender application
+- **Emotion**: Tender, hopeful, gentle beauty, spring renewal, soft comfort
+- **Key Works**: Van Gogh's《Almond Blossoms》soft pink-white + Monet's《Water Lilies》gentle impressionism
 
 ═══════════════════════════════════════════════════════════════════════
 
 CRITICAL REMINDERS FOR ALL STYLES:
 1. First, identify the dream's EMOTIONAL CORE
-2. Translate emotion into VISUAL DNA using YOUR STYLE'S artistic vocabulary
-3. Panel 1 (wide): Establish mood through color and form (style-specific approach)
-4. Panel 2 (medium): Develop tension or transformation (style-specific distortion)
-5. Panel 3 (close): Resolve or dissolve (style-specific dissolution, 70%+ void)
-6. All three panels = ONE EMOTIONAL POEM with ZERO representational elements
+2. Choose the Van Gogh period that matches the emotion (early dark / Arles bright / Starry vortex / Blossoms tender)
+3. Panel 1 (wide): Establish mood with THICK IMPASTO BRUSHWORK
+4. Panel 2 (medium): Develop with CHARACTERISTIC BRUSHSTROKE PATTERN (geometric/swirl/wave/dab)
+5. Panel 3 (close): Dissolve with PAINT TEXTURE visible, 70%+ void
+6. All three panels = ONE VAN GOGH-INSPIRED EMOTIONAL JOURNEY with ZERO representational elements
 
-**Absolute Rule**: If you can NAME the object/space you're describing (corridor, room, tunnel, building, stairs), you FAILED. Describe only style-appropriate abstract language.
+**Absolute Rule**: Use Van Gogh's BRUSHWORK LANGUAGE (thick impasto, visible strokes, paint texture), NOT realistic scenes. If you describe a corridor/room/building, you FAILED.
 6. Abstraction level must be ≥0.70, concrete_ratio must be ≤0.30 per panel
 
 Respond with VALID JSON (following the schema above):
@@ -621,32 +625,32 @@ async function generateImage(
   const compositionKey = `panel${panelIndex + 1}` as 'panel1' | 'panel2' | 'panel3';
   const compositionTemplate = styleConfig.compositionGuide[compositionKey];
 
-  // FORCE style-specific artist references based on the dream card style
+  // FORCE Van Gogh-inspired style-specific artist references
   let artistPrefix: string;
 
   switch (style) {
     case 'minimal':
-      // Rothko + Malevich: Cold abstraction, color fields, geometric minimalism
-      artistPrefix = 'abstract masterpiece in the style of Mark Rothko and Kazimir Malevich, large color field rectangles, suprematist geometric forms, hard-edge abstraction, extreme negative space, contemplative color blocks, minimalist composition, monochromatic palette,';
+      // Van Gogh Early Period + Cézanne: Dark impasto, geometric structure
+      artistPrefix = 'expressionist masterpiece in the style of early Vincent van Gogh and Paul Cézanne, thick impasto brushwork, dark earth tones, heavy paint texture, geometric brushstrokes, architectural paint blocks, somber mood, Dutch period darkness, Cézanne geometric structure, visible palette knife marks, ochre and burnt sienna, melancholic expressionism,';
       break;
 
     case 'film':
-      // Gerhard Richter + Anselm Kiefer: Blurred photo-paintings, textured materials
-      artistPrefix = 'abstract photo-painting in the style of Gerhard Richter and Anselm Kiefer, soft-focus blur, dragged paint texture, weathered surfaces, photographic grain, memory-like haziness, layered materials, earth tone palette, nostalgic abstraction,';
+      // Van Gogh Arles Period + Gauguin: Brilliant yellows, thick sunflower impasto
+      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh Arles period and Paul Gauguin, brilliant yellow impasto, thick sunflower brushstrokes, vibrant orange and ultramarine blue, intense Mediterranean light, energetic paint application, bold flat color areas, warm golden palette, ecstatic luminosity, thick textured paint,';
       break;
 
     case 'cyber':
-      // Syd Mead + James Turrell: Futuristic light installations, neon precision
-      artistPrefix = 'futuristic light installation in the style of James Turrell and Syd Mead, pure glowing color voids, volumetric light beams, neon gradients, holographic iridescence, sleek geometric forms, luminous abstract spaces, cyan-magenta palette, digital sublime,';
+      // Van Gogh Starry Night + Munch: Swirling vortexes, turbulent energy
+      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh Starry Night and Edvard Munch, swirling vortex brushstrokes, turbulent impasto spirals, electric blue and vibrant yellow contrast, cosmic energy patterns, wavy psychological distortions, thick swirling paint texture, deep purple-black voids, screaming color intensity, anxiety-inducing spirals,';
       break;
 
     case 'pastel':
-      // Claude Monet + Pierre Bonnard: Impressionist softness, warm color harmonies
-      artistPrefix = 'impressionist masterpiece in the style of Claude Monet and Pierre Bonnard, soft dappled brushwork, atmospheric haze, gentle color harmonies, light-filled abstraction, intimate warm tones, loose brushstrokes, pastel palette, tender impressionism,';
+      // Van Gogh Blossoms + Monet: Soft impasto, gentle impressionist touches
+      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh Almond Blossoms and Claude Monet, soft pink-white impasto, gentle brushwork, tender paint dabs, impressionist light touches, pastel color harmony, soft mint green and lavender, delicate paint texture, hopeful spring mood, dappled light softness, renewal and tenderness,';
       break;
 
     default:
-      artistPrefix = 'abstract expressionist masterpiece, non-representational art, pure color and form,';
+      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh, thick impasto brushwork, emotional color violence, visible paint texture,';
   }
 
   // Add composition template BEFORE the LLM scene description for stronger control
