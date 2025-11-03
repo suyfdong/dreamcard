@@ -46,21 +46,23 @@ export function ProgressBar({ stages, currentStage, progress }: ProgressBarProps
   }, [progress, displayProgress]);
 
   // Add subtle "fake" progress when stuck at same value for too long
+  // This keeps the bar moving even when backend is processing, giving users confidence
   useEffect(() => {
     if (displayProgress >= 95) return; // Don't fake progress near completion
 
     const fakeProgressTimer = setInterval(() => {
       setDisplayProgress((prev) => {
-        // Add tiny increments (0.1-0.3%) to show "activity"
-        const fakeIncrement = Math.random() * 0.3 + 0.1;
+        // Add tiny increments (0.2-0.5%) to show constant "activity"
+        const fakeIncrement = Math.random() * 0.3 + 0.2;
         const newProgress = prev + fakeIncrement;
-        // Don't exceed the real progress value
-        return Math.min(newProgress, progress, 95);
+        // Allow fake progress to go slightly ahead of real progress (max 95%)
+        // This creates the illusion of constant movement
+        return Math.min(newProgress, 95);
       });
-    }, 800); // Every 800ms add tiny bit
+    }, 500); // Every 500ms add tiny bit (faster for better perception)
 
     return () => clearInterval(fakeProgressTimer);
-  }, [displayProgress, progress]);
+  }, [displayProgress]);
 
   return (
     <div className="space-y-6">
@@ -77,7 +79,7 @@ export function ProgressBar({ stages, currentStage, progress }: ProgressBarProps
                   isCompleted
                     ? "border-primary bg-primary text-primary-foreground"
                     : isCurrent
-                    ? "border-primary bg-primary/20 text-primary animate-pulse"
+                    ? "border-primary bg-primary/20 text-primary"
                     : "border-muted-foreground/30 text-muted-foreground"
                 )}
               >
@@ -109,7 +111,7 @@ export function ProgressBar({ stages, currentStage, progress }: ProgressBarProps
 
       <div className="text-center space-y-1">
         <p className="text-2xl font-bold bg-gradient-to-r from-[#6E67FF] to-[#00D4FF] bg-clip-text text-transparent">
-          {displayProgress.toFixed(1)}%
+          {Math.floor(displayProgress)}%
         </p>
         <p className="text-sm text-muted-foreground">
           {displayProgress < 10 ? 'Interpreting your dream...' :
