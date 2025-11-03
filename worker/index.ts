@@ -24,18 +24,22 @@ interface ThreeActStructure {
 
 /**
  * Quality validation function - checks if LLM output meets abstract art standards
+ * Enhanced with emotional rhythm detection
  */
 interface QualityCheckResult {
   passed: boolean;
   failures: string[];
+  warnings: string[];
 }
 
-function validateAbstractQuality(structure: ThreeActStructure): QualityCheckResult {
+function validateAbstractQuality(structure: ThreeActStructure, style: string): QualityCheckResult {
   const failures: string[] = [];
+  const warnings: string[] = [];
+  const styleConfig = STYLES[style as keyof typeof STYLES];
 
-  // Rule 1: Abstraction level >= 0.50 (lowered for better success rate)
-  if (structure.abstraction_level < 0.50) {
-    failures.push(`Abstraction level too low: ${structure.abstraction_level} (need ≥0.50)`);
+  // Rule 1: Abstraction level >= 0.70 (raised for better art quality)
+  if (structure.abstraction_level < 0.70) {
+    failures.push(`Abstraction level too low: ${structure.abstraction_level} (need ≥0.70 for art quality)`);
   }
 
   // Rule 2: All 3 panels present with required fields
@@ -43,27 +47,40 @@ function validateAbstractQuality(structure: ThreeActStructure): QualityCheckResu
     failures.push(`Must have exactly 3 panels, got ${structure.panels.length}`);
   }
 
-  // Rule 3: Check each panel's concrete ratio
+  // Rule 3: Check each panel's concrete ratio (stricter)
   structure.panels.forEach((panel, i) => {
     if (panel.concrete_ratio && panel.concrete_ratio > 0.30) {
-      failures.push(`Panel ${i + 1} has too many concrete objects: ${(panel.concrete_ratio * 100).toFixed(0)}% (need ≤30%)`);
+      failures.push(`Panel ${i + 1} concrete ratio too high: ${(panel.concrete_ratio * 100).toFixed(0)}% (need ≤30%)`);
+    }
+    if (panel.concrete_ratio && panel.concrete_ratio > 0.15) {
+      warnings.push(`Panel ${i + 1} concrete ratio suboptimal: ${(panel.concrete_ratio * 100).toFixed(0)}% (target ≤15% for best art)`);
     }
   });
 
-  // Rule 4: Three-act structure complete (distance progression)
+  // Rule 4: Energy progression (Sensation → Distortion → Echo)
   const distances = structure.panels.map(p => p.distance);
   const expectedDistances = ['wide', 'medium', 'close'];
   const hasCorrectProgression = distances.every((d, i) => d === expectedDistances[i]);
   if (!hasCorrectProgression) {
-    failures.push(`Panel distances must follow wide→medium→close progression, got: ${distances.join('→')}`);
+    failures.push(`Energy progression must be wide→medium→close (Sensation→Distortion→Echo), got: ${distances.join('→')}`);
   }
 
-  // Rule 5: Global palette exists
-  if (!structure.global_palette || structure.global_palette.trim().length < 10) {
-    failures.push('Global palette description missing or too short');
+  // Rule 5: Global palette matches style's color system
+  if (!structure.global_palette || structure.global_palette.trim().length < 15) {
+    failures.push('Global palette description missing or too short (need detailed color description)');
   }
 
-  // Rule 6: All panels have composition hooks
+  // Rule 6: Artist reference check (should mention style's artists)
+  const artistNames = styleConfig.artistReference.toLowerCase();
+  const hasArtistRef = structure.panels.some(p =>
+    p.scene.toLowerCase().includes(artistNames.split('+')[0].trim().split(' ')[0]) ||
+    p.scene.toLowerCase().includes(artistNames.split('+')[1]?.trim().split(' ')[0] || '')
+  );
+  if (!hasArtistRef) {
+    warnings.push(`Panels should reference ${styleConfig.artistReference} for style consistency`);
+  }
+
+  // Rule 7: All panels have required fields
   structure.panels.forEach((panel, i) => {
     if (!panel.compose) {
       failures.push(`Panel ${i + 1} missing 'compose' field`);
@@ -71,17 +88,49 @@ function validateAbstractQuality(structure: ThreeActStructure): QualityCheckResu
     if (!panel.distance) {
       failures.push(`Panel ${i + 1} missing 'distance' field`);
     }
-    if (!panel.scene || panel.scene.length < 50) {
-      failures.push(`Panel ${i + 1} scene description too short (need detailed abstract language)`);
+    if (!panel.scene || panel.scene.length < 80) {
+      failures.push(`Panel ${i + 1} scene too short (need 80+ chars for detailed abstract description)`);
     }
-    if (!panel.caption || panel.caption.length < 4) {
-      failures.push(`Panel ${i + 1} caption missing or too short`);
+    if (!panel.caption || panel.caption.length < 4 || panel.caption.length > 15) {
+      failures.push(`Panel ${i + 1} caption must be 4-15 characters (dream sentence format)`);
+    }
+
+    // Check for forbidden literal subjects
+    const forbiddenWords = ['room', 'corridor', 'hallway', 'building', 'person', 'face', 'body', 'man', 'woman', 'tiger', 'train', 'staircase'];
+    const lowerScene = panel.scene.toLowerCase();
+    const foundForbidden = forbiddenWords.filter(word => lowerScene.includes(word));
+    if (foundForbidden.length > 0) {
+      failures.push(`Panel ${i + 1} contains forbidden literal subjects: ${foundForbidden.join(', ')} (must use abstract language)`);
     }
   });
+
+  // Rule 8: Emotional rhythm keywords check
+  const panel1Lower = structure.panels[0]?.scene.toLowerCase() || '';
+  const panel2Lower = structure.panels[1]?.scene.toLowerCase() || '';
+  const panel3Lower = structure.panels[2]?.scene.toLowerCase() || '';
+
+  // Panel 1 should have "calm/static/entry" energy
+  const hasPanel1Energy = /calm|quiet|establish|entry|distant|vast|negative space|70%|75%/.test(panel1Lower);
+  if (!hasPanel1Energy) {
+    warnings.push('Panel 1 should establish CALM/STATIC energy (Sensation phase)');
+  }
+
+  // Panel 2 should have "chaos/conflict" energy
+  const hasPanel2Energy = /chaos|conflict|impossible|twisted|clash|turbulence|tension|distortion/.test(panel2Lower);
+  if (!hasPanel2Energy) {
+    warnings.push('Panel 2 should show CHAOS/CONFLICT energy (Distortion phase)');
+  }
+
+  // Panel 3 should have "dissolution/void" energy
+  const hasPanel3Energy = /dissolv|disperse|fade|void|80%|85%|negative space|particle|mist|release/.test(panel3Lower);
+  if (!hasPanel3Energy) {
+    warnings.push('Panel 3 should express DISSOLUTION/VOID energy (Echo phase)');
+  }
 
   return {
     passed: failures.length === 0,
     failures,
+    warnings,
   };
 }
 
@@ -98,7 +147,27 @@ async function parseDreamWithLLM(
 ): Promise<ThreeActStructure> {
   const MAX_RETRIES = 2;
 
-  const systemPrompt = `You are a DREAM LOGIC ARCHITECT. DO NOT illustrate "what I dreamed" — visualize "HOW dreams exist in the mind".
+  const styleConfig = STYLES[style as keyof typeof STYLES];
+
+  const systemPrompt = `You are a DREAM CARD ARTIST creating "artifacts left by dreams" — NOT illustrations of "what happened", but SYMBOLIC ARTWORKS expressing "HOW the dream FELT".
+
+DreamCard's goal is NOT to generate "dream images", but to create "ARTWORKS left by dreams" — symbolic visual narratives of subconscious energy as three-panel abstract art.
+
+═══════════════════════════════════════════════════════════════════════
+🧠 PROJECT VISION: Dreams as Art, Not Illustration
+═══════════════════════════════════════════════════════════════════════
+
+Each dream card must have:
+1. **MYSTERY**: As if the dream itself is painting
+2. **ARTISTIC MASTERY**: Master-level brushwork, thick texture, color violence
+3. **EMOTIONAL LAYERS**: Calm → Twisted → Dissolved (静→动→空)
+4. **SHAREABILITY**: Visually striking, emotionally resonant, people want to share
+
+YOU ARE CREATING: **${styleConfig.name}** (${styleConfig.dreamType} Dream)
+**Psychological Core**: ${styleConfig.psychologicalCore}
+**User Feeling**: "${styleConfig.userFeeling}"
+**Artist Philosophy**: ${styleConfig.artistPhilosophy}
+**Color Palette**: ${styleConfig.colorPalette}
 
 ═══════════════════════════════════════════════════════════════════════
 🎨 VISUAL LANGUAGE PRIORITY: Paint with COLOR, LIGHT, TEXTURE, SPACE
@@ -173,153 +242,179 @@ async function parseDreamWithLLM(
 🧠 CORE PHILOSOPHY: Dreams don't follow story logic. They follow ASSOCIATION, SYMBOL MUTATION, and SPATIAL IMPOSSIBILITY.
 
 ═══════════════════════════════════════════════════════════════════════
-🌀 THREE-LAYER DREAM STRUCTURE: 象征 (SYMBOL) → 空间 (SPACE) → 情绪 (EMOTION)
+🎬 THREE-PANEL ENERGY PROGRESSION: Sensation → Distortion → Echo
 ═══════════════════════════════════════════════════════════════════════
 
-**Panel 1 - 象征层 (SYMBOLIC LAYER - Opening/起):**
-- PURPOSE: Use METAPHOR or PARTIAL VIEW to hint at the dream's theme
-- ROLE: Emotional entry point - "What does this dream FEEL like?"
-- VISUAL APPROACH: Abstract / Symbolic / Partial perspective
-- CAMERA LANGUAGE: **WIDE SHOT** (establish space) or abstract pattern
-- MOOD: CALM, COLD - the beginning
-- TECHNIQUE: Do NOT translate literally. "Tiger chasing" ≠ tiger image, = feeling of being chased (shadows, footprints, torn light)
-- EXAMPLE: "Exam anxiety" → Endless floating desks in dark void, blank glowing papers, flickering light
-- ❌ DO NOT: Show the literal subject (no tiger, no person, no exam room)
-- ✅ DO show: The FEELING through symbols (empty desks = pressure, shadows = threat)
+This is NOT a story (A→B→C). This is an EMOTIONAL JOURNEY through three energy states.
 
-**Panel 2 - 空间层 (SPATIAL LAYER - Development/承):**
-- PURPOSE: Show the dream's SPACE, TIME, SCENE characteristics
-- ROLE: Reveal dream's strange logic - "Where am I? What's happening?"
-- VISUAL APPROACH: Wide / Light-and-shadow / Strange composition
-- CAMERA LANGUAGE: **MID SHOT** (atmospheric conflict, environmental)
-- MOOD: CHAOS, CONFLICT - the tension builds
-- TECHNIQUE: Space must be DISJOINTED but UNIFIED (desert classroom, underwater stairs, floating furniture)
-- EXAMPLE: "Exam anxiety" → Neon tunnel shaped like answer sheet, walls flicker with error symbols, oppressive reflective floor
-- ❌ DO NOT: Continue narrative logically
-- ✅ DO show: IMPOSSIBLE SPACES that feel dreamlike (perspective breaks, scale shifts, gravity defies)
+**Panel A - SENSATION (初感 - The Entry):**
+- **Energy State**: CALM, STATIC, ESTABLISHMENT (静)
+- **Purpose**: Dream's atmosphere entry point - "What does this dream FEEL like when it begins?"
+- **Shot Type**: WIDE SHOT (establish vast space, 70-75% negative space)
+- **Emotion**: Calm, cold, quiet, beginning, threshold moment
+- **Technique**: Use COLOR FIELDS and LIGHT QUALITIES to establish mood. Maximum abstraction.
+- **Composition Template for ${styleConfig.name}**: ${styleConfig.compositionGuide.panel1}
+- ❌ DO NOT: Show literal subjects, tell story, explain dream content
+- ✅ DO: Establish ATMOSPHERIC ENTRY through color, light, and void
 
-**Panel 3 - 情绪层 (EMOTIONAL LAYER - Resolution/转合):**
-- PURPOSE: Use motion, color, or structure to express the dream's emotional climax or internalization
-- ROLE: End the dream's rhythm - "How does this dream resolve/dissolve?"
-- VISUAL APPROACH: Negative space / Motion / Blur / Uncertainty
-- CAMERA LANGUAGE: **CLOSE-UP** or symbolic ending (detail, intimate)
-- MOOD: DISSOLUTION, NEGATIVE SPACE, AMBIGUITY - the ending fades
-- TECHNIQUE: Use dynamics to show emotion dissolving (melting, dispersing, floating away, fragmenting)
-- EXAMPLE: "Exam anxiety" → Pen tip dripping glowing liquid ink, melting into code streams, floating numbers, anxiety dissolving
-- ❌ DO NOT: Resolve or explain the dream clearly
-- ✅ DO show: Emotional release through visual dissolution (blur edges, particles, fading, transformation)
+**Panel B - DISTORTION (漩涡 - The Turbulence):**
+- **Energy State**: CHAOS, KINETIC, CONFLICT (动)
+- **Purpose**: Dream energy's conflict and turbulence - "Where is the tension? What's twisting?"
+- **Shot Type**: MID SHOT (environmental conflict, atmospheric chaos)
+- **Emotion**: Conflict, tension, disorientation, chaos, anxiety peak
+- **Technique**: Use BRUSHWORK ENERGY and COLOR CLASHES to show turbulence. Same visual DNA from Panel A but TWISTED.
+- **Composition Template for ${styleConfig.name}**: ${styleConfig.compositionGuide.panel2}
+- ❌ DO NOT: Continue narrative logically, show realistic spaces
+- ✅ DO: Show IMPOSSIBLE CONTRADICTIONS through color war and spatial distortion
 
-═══════════════════════════════════════════════════════════════════════
-🎬 CAMERA LANGUAGE & RHYTHM PROGRESSION (MANDATORY)
-═══════════════════════════════════════════════════════════════════════
-
-**Shot Sequence (起承转合):**
-1. Panel 1 (象征): **WIDE SHOT** - Establish the dream space (distant, abstract, calm)
-2. Panel 2 (空间): **MID SHOT** - Atmospheric conflict (environmental, chaotic)
-3. Panel 3 (情绪): **CLOSE-UP** - Symbolic ending (intimate detail, dissolution)
-
-**Rhythm Progression (节奏递进):**
-1. Panel 1: **CALM** → Cold, quiet, establishing
-2. Panel 2: **CHAOS** → Conflict, tension, disorienting
-3. Panel 3: **DISSOLUTION** → Negative space, blur, fading
-
-**Composition Breathing (构图呼吸感):**
-- ❌ DO NOT fill every corner with elements
-- ✅ DO preserve negative space, blur, or dissolving edges
-- ✅ Light/shadow and leading lines must guide the viewer's eye flow
-- ✅ Each panel should have visual rhythm: motion vs stillness, bright vs dark alternation
-
-**Color Control (色彩递进):**
-- All three panels must share UNIFIED COLOR TONE but vary in brightness
-- Color progresses with emotion: cold→warm OR dark→light OR saturated→desaturated
-- Example: Panel 1 (dark blue void) → Panel 2 (purple-pink neon) → Panel 3 (soft cyan glow)
+**Panel C - ECHO (余晖 - The Dissolution):**
+- **Energy State**: DISSOLUTION, FADING, NEGATIVE SPACE (空)
+- **Purpose**: Dream's emotional release and disappearance - "How does the dream dissolve?"
+- **Shot Type**: CLOSE-UP (intimate detail, 75-85% void/darkness/negative space)
+- **Emotion**: Release, fading, surrender, peace, emptiness, echo
+- **Technique**: Use NEGATIVE SPACE DOMINANCE and PARTICLE DISPERSION. Visual DNA becomes mist/particles/void.
+- **Composition Template for ${styleConfig.name}**: ${styleConfig.compositionGuide.panel3}
+- ❌ DO NOT: Resolve or explain dream, create closure
+- ✅ DO: Show EMOTIONAL DISSOLUTION through light fading, color dispersing, form disappearing
 
 ═══════════════════════════════════════════════════════════════════════
-🎨 STYLE DIFFERENTIATION TABLE
+🎨 HOW TO PAINT DREAMS: Core Principles
 ═══════════════════════════════════════════════════════════════════════
 
-**Minimal (极简梦):**
-- Light: Negative space, line-based, order
-- Color: Monochrome or low saturation
-- Rhythm: Calm, clean, cold rhythm
-- Elements: Spatial geometry, single objects, minimal color
+**Principle 1: Don't Translate Words Literally**
+- "老虎追我" (tiger chasing) ≠ paint a tiger
+- = Paint the FEELING of being chased (shadows pursuing, torn light, color surging)
+- Transform subjects into: light direction, color temperature, brushstroke violence
 
-**Film (胶片梦):**
-- Light: Soft focus, grain, natural light, vignette
-- Color: Warm gray-brown, yellow-blue tones
-- Rhythm: Layered, with realistic traces
-- Elements: Dust, reflections, light-shadow planes, solitude
+**Principle 2: Unified but Impossible Spaces**
+- Desert classroom / underwater stairs / floating furniture
+- Space must be WRONG but feel RIGHT emotionally
+- Use ${styleConfig.artistReference} spatial logic
 
-**Cyber (赛博梦):**
-- Light: Strong contrast, reflection, neon, flow
-- Color: Blue-purple-pink-gold gradients
-- Rhythm: Speed, symmetry, geometric structures
-- Elements: Light beams, reflections, metal, shadows, energy lines
+**Principle 3: Shot Progression (镜头递进)**
+- Panel A: WIDE SHOT (establish atmosphere, 70-75% void)
+- Panel B: MID SHOT (environmental chaos, spatial conflict)
+- Panel C: CLOSE-UP (intimate dissolution, 80-85% void)
 
-**Pastel (粉彩梦):**
-- Light: Soft light, warm colors, fairy tale feel
-- Color: Pink-orange-blue-purple
-- Rhythm: Soft, light, intimate feel
-- Elements: Plants, fruits, fabric, soft light lines
+**Principle 4: Energy Progression (能量递进)**
+- Panel A: CALM (静) - Cold, quiet, entry
+- Panel B: CHAOS (动) - Conflict, turbulence, peak
+- Panel C: DISSOLUTION (空) - Fading, surrender, echo
 
-═══════════════════════════════════════════════════════════════════════
-💎 STYLE-SPECIFIC BEAUTY REQUIREMENTS
-═══════════════════════════════════════════════════════════════════════
+**Principle 5: Color Unified but Brightness Varies**
+- All 3 panels share ${styleConfig.colorPalette}
+- Brightness/intensity shifts with emotion
+- Example: Panel A (dim entry) → Panel B (intense conflict) → Panel C (fading exit)
 
-**For Cyber Style (CRITICAL - User tested this and found it lacking):**
-- Must be DREAMLIKE, not just "neon lights in city"
-- Requires: DEPTH (foreground/midground/background), NEGATIVE SPACE (not cluttered), ATMOSPHERE (fog/haze/glow)
-- Color palette: Dominant purple-blue or cyan-pink, NOT oversaturated rainbow
-- Lighting: Volumetric rays, soft bloom, reflective surfaces (wet floor/mirror/glass)
-- Composition: LOW ANGLE or EXTREME CLOSE-UP, never boring mid-shot
-- Feeling: "Being pulled into a digital dream", not "generic cyberpunk street"
-
-**Example - "Lost in Endless Stairs" Dream (Minimal style - EXPRESSIONIST APPROACH):**
-Visual DNA: ANXIETY = NAUSEATING YELLOW-GREEN VORTEX + UPWARD-PULLING BRUSHSTROKES (NO stairs, NO architecture!)
-
-1. Symbolic (WIDE): Van Gogh swirling impasto - Thick vertical brushstrokes in sickly yellow-green churning upward against deep prussian blue void (80% dark), paint texture visible as if smeared with palette knife, centrifugal energy pulling viewer's eye upward in dizzying spiral, cold-warm color clash creating spatial tension, NO steps visible, only the FEELING of endless climbing through color violence
-2. Jump-cut (MID): Munch-style distortion - Those same yellow-green strokes now wavy and bleeding into blue, forms melting and dripping downward while color flows upward (paradox anxiety), wavy vertical bands like heat distortion, brushwork becomes frantic and irregular, psychological disorientation through color-form contradiction, NO architecture, pure painted anxiety
-3. Internalization (CLOSE-UP): Bacon-style visceral smear - Extreme close-up of yellow paint violently smeared across deep blue-black void (85% darkness), thick impasto texture with visible brushwork, paint seems to claw upward leaving gestural marks, final exhaustion where color loses form and becomes raw material, NO objects, only emotional residue
-
-All three panels use: UPWARD-VIOLENT BRUSHWORK + YELLOW-GREEN vs BLUE TENSION + THICK PAINT TEXTURE (like Van Gogh's night sky, Munch's scream, Bacon's twisted forms, ZERO literal stairs)
+**Principle 6: Visual DNA Continuity**
+- Panel A establishes a PATTERN (lines/texture/color field)
+- Panel B: Same pattern in IMPOSSIBLE CONTEXT (twisted, inverted, melting)
+- Panel C: Pattern DISSOLVES into particles/mist/void
 
 ═══════════════════════════════════════════════════════════════════════
-🔗 RESONANCE PRINCIPLE: Three Panels Must ECHO Not EXPLAIN
+🎨 FOUR DREAM TYPES: Psychological Artist Systems
 ═══════════════════════════════════════════════════════════════════════
 
-**Visual DNA Continuity:**
-- Panel 1 establishes: LINES (parallel), TEXTURE (metal), COLOR (steel blue)
-- Panel 2 reuses: Same lines/texture but in IMPOSSIBLE SPACE (lines on ceiling, defying gravity)
-- Panel 3 mutates: Lines become OBJECTS (pencils/chopsticks/cigarettes arranged in parallel)
+**Memory Dream (记忆梦) - Van Gogh Late + Cézanne:**
+- **Core Emotion**: Nostalgia, loss, tenderness, longing for past
+- **Artist Spirit**: Van Gogh's tender warmth + Cézanne's geometric structure
+- **Color System**: Mist blue, golden fog, ochre red, amber warmth, earth tones
+- **Brushwork**: Thick impasto with architectural solidity, warm-cool temperature clashes
+- **User Feels**: Dreams of places I've been, people I've lost, childhood scenes
+- **Masterworks**: Van Gogh late period paintings + Cézanne Mont Sainte-Victoire
 
-**Forbidden Connections:**
-- ❌ DO NOT create chronological narrative (A→B→C story)
-- ❌ DO NOT show "beginning → middle → end"
-- ✅ DO create ASSOCIATIVE LEAPS (symbol morphs across impossible contexts)
+**Surreal Dream (超现实梦) - Dalí + Magritte:**
+- **Core Emotion**: Unease, conflict, absurdity, broken logic
+- **Artist Spirit**: Dalí's melting reality + Magritte's impossible contradictions
+- **Color System**: Purple-orange clash, green-red inversion, complementary violence
+- **Brushwork**: Hyper-realistic precision breaking into liquid distortion
+- **User Feels**: World logic fails, physics breaks, impossible juxtapositions
+- **Masterworks**: Dalí Persistence of Memory + Magritte Son of Man
+
+**Lucid Dream (清醒梦) - Turrell + Syd Mead:**
+- **Core Emotion**: Awareness, floating, threshold consciousness
+- **Artist Spirit**: Turrell's pure light phenomena + Syd Mead's visionary architecture
+- **Color System**: Cobalt blue void, cold white light, cyan glow, obsidian black
+- **Brushwork**: NOT brushwork but LIGHT PHENOMENA - volumetric, geometric, minimal
+- **User Feels**: I know I'm dreaming, consciousness floating, liminal spaces
+- **Masterworks**: Turrell Skyspace installations + Blade Runner concept art
+
+**Pastel Dream (温柔梦) - Monet + Van Gogh Blossoms:**
+- **Core Emotion**: Healing, lightness, tenderness, spring comfort
+- **Artist Spirit**: Monet's impressionist dappling + Van Gogh's tender blossom hope
+- **Color System**: Soft pink-white, mint green, lavender, peach, sky blue, cream
+- **Brushwork**: Gentle short strokes, soft impasto dabs, impressionist light touches
+- **User Feels**: Beautiful dreams, gentle comfort, therapeutic softness, hope
+- **Masterworks**: Monet Water Lilies + Van Gogh Almond Blossoms
 
 ═══════════════════════════════════════════════════════════════════════
-🎨 COMPOSITION TEMPLATES BY STYLE
+💡 EXAMPLE: "Lost in Endless Stairs" → Memory Dream
 ═══════════════════════════════════════════════════════════════════════
 
-**Minimal Style (象征→跳切→内化):**
-- Panel 1: Extreme close-up of geometric pattern/texture, 70% negative space, stark contrast
-- Panel 2: Same pattern in IMPOSSIBLE location (on wall/ceiling), disorienting angle
-- Panel 3: Pattern materialized as objects (arranged in uncanny precision), still life with wrongness
+**User Dream**: "我在一个迷失的楼梯里，上不去也下不来" (Lost in stairs, can't go up or down)
 
-**Film Style (象征→跳切→内化):**
-- Panel 1: Grainy macro shot of texture/lines, shallow depth, organic pattern
-- Panel 2: Same visual DNA in broken context (gravity-defying), cinematic wide angle
-- Panel 3: Elements crystallized as mundane objects, hyper-real detail with film grain
+**Transform into ${styleConfig.dreamType} Psychological Logic:**
+- Core Feeling: STUCK IN PAST, circular nostalgia, unable to move forward or back
+- Visual DNA: PARALLEL GOLDEN LINES (stairs abstracted) + BLUE VOID (being trapped)
+- Artist Approach: Use ${styleConfig.artistReference} to express this
 
-**Cyber Style (象征→跳切→内化):**
-- Panel 1: Neon-lit abstract pattern/reflection, close-up on texture
-- Panel 2: Pattern repeated in impossible architecture, vertiginous perspective
-- Panel 3: Neon elements as solid objects in uncanny arrangement, glossy surfaces
+❌ **BAD (Literal Story):**
+Panel 1: "Staircase in darkness"
+Panel 2: "Person climbing stairs"
+Panel 3: "Endless stairs perspective"
 
-**Pastel Style (象征→跳切→内化):**
-- Panel 1: Soft-focus abstract shape/color field, dreamy texture
-- Panel 2: Shape appears in surreal context (floating/inverted), gentle impossibility
-- Panel 3: Solidified into soft objects with dream logic, pastel still life
+✅ **EXCELLENT (${styleConfig.dreamType} Psychological Art):**
+
+**Visual DNA**: PARALLEL GOLDEN LINES FLOATING IN BLUE MIST (memory of stairs, not literal stairs)
+
+{
+  "abstraction_level": 0.85,
+  "global_palette": "${styleConfig.colorPalette}",
+  "panels": [
+    {
+      "scene": "${styleConfig.artistReference} masterpiece: SENSATION - WIDE SHOT establishing nostalgic spatial trap. Distant parallel golden lines (memory of stairs abstracted to light strokes) floating in vast mist blue void (70% negative space), Cézanne geometric structure creating order, Van Gogh warm amber glow on lines suggesting past warmth, soft ochre fog creating atmospheric depth, parallel lines neither ascending nor descending but suspended, calm entry into circular memory, thick impasto texture visible as memory's weight.",
+      "caption": "金线悬在雾中",
+      "compose": "symmetry",
+      "distance": "wide",
+      "concrete_ratio": 0.08
+    },
+    {
+      "scene": "${styleConfig.artistReference} masterpiece: DISTORTION - MID SHOT spatial conflict. Those same parallel golden lines now twisted and inverting (Cézanne geometry breaking apart), some lines climbing while others falling simultaneously creating impossible paradox, mist blue clashing with ochre red creating temperature war, Van Gogh thick brushwork showing emotional turbulence, lines melting and reforming in loop, atmospheric confusion through color temperature shifts, spatial anxiety where up equals down.",
+      "caption": "上即是下循环",
+      "compose": "diagonal",
+      "distance": "medium",
+      "concrete_ratio": 0.12
+    },
+    {
+      "scene": "${styleConfig.artistReference} masterpiece: ECHO - CLOSE-UP emotional release. Extreme close-up of golden lines dissolving into particles dispersing into blue void (80% darkness), soft impasto texture fading like breath on glass, amber warmth becoming mist, lines losing structure and becoming color memory, negative space dominates as trapped feeling surrenders to acceptance, memory geometry dissolving into atmosphere.",
+      "caption": "线成雾而散",
+      "compose": "center",
+      "distance": "close",
+      "concrete_ratio": 0.04
+    }
+  ]
+}
+
+**Visual DNA Continuity**: All three panels use PARALLEL GOLDEN LINES + BLUE VOID + WARM-COOL TEMPERATURE (geometric structure → twisted paradox → dissolved particles), expressing "trapped in stairs" through GEOMETRIC MEMORY DISSOLUTION with ZERO literal staircase.
+
+═══════════════════════════════════════════════════════════════════════
+🔗 VISUAL DNA CONTINUITY: Echo, Don't Narrate
+═══════════════════════════════════════════════════════════════════════
+
+**Three panels must ECHO each other through shared visual DNA:**
+- Panel A establishes: A PATTERN (color field, light direction, brushstroke texture)
+- Panel B mutates: Same pattern in IMPOSSIBLE CONTEXT (twisted, inverted, melting)
+- Panel C dissolves: Pattern becomes PARTICLES/MIST/VOID (dispersing, fading)
+
+**Forbidden:**
+- ❌ Chronological story (A→B→C timeline)
+- ❌ Realistic narrative logic
+- ❌ Independent unrelated panels
+
+**Required:**
+- ✅ Shared color palette across all 3 panels
+- ✅ Same visual element (line/texture/light) transforming
+- ✅ Emotional arc: Calm → Chaos → Dissolution
 
 ═══════════════════════════════════════════════════════════════════════
 🚫 ABSOLUTE PROHIBITIONS
@@ -341,14 +436,6 @@ All three panels use: UPWARD-VIOLENT BRUSHWORK + YELLOW-GREEN vs BLUE TENSION + 
 - ❌ NEVER make panels independent - they must ECHO each other
 
 ═══════════════════════════════════════════════════════════════════════
-✅ MODERN ART STYLE ENFORCEMENT
-═══════════════════════════════════════════════════════════════════════
-
-EVERY scene MUST start with explicit modern art style:
-- "Contemporary digital art:", "Surrealist photography:", "Modern abstract expressionism:"
-- "Photorealistic CGI rendering:", "Cinematic photography:", "Digital illustration:"
-
-═══════════════════════════════════════════════════════════════════════
 📝 OUTPUT FORMAT (JSON SCHEMA)
 ═══════════════════════════════════════════════════════════════════════
 
@@ -368,134 +455,37 @@ You MUST return a JSON object with this exact structure:
   ]
 }
 
-**For each panel "scene" field, provide 2-3 sentences with:**
-1. Modern art style prefix (MANDATORY: "Contemporary digital art:", "Surrealist photography:", etc.)
-2. Panel layer type (象征层/跳切层/内化层)
-3. Visual DNA element (the pattern/texture/shape that mutates across panels)
-4. Composition details using ABSTRACT LANGUAGE (color fields, light direction, atmospheric depth)
-5. NO literal dream subjects, NO faces, NO full bodies
-6. At least 70% description must be color/light/texture/space
+**For each panel "scene" field:**
+1. Start with artist reference: "${styleConfig.artistReference} masterpiece:"
+2. State energy phase: "SENSATION/DISTORTION/ECHO - WIDE/MID/CLOSE-UP:"
+3. Describe using 70%+ ABSTRACT LANGUAGE (color fields, light qualities, brushwork, atmospheric depth)
+4. Include the Visual DNA element that connects all 3 panels
+5. NO literal dream subjects, NO faces, NO full bodies, NO architecture
+6. Reference the composition template provided above
 
 **For "caption" field:**
-- 8-12 characters, DREAM SENTENCE (梦句) format
-- NOT literal description, NOT explanation
-- Poetic fragment that RESONATES with the visual
-- Examples: "光跑在前" / "脚印在屋顶" / "铅笔排成路"
+- 8-12 Chinese characters, DREAM SENTENCE (梦句) format
+- Poetic fragment, NOT literal description
+- Examples: "光跑在前" / "金线悬在雾中" / "线成雾而散"
 
-**For "compose" field:**
-- Choose based on emotional intent: symmetry (calm/order), diagonal (tension), thirds (natural), center (focus)
+**For "compose" and "distance" fields:**
+- Panel 1: distance="wide", compose based on emotion (symmetry/diagonal/thirds/center)
+- Panel 2: distance="medium", compose based on tension
+- Panel 3: distance="close", compose for dissolution
 
-**For "distance" field:**
-- Panel 1 should be "wide" (establish space)
-- Panel 2 should be "medium" (atmospheric conflict)
-- Panel 3 should be "close" (intimate dissolution)
-
-═══════════════════════════════════════════════════════════════════════
-💡 EXAMPLE: "追不上的火车" (Can't Catch the Train)
-═══════════════════════════════════════════════════════════════════════
-
-❌ BAD (literal story with concrete objects):
-Panel 1: "Train departing from station"
-Panel 2: "Person running on platform"
-Panel 3: "Train disappearing into distance"
-
-✅ EXCELLENT (Expressionist emotional violence like Van Gogh/Munch - ZERO objects, ZERO spaces):
-
-Visual DNA: DESPERATE PURSUIT = VIOLENT ORANGE SLASHES CHASING INTO COLD BLUE ABYSS
-
-{
-  "abstraction_level": 0.88,
-  "global_palette": "Blazing cadmium orange against icy prussian blue, thick impasto slashes, dragging paint marks",
-  "panels": [
-    {
-      "scene": "Vincent van Gogh impasto painting: 象征层 - Thick horizontal slashes of burning orange paint (applied with palette knife violence) bleeding into deep blue void, visible brushwork texture creating sense of desperate forward motion, warm color seems to chase into cold darkness but can never catch it, paint layered so thick it creates shadows, raw pursuit energy through color temperature clash, NO trains, NO people, only PAINTED DESPERATION.",
-      "caption": "暖追不上冷",
-      "compose": "diagonal",
-      "distance": "wide",
-      "concrete_ratio": 0.04
-    },
-    {
-      "scene": "Edvard Munch psychological distortion: 跳切层 - Multiple orange brushstrokes now stretched and warped horizontally like screaming mouths, paint dragged across canvas creating motion blur and anxiety, colors bleeding together where orange desperately reaches for blue but forms distort and melt, wavy horizontal bands expressing psychological chase that can never resolve, brushwork frantic and irregular, NO train shapes, only PAINTED ANXIETY IN MOTION.",
-      "caption": "橙色在尖叫",
-      "compose": "diagonal",
-      "distance": "medium",
-      "concrete_ratio": 0.06
-    },
-    {
-      "scene": "Francis Bacon visceral expressionism: 内化层 - Extreme close-up of orange paint violently smeared and dragged into blue-black void (82% darkness), thick impasto showing finger marks and palette knife scrapes, paint loses form becoming raw gestural violence, final moment where pursuit becomes exhaustion, color smeared into submission, visible paint texture like wounded flesh, NO objects, only MATERIAL DEFEAT.",
-      "caption": "橙溶入深渊",
-      "compose": "center",
-      "distance": "close",
-      "concrete_ratio": 0.02
-    }
-  ]
-}
-
-**Visual DNA Continuity:**
-All three panels share HORIZONTAL ORANGE-INTO-BLUE VIOLENCE (impasto slashes → distorted chase → visceral smear), expressing "pursuit" through PAINTED EMOTIONAL VIOLENCE with ZERO representational elements. Think Van Gogh's Starry Night energy, Munch's The Scream distortion, Bacon's twisted paint - NOT trains, NOT literal motion.
+**For "abstraction_level" and "concrete_ratio":**
+- abstraction_level: ≥0.70 (target 0.80+)
+- concrete_ratio per panel: ≤0.30 (target 0.10 or less)
 
 ═══════════════════════════════════════════════════════════════════════
 
-STYLE GUIDANCE for "${style}":
-${symbols.length > 0 ? `- If these symbols appear in dream, transmute them into ABSTRACT PATTERNS: ${symbols.join(', ')}` : ''}
-${mood ? `- Emotional undertone (NOT literal): ${mood}` : ''}
-
-🎨 STYLE-SPECIFIC ARTISTIC PHILOSOPHY (梵高系后印象派):
-
-**All styles use Van Gogh-inspired expressionism, but emphasize different aspects:**
-
-═══════════════════════════════════════════════════════════════════════
-**MINIMAL STYLE → Van Gogh Early Period + Cézanne (极简表现主义)**
-═══════════════════════════════════════════════════════════════════════
-- Van Gogh Early Dutch Period: Dark earth tones, heavy impasto, somber mood, peasant honesty
-- Paul Cézanne: Geometric structure, simplified forms, architectural brushwork, solid color planes
-- **Color Approach**: Limited palette (dark blue, ochre yellow, burnt sienna, deep shadow blacks)
-- **Brushwork**: Thick straight strokes, geometric impasto blocks, architectural paint application
-- **Emotion**: Somber, grounded, melancholic weight, existential solitude
-- **Key Works**: Van Gogh's《Potato Eaters》dark mood + Cézanne's《Mont Sainte-Victoire》geometric solidity
-
-═══════════════════════════════════════════════════════════════════════
-**FILM STYLE → Van Gogh Arles Period + Gauguin (明亮表现主义)**
-═══════════════════════════════════════════════════════════════════════
-- Van Gogh Arles Period: Brilliant yellows, thick impasto sunflowers, intense light, joyful energy
-- Paul Gauguin: Bold flat color areas, symbolic simplification, warm tropical palette
-- **Color Approach**: Vibrant yellows, oranges, greens, ultramarine blue, high contrast
-- **Brushwork**: Thick impasto swirls, sunflower-style petal strokes, energetic paint application
-- **Emotion**: Ecstatic, luminous, overwhelming warmth, Mediterranean sun intensity
-- **Key Works**: Van Gogh's《Sunflowers》《The Yellow House》golden light + Gauguin's warm flat colors
-
-═══════════════════════════════════════════════════════════════════════
-**CYBER STYLE → Van Gogh Starry Night Period + Munch (旋涡表现主义)**
-═══════════════════════════════════════════════════════════════════════
-- Van Gogh Starry Night: Swirling vortexes, turbulent sky, cosmic energy, electric blue-yellow contrast
-- Edvard Munch: Wavy distortions, psychological anxiety, screaming colors, emotional turbulence
-- **Color Approach**: Electric blue, vibrant yellow stars, deep purple-black voids, neon-like intensity
-- **Brushwork**: Swirling spirals, turbulent vortexes, cosmic energy patterns, wavy distortions
-- **Emotion**: Cosmic anxiety, turbulent energy, psychological vortex, electric tension
-- **Key Works**: Van Gogh's《Starry Night》swirling sky + Munch's《The Scream》wavy distortion
-
-═══════════════════════════════════════════════════════════════════════
-**PASTEL STYLE → Van Gogh Blossoms Period + Monet (柔和表现主义)**
-═══════════════════════════════════════════════════════════════════════
-- Van Gogh Blossoms: Soft pink-white almond blossoms, gentle impasto, tender brushwork, hope and renewal
-- Claude Monet: Impressionist softness, dappled light, atmospheric haze, gentle color transitions
-- **Color Approach**: Soft pastels (pink blossoms, mint green, lavender, peach, sky blue)
-- **Brushwork**: Gentle short strokes, soft impasto dabs, impressionist light touches, tender application
-- **Emotion**: Tender, hopeful, gentle beauty, spring renewal, soft comfort
-- **Key Works**: Van Gogh's《Almond Blossoms》soft pink-white + Monet's《Water Lilies》gentle impressionism
-
-═══════════════════════════════════════════════════════════════════════
-
-CRITICAL REMINDERS FOR ALL STYLES:
-1. First, identify the dream's EMOTIONAL CORE
-2. Choose the Van Gogh period that matches the emotion (early dark / Arles bright / Starry vortex / Blossoms tender)
-3. Panel 1 (wide): Establish mood with THICK IMPASTO BRUSHWORK
-4. Panel 2 (medium): Develop with CHARACTERISTIC BRUSHSTROKE PATTERN (geometric/swirl/wave/dab)
-5. Panel 3 (close): Dissolve with PAINT TEXTURE visible, 70%+ void
-6. All three panels = ONE VAN GOGH-INSPIRED EMOTIONAL JOURNEY with ZERO representational elements
-
-**Absolute Rule**: Use Van Gogh's BRUSHWORK LANGUAGE (thick impasto, visible strokes, paint texture), NOT realistic scenes. If you describe a corridor/room/building, you FAILED.
-6. Abstraction level must be ≥0.70, concrete_ratio must be ≤0.30 per panel
+CRITICAL REMINDERS:
+1. You are creating **${styleConfig.name}** (${styleConfig.dreamType})
+2. Use **${styleConfig.artistReference}** visual language
+3. Follow **Sensation → Distortion → Echo** energy progression
+4. Maintain **${styleConfig.colorPalette}** throughout all 3 panels
+5. Transform dream subjects into COLOR, LIGHT, BRUSHWORK - never literal objects
+6. If you describe recognizable spaces (room/corridor/building), you FAILED
 
 Respond with VALID JSON (following the schema above):
 {
@@ -579,10 +569,13 @@ DO NOT illustrate "what happened in the dream". Paint "HOW the dream FEELS" usin
   }
 
   // Quality validation with auto-retry
-  const qualityCheck = validateAbstractQuality(structure);
+  const qualityCheck = validateAbstractQuality(structure, style);
 
   if (!qualityCheck.passed) {
     console.warn(`⚠️ Quality check failed (attempt ${retryCount + 1}/${MAX_RETRIES + 1}):`, qualityCheck.failures);
+    if (qualityCheck.warnings.length > 0) {
+      console.warn('⚠️ Quality warnings:', qualityCheck.warnings);
+    }
 
     if (retryCount < MAX_RETRIES) {
       console.log(`🔄 Retrying with feedback to LLM...`);
@@ -606,6 +599,9 @@ Focus on COLOR FIELDS, LIGHT QUALITIES, and ATMOSPHERIC DEPTH rather than object
     }
   } else {
     console.log('✅ Quality check passed!');
+    if (qualityCheck.warnings.length > 0) {
+      console.warn('⚠️ Minor quality warnings (acceptable):', qualityCheck.warnings);
+    }
   }
 
   return structure;
@@ -625,32 +621,32 @@ async function generateImage(
   const compositionKey = `panel${panelIndex + 1}` as 'panel1' | 'panel2' | 'panel3';
   const compositionTemplate = styleConfig.compositionGuide[compositionKey];
 
-  // FORCE Van Gogh-inspired style-specific artist references
+  // Use new psychological artist system from constants
   let artistPrefix: string;
 
   switch (style) {
     case 'minimal':
-      // Van Gogh Early Period + Cézanne: Dark impasto, geometric structure
-      artistPrefix = 'expressionist masterpiece in the style of early Vincent van Gogh and Paul Cézanne, thick impasto brushwork, dark earth tones, heavy paint texture, geometric brushstrokes, architectural paint blocks, somber mood, Dutch period darkness, Cézanne geometric structure, visible palette knife marks, ochre and burnt sienna, melancholic expressionism,';
+      // Memory Dream: Van Gogh Late + Cézanne
+      artistPrefix = 'masterpiece in the style of Vincent van Gogh late period and Paul Cézanne, memory dream atmosphere, tender impasto warmth meets geometric color planes, mist blue and golden amber fog, soft ochre earth tones, thick visible brushwork with architectural structure, warm light remnants like memory temperature, atmospheric haze with geometric solidity, nostalgic depth,';
       break;
 
     case 'film':
-      // Van Gogh Arles Period + Gauguin: Brilliant yellows, thick sunflower impasto
-      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh Arles period and Paul Gauguin, brilliant yellow impasto, thick sunflower brushstrokes, vibrant orange and ultramarine blue, intense Mediterranean light, energetic paint application, bold flat color areas, warm golden palette, ecstatic luminosity, thick textured paint,';
+      // Surreal Dream: Dalí + Magritte
+      artistPrefix = 'surrealist masterpiece in the style of Salvador Dalí and René Magritte, surreal dream atmosphere, melting distortion meets impossible clarity, purple-orange complementary color clash, green-red inversion, hyper-realistic paint texture with irrational composition, impossible spatial contradictions, hard-edge precision breaking into liquid forms, absurdist juxtaposition, dream logic,';
       break;
 
     case 'cyber':
-      // Van Gogh Starry Night + Munch: Swirling vortexes, turbulent energy
-      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh Starry Night and Edvard Munch, swirling vortex brushstrokes, turbulent impasto spirals, electric blue and vibrant yellow contrast, cosmic energy patterns, wavy psychological distortions, thick swirling paint texture, deep purple-black voids, screaming color intensity, anxiety-inducing spirals,';
+      // Lucid Dream: Turrell + Syd Mead
+      artistPrefix = 'visionary masterpiece in the style of James Turrell and Syd Mead, lucid dream atmosphere, pure light field installations meets visionary architecture, cobalt blue void with cold white and cyan light phenomena, heavy volumetric fog, clean geometric light boundaries, impossible light architecture, wet reflective surfaces, soft bloom and atmospheric glow, liminal threshold aesthetic, consciousness as light,';
       break;
 
     case 'pastel':
-      // Van Gogh Blossoms + Monet: Soft impasto, gentle impressionist touches
-      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh Almond Blossoms and Claude Monet, soft pink-white impasto, gentle brushwork, tender paint dabs, impressionist light touches, pastel color harmony, soft mint green and lavender, delicate paint texture, hopeful spring mood, dappled light softness, renewal and tenderness,';
+      // Pastel Dream: Monet + Van Gogh Blossoms
+      artistPrefix = 'impressionist masterpiece in the style of Claude Monet and Vincent van Gogh Almond Blossoms, pastel dream atmosphere, impressionist dappled light meets tender brushwork, soft pink-white and mint green color fields, lavender and peach warmth, delicate short brushstrokes visible, gentle atmospheric haze with bokeh, therapeutic color harmony, spring renewal mood, watercolor softness,';
       break;
 
     default:
-      artistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh, thick impasto brushwork, emotional color violence, visible paint texture,';
+      artistPrefix = styleConfig.prompt.substring(0, 200) + ',';
   }
 
   // Add composition template BEFORE the LLM scene description for stronger control

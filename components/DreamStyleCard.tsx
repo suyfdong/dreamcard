@@ -14,32 +14,36 @@ interface DreamStyleCardProps {
 
 const styleConfig = {
   minimal: {
-    title: "Minimal Sketch",
-    description: "Clean line art",
+    title: "记忆梦 Memory",
+    description: "梦到过去的地方",
+    subtitle: "Van Gogh + Cézanne",
     // Using original Memory Dream image
     imageUrl: "https://images.pexels.com/photos/1209843/pexels-photo-1209843.jpeg?auto=compress&cs=tinysrgb&w=800",
     gradient: "from-amber-500/70 via-orange-500/50 to-transparent",
     bgColor: "from-orange-600/30",
   },
   film: {
-    title: "Film Grain",
-    description: "Vintage cinematic",
+    title: "超现实梦 Surreal",
+    description: "世界的法则错乱",
+    subtitle: "Dalí + Magritte",
     // Using original Surreal Dream image
     imageUrl: "https://images.pexels.com/photos/1616403/pexels-photo-1616403.jpeg?auto=compress&cs=tinysrgb&w=800",
-    gradient: "from-slate-500/70 via-gray-600/50 to-transparent",
-    bgColor: "from-slate-700/30",
+    gradient: "from-purple-500/70 via-orange-600/50 to-transparent",
+    bgColor: "from-purple-600/30",
   },
   cyber: {
-    title: "Cyber Mist",
-    description: "Neon cyberpunk",
+    title: "清醒梦 Lucid",
+    description: "介于梦与醒之间",
+    subtitle: "Turrell + Syd Mead",
     // Using original Lucid Dream image
     imageUrl: "https://replicate.delivery/xezq/tjZXUEFBevVDJaAgtyIoqMRwdB6Rm7WqnkCQ1wvFIzjQHejVA/out-0.webp",
     gradient: "from-cyan-500/70 via-blue-600/50 to-transparent",
     bgColor: "from-cyan-600/30",
   },
   pastel: {
-    title: "Pastel Fairytale",
-    description: "Soft and dreamy",
+    title: "温柔梦 Pastel",
+    description: "春天般的安慰",
+    subtitle: "Monet + Van Gogh",
     // Using original Fantasy Dream image
     imageUrl: "https://replicate.delivery/xezq/KskDYLE5M2rFJteUuph9J741X8HJpdyYGVFxftT1w9doB8jVA/out-0.webp",
     gradient: "from-pink-500/70 via-purple-600/50 to-transparent",
@@ -86,12 +90,13 @@ export function DreamStyleCard({ style, selected, onClick }: DreamStyleCardProps
 
       <div className="relative flex h-full flex-col items-center justify-end p-6">
         <h3 className={cn(
-          "mb-2 text-xl font-bold text-white drop-shadow-lg transition-all duration-300",
+          "mb-1 text-xl font-bold text-white drop-shadow-lg transition-all duration-300",
           selected && "scale-110 text-2xl"
         )}>
           {config.title}
         </h3>
-        <p className="text-center text-sm text-white/90 drop-shadow-md">{config.description}</p>
+        <p className="mb-2 text-center text-sm text-white/90 drop-shadow-md">{config.description}</p>
+        <p className="text-center text-xs text-white/70 drop-shadow-sm italic">{config.subtitle}</p>
       </div>
 
       {selected && (
