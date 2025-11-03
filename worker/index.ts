@@ -274,12 +274,14 @@ async function parseDreamWithLLM(
 - Composition: LOW ANGLE or EXTREME CLOSE-UP, never boring mid-shot
 - Feeling: "Being pulled into a digital dream", not "generic cyberpunk street"
 
-**Example - "Lost in Endless Stairs" Dream (Minimal style - CORRECT ABSTRACT APPROACH):**
-1. Symbolic: Diagonal ascending light beams in cobalt blue void, 80% negative space, single white neon line cutting through darkness, cold geometric pattern suggesting upward motion
-2. Jump-cut: Same diagonal light pattern now inverted and multiplied, creating impossible perspective where lines defy gravity, atmospheric blue haze with hard white accents, disorienting symmetry
-3. Internalization: Light beams fragmenting into scattered geometric shards, fading into deep blue-black void, 90% negative space, dissolution of structure into pure color field
+**Example - "Lost in Endless Stairs" Dream (Minimal style - PURE ABSTRACT APPROACH):**
+Visual DNA: VERTICAL RHYTHM + COLD COBALT BLUE + ASCENDING TENSION (NO stairs, NO architecture!)
 
-All three must share: DIAGONAL LIGHT LINES + COBALT BLUE VOID + GEOMETRIC ABSTRACTION (NO stairs visible!)
+1. Symbolic (WIDE): Pure color field composition - Cobalt blue gradient fills 85% of frame from deep navy bottom to pale cerulean top, single diagonal white-hot light streak cutting from lower left to upper right, Rothko-style color plane with minimal geometry, cold atmospheric depth through blue-to-black tonal shifts, NO objects, NO spaces
+2. Jump-cut (MID): Same diagonal white streak now multiplied into parallel ascending bars, Kandinsky-style geometric abstraction with blue void, bars dissolve into light particles midway creating vertical motion blur, hard-edge color fields meeting soft atmospheric haze, increasing visual tension through repetition, NO architecture, pure light phenomenon
+3. Internalization (CLOSE-UP): Extreme close-up of white light fragments scattering across deep blue void, Malevich-style suprematist composition with geometric shards fading into darkness, 92% negative space, final dissolution where light becomes color mist, soft-focus edges, emotional release through pure chromatic dissolution
+
+All three panels use: DIAGONAL ASCENDING LIGHT + COBALT BLUE COLOR FIELD + GEOMETRIC ABSTRACTION (like Kandinsky/Rothko/Malevich, ZERO architectural elements)
 
 ═══════════════════════════════════════════════════════════════════════
 🔗 RESONANCE PRINCIPLE: Three Panels Must ECHO Not EXPLAIN
@@ -397,38 +399,40 @@ Panel 1: "Train departing from station"
 Panel 2: "Person running on platform"
 Panel 3: "Train disappearing into distance"
 
-✅ EXCELLENT (Abstract-first with COLOR/LIGHT/SPACE priority):
+✅ EXCELLENT (Pure abstract like Rothko/Kandinsky - ZERO objects, ZERO spaces):
+
+Visual DNA: HORIZONTAL MOTION ENERGY expressed through COLOR VELOCITY + AMBER-TO-BLUE CHROMATIC SHIFT
 
 {
-  "abstraction_level": 0.80,
-  "global_palette": "Steel blue gradients, cold amber accents, deep shadow voids, weathered metal texture",
+  "abstraction_level": 0.85,
+  "global_palette": "Warm amber orange flowing into cold steel blue, motion blur gradients, deep shadow voids",
   "panels": [
     {
-      "scene": "Contemporary digital art: 象征层 - Extreme close-up of weathered parallel color bands in steel blue and amber, converging into infinite perspective void, cold directional light creating diagonal shadow rhythms across textured metal surface. Abstracted essence of pursuit through receding lines, NO train visible, NO people, pure geometric color field with atmospheric depth.",
-      "caption": "光跑在前",
-      "compose": "diagonal",
+      "scene": "Mark Rothko style color field painting: 象征层 - Large horizontal bands of warm amber orange (upper 40%) meeting cold steel blue (lower 60%), soft-edge transition zone creating atmospheric depth, Rothko-style color plane with subtle texture suggesting velocity, NO trains, NO platforms, NO objects - pure chromatic expression of pursuit energy through warm-to-cold color flow.",
+      "caption": "暖色跑向冷",
+      "compose": "thirds",
       "distance": "wide",
-      "concrete_ratio": 0.15
+      "concrete_ratio": 0.05
     },
     {
-      "scene": "Surrealist photography: 跳切层 - Those same parallel blue-amber bands now appear as ceiling structure in impossible vertical space, gravity-defying perspective with light beams flowing upward, disorienting Dutch angle revealing void below. Atmospheric haze between foreground and distant bands creates depth, NO train, NO faces, spatial paradox expressed through color and light direction.",
-      "caption": "脚印在天花板",
+      "scene": "Wassily Kandinsky geometric abstraction: 跳切层 - Multiple horizontal amber light streaks slicing through deep blue void at different speeds (motion blur effect), hard-edge geometric bars with soft atmospheric trails, dynamic rhythm through repetition and speed variation, sense of impossible chase where light itself becomes subject, NO train forms, NO people, pure kinetic energy visualized as color-in-motion.",
+      "caption": "光追光",
       "compose": "diagonal",
       "distance": "medium",
-      "concrete_ratio": 0.20
+      "concrete_ratio": 0.08
     },
     {
-      "scene": "Modern abstract photography: 内化层 - Intimate close-up of parallel amber light streaks dissolving into blue void, soft focus edges fading to darkness, residual warmth trails like memory fragments. Negative space dominates (70% deep blue-black), thin golden lines barely visible, dissolution of pursuit into color mist, NO objects, NO people, pure emotional release through light dispersion.",
-      "caption": "线消失在蓝里",
+      "scene": "Kazimir Malevich suprematist composition: 内化层 - Extreme close-up of single fading amber streak dissolving into infinite blue void, 88% negative space (deep blue-black), thin horizontal gold line fragmenting into particles and mist, soft-focus edges, emotional exhaustion expressed through chromatic dispersion where warmth dissipates into cold, NO objects, pure color dissolution.",
+      "caption": "橙融入深蓝",
       "compose": "center",
       "distance": "close",
-      "concrete_ratio": 0.10
+      "concrete_ratio": 0.03
     }
   ]
 }
 
 **Visual DNA Continuity:**
-All three panels share PARALLEL BLUE-AMBER LINEAR FLOW (color bands → ceiling light → dissolving streaks), but abstraction level increases from textured geometry → impossible space → pure light dissolution.
+All three panels share HORIZONTAL AMBER-TO-BLUE FLOW (color field → light streaks → dissolving particles), expressing "pursuit" through PURE CHROMATIC MOVEMENT with ZERO representational elements. Think Rothko color planes, Kandinsky geometric energy, Malevich void - NOT trains, NOT spaces.
 
 ═══════════════════════════════════════════════════════════════════════
 
@@ -436,12 +440,19 @@ STYLE GUIDANCE for "${style}":
 ${symbols.length > 0 ? `- If these symbols appear in dream, transmute them into ABSTRACT PATTERNS: ${symbols.join(', ')}` : ''}
 ${mood ? `- Emotional undertone (NOT literal): ${mood}` : ''}
 
+🎨 THINK LIKE AN ABSTRACT PAINTER, NOT A SCENE DESIGNER:
+
+You are Wassily Kandinsky, Mark Rothko, and Kazimir Malevich combined. You paint PURE EMOTION through COLOR, LIGHT, and GEOMETRIC FORM.
+
 CRITICAL REMINDERS:
-1. First, identify ONE visual DNA element from the dream — expressed as COLOR/LIGHT/TEXTURE (NOT object names)
-2. Panel 1 (wide): Show it as PURE COLOR FIELD / LIGHT PATTERN (abstract, atmospheric)
-3. Panel 2 (medium): Show it in IMPOSSIBLE SPACE (same color/light DNA, wrong context/gravity)
-4. Panel 3 (close): Show it DISSOLVING / DISPERSING (light particles, color mist, fading edges)
-5. All three panels must ECHO the same visual DNA through COLOR and LIGHT, not objects
+1. First, identify the dream's EMOTIONAL CORE (fear, longing, chaos, loss)
+2. Translate emotion into VISUAL DNA: Choose ONE color relationship + ONE form rhythm (e.g., "warm-to-cold gradient" + "diagonal ascending lines")
+3. Panel 1 (wide): Express this as PURE COLOR FIELD composition (Rothko-style color planes, NO objects, NO spaces)
+4. Panel 2 (medium): Same visual DNA with KINETIC ENERGY (Kandinsky-style geometric abstraction, light-in-motion, NO architecture)
+5. Panel 3 (close): Final DISSOLUTION (Malevich-style void, particles fading, 85%+ negative space)
+6. All three panels = ONE CHROMATIC POEM with ZERO representational elements
+
+**Absolute Rule**: If you can NAME the object/space you're describing (corridor, room, tunnel, building, stairs), you FAILED. Describe only COLOR RELATIONSHIPS, LIGHT DIRECTION, ATMOSPHERIC DEPTH, GEOMETRIC RHYTHM.
 6. Abstraction level must be ≥0.70, concrete_ratio must be ≤0.30 per panel
 
 Respond with VALID JSON (following the schema above):
@@ -556,17 +567,18 @@ async function generateImage(
   const compositionKey = `panel${panelIndex + 1}` as 'panel1' | 'panel2' | 'panel3';
   const compositionTemplate = styleConfig.compositionGuide[compositionKey];
 
-  // FORCE modern art style by adding explicit contemporary keywords
-  // Build prompt with modern art enforcement at the BEGINNING (most important position)
-  const modernArtPrefix = 'contemporary digital art, modern 21st century aesthetic, photorealistic CGI rendering, cinematic photography,';
+  // FORCE abstract art style by adding explicit artist style references
+  // These artists are known for pure abstraction with ZERO representational elements
+  const abstractArtPrefix = 'abstract expressionism in the style of Mark Rothko and Wassily Kandinsky, color field painting, geometric abstraction, suprematist composition, non-objective art, pure chromatic study,';
 
   // Add composition template BEFORE the LLM scene description for stronger control
-  const fullPrompt = `${modernArtPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
+  const fullPrompt = `${abstractArtPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
 
-  // AGGRESSIVE negative prompt to completely block traditional Asian art styles, literal subjects, AND architectural elements
+  // AGGRESSIVE negative prompt to completely block ALL representational elements
+  const representationalNegative = 'realistic, photorealistic, representational art, figurative art, recognizable objects, identifiable subjects, literal interpretation, concrete forms, physical objects, real-world elements';
   const indirectRepresentationNegative = 'human face, human faces, direct eye contact, full body shot, portrait, close-up face, facial features, literal subject, main character visible, person in focus, clear human figure';
-  const architecturalNegative = 'room, corridor, hallway, building, architecture, parking lot, garage, street, road, wall, floor, ceiling, door, window, interior, exterior, house, office, lobby, tunnel, bridge, staircase visible, recognizable space, realistic environment, constructed space, man-made structure';
-  const negativePrompt = `${styleConfig.negative}, ${indirectRepresentationNegative}, ${architecturalNegative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, classical painting, oil painting, acrylic painting, canvas painting, brush strokes, traditional chinese art, japanese art, asian traditional art, calligraphy, seal stamps, ancient art, historical painting, classical landscape, traditional portrait, brush painting, ink drawing, traditional illustration, vintage painting, antique art, classical art style, traditional artistic techniques, hand-painted, brushwork, traditional medium, classical chinese painting, traditional asian aesthetics`;
+  const architecturalNegative = 'room, corridor, hallway, building, architecture, parking lot, garage, street, road, wall, floor, ceiling, door, window, interior, exterior, house, office, lobby, tunnel, bridge, staircase visible, recognizable space, realistic environment, constructed space, man-made structure, architectural elements, structural forms, building materials';
+  const negativePrompt = `${styleConfig.negative}, ${representationalNegative}, ${indirectRepresentationNegative}, ${architecturalNegative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, classical painting, oil painting, acrylic painting, canvas painting, brush strokes, traditional chinese art, japanese art, asian traditional art, calligraphy, seal stamps, ancient art, historical painting, classical landscape, traditional portrait, brush painting, ink drawing, traditional illustration, vintage painting, antique art, classical art style, traditional artistic techniques, hand-painted, brushwork, traditional medium, classical chinese painting, traditional asian aesthetics`;
 
   console.log('Generating image with style:', style, 'panel:', panelIndex + 1);
   console.log('Composition template:', compositionTemplate);
