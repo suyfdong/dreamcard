@@ -153,9 +153,9 @@ export default function Home() {
 
           <Button
             onClick={handleGenerate}
-            disabled={!dreamText.trim() || isGenerating}
+            disabled={dreamText.trim().length < 10 || isGenerating}
             className="gradient-brand h-12 w-full rounded-xl text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/30"
-            title={!dreamText.trim() ? "请先输入梦境描述（至少10个字符）" : isGenerating ? "正在生成中..." : "点击生成梦境卡片"}
+            title={dreamText.trim().length < 10 ? `请输入至少10个字符（当前${dreamText.trim().length}个）` : isGenerating ? "正在生成中..." : "点击生成梦境卡片"}
           >
             {isGenerating ? (
               <>
