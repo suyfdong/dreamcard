@@ -19,50 +19,37 @@ export function ProgressBar({ stages, currentStage, progress }: ProgressBarProps
   // Smooth animated progress (always increasing for better UX)
   const [displayProgress, setDisplayProgress] = useState(0);
 
+  // Single effect to handle both real progress updates and fake increments
   useEffect(() => {
-    // Start from 0 and smoothly animate to target progress
-    let currentProgress = displayProgress;
-    const targetProgress = progress;
-
-    // If target is less than current (shouldn't happen often), jump to it
-    if (targetProgress < currentProgress) {
-      setDisplayProgress(targetProgress);
-      return;
-    }
-
-    // Smooth increment animation
+    // Update every 300ms for smooth animation
     const interval = setInterval(() => {
-      if (currentProgress < targetProgress) {
-        // Increment by small steps for smooth animation
-        const increment = Math.max(0.5, (targetProgress - currentProgress) / 20);
-        currentProgress = Math.min(currentProgress + increment, targetProgress);
-        setDisplayProgress(Math.floor(currentProgress));
-      } else {
-        clearInterval(interval);
-      }
-    }, 100); // Update every 100ms
+      setDisplayProgress((prev) => {
+        // If we're close to completion, just show 100%
+        if (progress >= 100) {
+          return 100;
+        }
+
+        // If real progress is higher than display, move toward it faster
+        if (progress > prev) {
+          const diff = progress - prev;
+          const increment = Math.max(0.5, diff / 10); // Catch up speed
+          return Math.min(prev + increment, progress, 100);
+        }
+
+        // Otherwise add fake tiny increments to show "activity"
+        // Keep moving slowly even when backend is stuck
+        if (prev < 95) {
+          const fakeIncrement = Math.random() * 0.4 + 0.2; // 0.2-0.6% per tick
+          return Math.min(prev + fakeIncrement, 95); // Cap at 95% for fake progress
+        }
+
+        // If we're at 95% and waiting for backend, just stay there
+        return prev;
+      });
+    }, 300); // Update every 300ms
 
     return () => clearInterval(interval);
-  }, [progress, displayProgress]);
-
-  // Add subtle "fake" progress when stuck at same value for too long
-  // This keeps the bar moving even when backend is processing, giving users confidence
-  useEffect(() => {
-    if (displayProgress >= 95) return; // Don't fake progress near completion
-
-    const fakeProgressTimer = setInterval(() => {
-      setDisplayProgress((prev) => {
-        // Add tiny increments (0.2-0.5%) to show constant "activity"
-        const fakeIncrement = Math.random() * 0.3 + 0.2;
-        const newProgress = prev + fakeIncrement;
-        // Allow fake progress to go slightly ahead of real progress (max 95%)
-        // This creates the illusion of constant movement
-        return Math.min(newProgress, 95);
-      });
-    }, 500); // Every 500ms add tiny bit (faster for better perception)
-
-    return () => clearInterval(fakeProgressTimer);
-  }, [displayProgress]);
+  }, [progress]); // Only depend on real progress from backend
 
   return (
     <div className="space-y-6">
