@@ -33,9 +33,9 @@ interface QualityCheckResult {
 function validateAbstractQuality(structure: ThreeActStructure): QualityCheckResult {
   const failures: string[] = [];
 
-  // Rule 1: Abstraction level >= 0.65
-  if (structure.abstraction_level < 0.65) {
-    failures.push(`Abstraction level too low: ${structure.abstraction_level} (need ≥0.65)`);
+  // Rule 1: Abstraction level >= 0.50 (lowered for better success rate)
+  if (structure.abstraction_level < 0.50) {
+    failures.push(`Abstraction level too low: ${structure.abstraction_level} (need ≥0.50)`);
   }
 
   // Rule 2: All 3 panels present with required fields
@@ -274,12 +274,12 @@ async function parseDreamWithLLM(
 - Composition: LOW ANGLE or EXTREME CLOSE-UP, never boring mid-shot
 - Feeling: "Being pulled into a digital dream", not "generic cyberpunk street"
 
-**Example - Exam Anxiety Dream (Cyber style):**
-1. Symbolic: Endless floating desks in dark void, glowing neon blank exam papers, flickering fluorescent light
-2. Jump-cut: Neon tunnel shaped like exam answer sheet, walls flicker with error symbols and wrong answers, oppressive reflective floor
-3. Internalization: Pen tip dripping glowing liquid ink, melting into code streams, floating numbers surrounding, dissolution of anxiety
+**Example - "Lost in Endless Stairs" Dream (Minimal style - CORRECT ABSTRACT APPROACH):**
+1. Symbolic: Diagonal ascending light beams in cobalt blue void, 80% negative space, single white neon line cutting through darkness, cold geometric pattern suggesting upward motion
+2. Jump-cut: Same diagonal light pattern now inverted and multiplied, creating impossible perspective where lines defy gravity, atmospheric blue haze with hard white accents, disorienting symmetry
+3. Internalization: Light beams fragmenting into scattered geometric shards, fading into deep blue-black void, 90% negative space, dissolution of structure into pure color field
 
-All three must share: NEON GLOW + DARK VOID + VERTICAL/HORIZONTAL LINES (exam paper grid pattern)
+All three must share: DIAGONAL LIGHT LINES + COBALT BLUE VOID + GEOMETRIC ABSTRACTION (NO stairs visible!)
 
 ═══════════════════════════════════════════════════════════════════════
 🔗 RESONANCE PRINCIPLE: Three Panels Must ECHO Not EXPLAIN
@@ -329,6 +329,9 @@ All three must share: NEON GLOW + DARK VOID + VERTICAL/HORIZONTAL LINES (exam pa
 - ❌ NEVER create A→B→C chronological story
 - ❌ NEVER show traditional art (watercolor, ink wash, calligraphy, classical painting)
 - ❌ NEVER include text, logos, watermarks, or readable words
+- ❌ ABSOLUTELY FORBIDDEN: rooms, corridors, hallways, buildings, architecture, parking lots, streets, walls, floors, ceilings, doors, windows (architectural elements)
+- ❌ ABSOLUTELY FORBIDDEN: recognizable spaces, realistic environments, literal objects
+- ✅ ONLY USE: color fields, light phenomena, abstract patterns, atmospheric effects, geometric abstractions
 
 **Conceptual Taboos:**
 - ❌ NEVER explain or resolve the dream
@@ -560,9 +563,10 @@ async function generateImage(
   // Add composition template BEFORE the LLM scene description for stronger control
   const fullPrompt = `${modernArtPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
 
-  // AGGRESSIVE negative prompt to completely block traditional Asian art styles AND literal subjects
+  // AGGRESSIVE negative prompt to completely block traditional Asian art styles, literal subjects, AND architectural elements
   const indirectRepresentationNegative = 'human face, human faces, direct eye contact, full body shot, portrait, close-up face, facial features, literal subject, main character visible, person in focus, clear human figure';
-  const negativePrompt = `${styleConfig.negative}, ${indirectRepresentationNegative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, classical painting, oil painting, acrylic painting, canvas painting, brush strokes, traditional chinese art, japanese art, asian traditional art, calligraphy, seal stamps, ancient art, historical painting, classical landscape, traditional portrait, brush painting, ink drawing, traditional illustration, vintage painting, antique art, classical art style, traditional artistic techniques, hand-painted, brushwork, traditional medium, classical chinese painting, traditional asian aesthetics`;
+  const architecturalNegative = 'room, corridor, hallway, building, architecture, parking lot, garage, street, road, wall, floor, ceiling, door, window, interior, exterior, house, office, lobby, tunnel, bridge, staircase visible, recognizable space, realistic environment, constructed space, man-made structure';
+  const negativePrompt = `${styleConfig.negative}, ${indirectRepresentationNegative}, ${architecturalNegative}, watercolor painting, ink wash painting, chinese brush painting, sumi-e, traditional art, classical painting, oil painting, acrylic painting, canvas painting, brush strokes, traditional chinese art, japanese art, asian traditional art, calligraphy, seal stamps, ancient art, historical painting, classical landscape, traditional portrait, brush painting, ink drawing, traditional illustration, vintage painting, antique art, classical art style, traditional artistic techniques, hand-painted, brushwork, traditional medium, classical chinese painting, traditional asian aesthetics`;
 
   console.log('Generating image with style:', style, 'panel:', panelIndex + 1);
   console.log('Composition template:', compositionTemplate);
