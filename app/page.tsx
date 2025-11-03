@@ -29,8 +29,11 @@ export default function Home() {
   const handleGenerate = () => {
     const trimmedText = dreamText.trim();
 
+    console.log('Generate clicked, dreamText:', dreamText, 'trimmed:', trimmedText);
+
     // Validate input before submitting
     if (!trimmedText) {
+      console.log('Validation failed: empty text');
       toast({
         title: "Dream description required",
         description: "Please describe your dream first",
@@ -40,14 +43,16 @@ export default function Home() {
     }
 
     if (trimmedText.length < 10) {
+      console.log('Validation failed: too short', trimmedText.length);
       toast({
         title: "Description too short",
-        description: "Please provide at least 10 characters",
+        description: `Please provide at least 10 characters (you have ${trimmedText.length})`,
         variant: "destructive",
       });
       return;
     }
 
+    console.log('Validation passed, starting generation...');
     setIsGenerating(true);
 
     // Convert symbols to lowercase for backend
@@ -55,6 +60,8 @@ export default function Home() {
 
     // Generate a temporary projectId for immediate navigation
     const tempProjectId = `temp-${Date.now()}`;
+
+    console.log('Navigating to:', `/result/${tempProjectId}`);
 
     // Navigate IMMEDIATELY (no waiting!)
     router.push(`/result/${tempProjectId}`);
