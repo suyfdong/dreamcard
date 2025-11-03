@@ -10,7 +10,7 @@ const generateSchema = z.object({
   inputText: z.string().min(10).max(1000),
   style: z.enum(['minimal', 'film', 'cyber', 'pastel']),
   symbols: z.array(z.string()).optional().default([]),
-  mood: z.string().optional(),
+  mood: z.string().optional().transform((val: string | undefined) => val && val.trim() ? val : undefined),
   visibility: z.enum(['private', 'public']).optional().default('private'),
 });
 
