@@ -50,13 +50,13 @@ export function PanelGrid({ panels, aspectRatio, onTextChange }: PanelGridProps)
         {panels.map((panel) => (
           <div key={panel.position} className="space-y-3">
             <Card className="overflow-hidden rounded-2xl">
-              {/* 固定合理的高度，保持 9:16 比例 */}
-              <div className="relative aspect-[9/16] max-h-[500px]">
+              {/* 使用实际图片比例 3:4 (768x1024) */}
+              <div className="relative aspect-[3/4] max-h-[500px]">
                 <img
                   src={showFinal ? panel.imageUrl : panel.sketchUrl}
                   alt={`Panel ${panel.position}`}
                   className={cn(
-                    "h-full w-full object-cover transition-opacity duration-1000",
+                    "h-full w-full object-contain rounded-2xl transition-opacity duration-1000",
                     showFinal ? "opacity-100" : "opacity-70"
                   )}
                 />
