@@ -155,6 +155,7 @@ export default function Home() {
             onClick={handleGenerate}
             disabled={!dreamText.trim() || isGenerating}
             className="gradient-brand h-12 w-full rounded-xl text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/30"
+            title={!dreamText.trim() ? "请先输入梦境描述（至少10个字符）" : isGenerating ? "正在生成中..." : "点击生成梦境卡片"}
           >
             {isGenerating ? (
               <>
@@ -168,6 +169,11 @@ export default function Home() {
               </>
             )}
           </Button>
+
+          {/* Debug info - remove later */}
+          <div className="mt-2 text-xs text-muted-foreground text-center">
+            Debug: dreamText length = {dreamText.length}, trimmed = {dreamText.trim().length}, isGenerating = {isGenerating.toString()}
+          </div>
         </div>
         </div>
       </div>
