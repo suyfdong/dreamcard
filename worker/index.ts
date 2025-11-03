@@ -274,14 +274,14 @@ async function parseDreamWithLLM(
 - Composition: LOW ANGLE or EXTREME CLOSE-UP, never boring mid-shot
 - Feeling: "Being pulled into a digital dream", not "generic cyberpunk street"
 
-**Example - "Lost in Endless Stairs" Dream (Minimal style - PURE ABSTRACT APPROACH):**
-Visual DNA: VERTICAL RHYTHM + COLD COBALT BLUE + ASCENDING TENSION (NO stairs, NO architecture!)
+**Example - "Lost in Endless Stairs" Dream (Minimal style - EXPRESSIONIST APPROACH):**
+Visual DNA: ANXIETY = NAUSEATING YELLOW-GREEN VORTEX + UPWARD-PULLING BRUSHSTROKES (NO stairs, NO architecture!)
 
-1. Symbolic (WIDE): Pure color field composition - Cobalt blue gradient fills 85% of frame from deep navy bottom to pale cerulean top, single diagonal white-hot light streak cutting from lower left to upper right, Rothko-style color plane with minimal geometry, cold atmospheric depth through blue-to-black tonal shifts, NO objects, NO spaces
-2. Jump-cut (MID): Same diagonal white streak now multiplied into parallel ascending bars, Kandinsky-style geometric abstraction with blue void, bars dissolve into light particles midway creating vertical motion blur, hard-edge color fields meeting soft atmospheric haze, increasing visual tension through repetition, NO architecture, pure light phenomenon
-3. Internalization (CLOSE-UP): Extreme close-up of white light fragments scattering across deep blue void, Malevich-style suprematist composition with geometric shards fading into darkness, 92% negative space, final dissolution where light becomes color mist, soft-focus edges, emotional release through pure chromatic dissolution
+1. Symbolic (WIDE): Van Gogh swirling impasto - Thick vertical brushstrokes in sickly yellow-green churning upward against deep prussian blue void (80% dark), paint texture visible as if smeared with palette knife, centrifugal energy pulling viewer's eye upward in dizzying spiral, cold-warm color clash creating spatial tension, NO steps visible, only the FEELING of endless climbing through color violence
+2. Jump-cut (MID): Munch-style distortion - Those same yellow-green strokes now wavy and bleeding into blue, forms melting and dripping downward while color flows upward (paradox anxiety), wavy vertical bands like heat distortion, brushwork becomes frantic and irregular, psychological disorientation through color-form contradiction, NO architecture, pure painted anxiety
+3. Internalization (CLOSE-UP): Bacon-style visceral smear - Extreme close-up of yellow paint violently smeared across deep blue-black void (85% darkness), thick impasto texture with visible brushwork, paint seems to claw upward leaving gestural marks, final exhaustion where color loses form and becomes raw material, NO objects, only emotional residue
 
-All three panels use: DIAGONAL ASCENDING LIGHT + COBALT BLUE COLOR FIELD + GEOMETRIC ABSTRACTION (like Kandinsky/Rothko/Malevich, ZERO architectural elements)
+All three panels use: UPWARD-VIOLENT BRUSHWORK + YELLOW-GREEN vs BLUE TENSION + THICK PAINT TEXTURE (like Van Gogh's night sky, Munch's scream, Bacon's twisted forms, ZERO literal stairs)
 
 ═══════════════════════════════════════════════════════════════════════
 🔗 RESONANCE PRINCIPLE: Three Panels Must ECHO Not EXPLAIN
@@ -399,40 +399,40 @@ Panel 1: "Train departing from station"
 Panel 2: "Person running on platform"
 Panel 3: "Train disappearing into distance"
 
-✅ EXCELLENT (Pure abstract like Rothko/Kandinsky - ZERO objects, ZERO spaces):
+✅ EXCELLENT (Expressionist emotional violence like Van Gogh/Munch - ZERO objects, ZERO spaces):
 
-Visual DNA: HORIZONTAL MOTION ENERGY expressed through COLOR VELOCITY + AMBER-TO-BLUE CHROMATIC SHIFT
+Visual DNA: DESPERATE PURSUIT = VIOLENT ORANGE SLASHES CHASING INTO COLD BLUE ABYSS
 
 {
-  "abstraction_level": 0.85,
-  "global_palette": "Warm amber orange flowing into cold steel blue, motion blur gradients, deep shadow voids",
+  "abstraction_level": 0.88,
+  "global_palette": "Blazing cadmium orange against icy prussian blue, thick impasto slashes, dragging paint marks",
   "panels": [
     {
-      "scene": "Mark Rothko style color field painting: 象征层 - Large horizontal bands of warm amber orange (upper 40%) meeting cold steel blue (lower 60%), soft-edge transition zone creating atmospheric depth, Rothko-style color plane with subtle texture suggesting velocity, NO trains, NO platforms, NO objects - pure chromatic expression of pursuit energy through warm-to-cold color flow.",
-      "caption": "暖色跑向冷",
-      "compose": "thirds",
+      "scene": "Vincent van Gogh impasto painting: 象征层 - Thick horizontal slashes of burning orange paint (applied with palette knife violence) bleeding into deep blue void, visible brushwork texture creating sense of desperate forward motion, warm color seems to chase into cold darkness but can never catch it, paint layered so thick it creates shadows, raw pursuit energy through color temperature clash, NO trains, NO people, only PAINTED DESPERATION.",
+      "caption": "暖追不上冷",
+      "compose": "diagonal",
       "distance": "wide",
-      "concrete_ratio": 0.05
+      "concrete_ratio": 0.04
     },
     {
-      "scene": "Wassily Kandinsky geometric abstraction: 跳切层 - Multiple horizontal amber light streaks slicing through deep blue void at different speeds (motion blur effect), hard-edge geometric bars with soft atmospheric trails, dynamic rhythm through repetition and speed variation, sense of impossible chase where light itself becomes subject, NO train forms, NO people, pure kinetic energy visualized as color-in-motion.",
-      "caption": "光追光",
+      "scene": "Edvard Munch psychological distortion: 跳切层 - Multiple orange brushstrokes now stretched and warped horizontally like screaming mouths, paint dragged across canvas creating motion blur and anxiety, colors bleeding together where orange desperately reaches for blue but forms distort and melt, wavy horizontal bands expressing psychological chase that can never resolve, brushwork frantic and irregular, NO train shapes, only PAINTED ANXIETY IN MOTION.",
+      "caption": "橙色在尖叫",
       "compose": "diagonal",
       "distance": "medium",
-      "concrete_ratio": 0.08
+      "concrete_ratio": 0.06
     },
     {
-      "scene": "Kazimir Malevich suprematist composition: 内化层 - Extreme close-up of single fading amber streak dissolving into infinite blue void, 88% negative space (deep blue-black), thin horizontal gold line fragmenting into particles and mist, soft-focus edges, emotional exhaustion expressed through chromatic dispersion where warmth dissipates into cold, NO objects, pure color dissolution.",
-      "caption": "橙融入深蓝",
+      "scene": "Francis Bacon visceral expressionism: 内化层 - Extreme close-up of orange paint violently smeared and dragged into blue-black void (82% darkness), thick impasto showing finger marks and palette knife scrapes, paint loses form becoming raw gestural violence, final moment where pursuit becomes exhaustion, color smeared into submission, visible paint texture like wounded flesh, NO objects, only MATERIAL DEFEAT.",
+      "caption": "橙溶入深渊",
       "compose": "center",
       "distance": "close",
-      "concrete_ratio": 0.03
+      "concrete_ratio": 0.02
     }
   ]
 }
 
 **Visual DNA Continuity:**
-All three panels share HORIZONTAL AMBER-TO-BLUE FLOW (color field → light streaks → dissolving particles), expressing "pursuit" through PURE CHROMATIC MOVEMENT with ZERO representational elements. Think Rothko color planes, Kandinsky geometric energy, Malevich void - NOT trains, NOT spaces.
+All three panels share HORIZONTAL ORANGE-INTO-BLUE VIOLENCE (impasto slashes → distorted chase → visceral smear), expressing "pursuit" through PAINTED EMOTIONAL VIOLENCE with ZERO representational elements. Think Van Gogh's Starry Night energy, Munch's The Scream distortion, Bacon's twisted paint - NOT trains, NOT literal motion.
 
 ═══════════════════════════════════════════════════════════════════════
 
@@ -440,19 +440,28 @@ STYLE GUIDANCE for "${style}":
 ${symbols.length > 0 ? `- If these symbols appear in dream, transmute them into ABSTRACT PATTERNS: ${symbols.join(', ')}` : ''}
 ${mood ? `- Emotional undertone (NOT literal): ${mood}` : ''}
 
-🎨 THINK LIKE AN ABSTRACT PAINTER, NOT A SCENE DESIGNER:
+🎨 THINK LIKE AN EXPRESSIONIST MASTER, NOT A SCENE DESIGNER:
 
-You are Wassily Kandinsky, Mark Rothko, and Kazimir Malevich combined. You paint PURE EMOTION through COLOR, LIGHT, and GEOMETRIC FORM.
+You are Vincent van Gogh, Edvard Munch, and Francis Bacon combined. You paint RAW EMOTION through VIOLENT COLOR, TWISTED FORMS, and EXPRESSIVE BRUSHWORK.
+
+**Your Visual Vocabulary:**
+- Van Gogh: Swirling impasto brushstrokes, starry vortexes, vibrant color clashes (yellow-blue, orange-violet)
+- Munch: Wavy distorted forms, anxiety through color bleeding, psychological tension
+- Bacon: Visceral flesh tones, smeared paint, geometric cages, claustrophobic color fields
 
 CRITICAL REMINDERS:
-1. First, identify the dream's EMOTIONAL CORE (fear, longing, chaos, loss)
-2. Translate emotion into VISUAL DNA: Choose ONE color relationship + ONE form rhythm (e.g., "warm-to-cold gradient" + "diagonal ascending lines")
-3. Panel 1 (wide): Express this as PURE COLOR FIELD composition (Rothko-style color planes, NO objects, NO spaces)
-4. Panel 2 (medium): Same visual DNA with KINETIC ENERGY (Kandinsky-style geometric abstraction, light-in-motion, NO architecture)
-5. Panel 3 (close): Final DISSOLUTION (Malevich-style void, particles fading, 85%+ negative space)
-6. All three panels = ONE CHROMATIC POEM with ZERO representational elements
+1. First, identify the dream's EMOTIONAL CORE (fear → nauseous greens, longing → bleeding reds, chaos → swirling yellows)
+2. Translate emotion into VISUAL DNA: Choose ONE color violence + ONE form distortion (e.g., "yellow vortex devouring blue" + "melting vertical streaks")
+3. Panel 1 (wide): Express as EXPRESSIVE COLOR STORM (Van Gogh swirls, thick paint texture, NO objects, NO spaces)
+4. Panel 2 (medium): Same visual DNA with DISTORTION INTENSITY (Munch wavy forms, color bleeding, emotional tension, NO architecture)
+5. Panel 3 (close): Final EMOTIONAL RELEASE (Bacon visceral smears, paint drips, raw gestural marks, 70%+ dark void)
+6. All three panels = ONE EMOTIONAL SCREAM with ZERO representational elements
 
-**Absolute Rule**: If you can NAME the object/space you're describing (corridor, room, tunnel, building, stairs), you FAILED. Describe only COLOR RELATIONSHIPS, LIGHT DIRECTION, ATMOSPHERIC DEPTH, GEOMETRIC RHYTHM.
+**Absolute Rule**: If you can NAME the object/space you're describing (corridor, room, tunnel, building, stairs), you FAILED. Describe only:
+- COLOR VIOLENCE (clashing, bleeding, devouring)
+- BRUSHWORK ENERGY (swirling, slashing, impasto)
+- FORM DISTORTION (melting, twisting, fragmenting)
+- EMOTIONAL TEXTURE (anxiety, ecstasy, dread)
 6. Abstraction level must be ≥0.70, concrete_ratio must be ≤0.30 per panel
 
 Respond with VALID JSON (following the schema above):
@@ -567,12 +576,12 @@ async function generateImage(
   const compositionKey = `panel${panelIndex + 1}` as 'panel1' | 'panel2' | 'panel3';
   const compositionTemplate = styleConfig.compositionGuide[compositionKey];
 
-  // FORCE abstract art style by adding explicit artist style references
-  // These artists are known for pure abstraction with ZERO representational elements
-  const abstractArtPrefix = 'abstract expressionism in the style of Mark Rothko and Wassily Kandinsky, color field painting, geometric abstraction, suprematist composition, non-objective art, pure chromatic study,';
+  // FORCE expressionist art style by adding explicit artist style references
+  // These artists are known for emotional violence and dramatic brushwork with ZERO literal subjects
+  const expressionistPrefix = 'expressionist masterpiece in the style of Vincent van Gogh and Edvard Munch, thick impasto brushwork, violent color clashes, swirling paint texture, psychological distortion, Francis Bacon visceral intensity, dramatic brushstrokes, post-impressionist color violence, emotional expressionism,';
 
   // Add composition template BEFORE the LLM scene description for stronger control
-  const fullPrompt = `${abstractArtPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
+  const fullPrompt = `${expressionistPrefix} ${compositionTemplate}, ${prompt}. ${styleConfig.prompt}`;
 
   // AGGRESSIVE negative prompt to completely block ALL representational elements
   const representationalNegative = 'realistic, photorealistic, representational art, figurative art, recognizable objects, identifiable subjects, literal interpretation, concrete forms, physical objects, real-world elements';
