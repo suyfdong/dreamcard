@@ -27,7 +27,26 @@ export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = () => {
-    if (!dreamText.trim()) return;
+    const trimmedText = dreamText.trim();
+
+    // Validate input before submitting
+    if (!trimmedText) {
+      toast({
+        title: "Dream description required",
+        description: "Please describe your dream first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (trimmedText.length < 10) {
+      toast({
+        title: "Description too short",
+        description: "Please provide at least 10 characters",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsGenerating(true);
 
@@ -42,10 +61,10 @@ export default function Home() {
 
     // Call API in background (fire and forget)
     apiClient.generate({
-      inputText: dreamText,
+      inputText: trimmedText,
       style,
       symbols,
-      mood: mood.toLowerCase(),
+      mood: mood ? mood.toLowerCase() : undefined, // Only send mood if it exists
       visibility: 'private',
     }).then(response => {
       // Store both IDs for result page to use
@@ -55,7 +74,15 @@ export default function Home() {
     }).catch(error => {
       console.error('Error generating dream card:', error);
       // Store error for result page to show
-      sessionStorage.setItem('generateError', error instanceof Error ? error.message : 'Failed to start generation');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to start generation';
+      sessionStorage.setItem('generateError', errorMessage);
+
+      // Also show toast if still on page
+      toast({
+        title: "Generation failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
     });
   };
 
