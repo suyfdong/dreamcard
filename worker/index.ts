@@ -1,3 +1,6 @@
+// Load environment variables first (required for tsx execution)
+import 'dotenv/config';
+
 import { Worker, Job } from 'bullmq';
 import { connection, ImageGenJobData } from '@/lib/redis';
 import { prisma } from '@/lib/db';
@@ -641,8 +644,8 @@ async function generateImage(
       break;
 
     case 'film':
-      // Surreal Dream: Dalí + Magritte
-      artistPrefix = 'surrealist masterpiece in the style of Salvador Dalí and René Magritte, surreal dream atmosphere, melting distortion meets impossible clarity, purple-orange complementary color clash, green-red inversion, hyper-realistic paint texture with irrational composition, impossible spatial contradictions, hard-edge precision breaking into liquid forms, absurdist juxtaposition, dream logic,';
+      // Surreal Dream: Dalí + Magritte (REDUCED COLOR INTENSITY)
+      artistPrefix = 'surrealist masterpiece in the style of Salvador Dalí and René Magritte, surreal dream atmosphere, melting distortion meets impossible clarity, muted purple-orange harmony with desaturated complementary colors, soft pastel tones creating dreamy atmosphere, hyper-realistic paint texture with irrational composition, impossible spatial contradictions, hard-edge precision breaking into liquid forms, absurdist juxtaposition, gentle color transitions,';
       break;
 
     case 'cyber':

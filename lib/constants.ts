@@ -32,7 +32,7 @@ export const STYLES = {
     // Artist System: Salvador Dalí + René Magritte (超现实矛盾美学)
     artistReference: 'Salvador Dalí + René Magritte',
     artistPhilosophy: 'Dalí\'s melting reality meets Magritte\'s impossible contradictions. Dreams expose the absurdity beneath rational surfaces.',
-    colorPalette: 'Purple-orange clash, green-red inversion, complementary color violence, Magritte sky blue vs earth brown',
+    colorPalette: 'Muted purple-orange harmony, soft green-red balance, desaturated complementary colors, Magritte sky blue vs warm earth tones',
     // Energy Progression: Sensation → Distortion → Echo
     compositionGuide: {
       panel1: 'SENSATION (初感) - WIDE SHOT: Establish surreal calm before chaos. Magritte-style color field where sky purple meets earth orange (70% negative space), crisp hard edges like hyper-real painting, single impossible element (inverted gravity hint), deceptive clarity creating unease, rational surface hiding irrational core',
@@ -42,7 +42,7 @@ export const STYLES = {
     // Sketch-first: Surreal composition guide
     sketchPrompt: 'surrealist composition sketch, Magritte hard edges, Dalí melting forms, impossible object placement, complementary color zones, contradictory perspective',
     // Final render: Surreal Dream aesthetic
-    prompt: 'surrealist masterpiece, Salvador Dalí melting distortion meets René Magritte impossible clarity, purple-orange complementary color clash creating visual tension, green-red inversion, hyper-realistic paint texture with irrational composition, impossible spatial contradictions, hard-edge precision breaking into liquid forms, absurdist juxtaposition, dream logic exposing reality\'s fragility, color violence through complementary warfare',
+    prompt: 'surrealist masterpiece, Salvador Dalí melting distortion meets René Magritte impossible clarity, muted purple-orange harmony with desaturated complementary colors, soft pastel tones with surreal atmosphere, hyper-realistic paint texture with irrational composition, impossible spatial contradictions, hard-edge precision breaking into liquid forms, absurdist juxtaposition, dream logic exposing reality\'s fragility, gentle color transitions replacing harsh contrasts',
     negative: 'natural realistic, logical composition, harmonious colors, cozy warm, soft romantic, impressionist blur, text, watermark, faces, full bodies, literal narrative, photographic realism, conventional beauty',
   },
   cyber: {
