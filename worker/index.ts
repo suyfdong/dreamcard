@@ -91,8 +91,9 @@ function validateAbstractQuality(structure: ThreeActStructure, style: string): Q
     if (!panel.scene || panel.scene.length < 80) {
       failures.push(`Panel ${i + 1} scene too short (need 80+ chars for detailed abstract description)`);
     }
-    if (!panel.caption || panel.caption.length < 4 || panel.caption.length > 15) {
-      failures.push(`Panel ${i + 1} caption must be 4-15 characters (dream sentence format)`);
+    // Caption validation: 10-50 characters for English philosophical phrases (3-8 words)
+    if (!panel.caption || panel.caption.length < 10 || panel.caption.length > 50) {
+      failures.push(`Panel ${i + 1} caption must be 10-50 characters (3-8 word English philosophical phrase)`);
     }
 
     // Check for forbidden literal subjects
@@ -315,12 +316,13 @@ This is NOT a story (A→B→C). This is an EMOTIONAL JOURNEY through three ener
 🎨 FOUR DREAM TYPES: Psychological Artist Systems
 ═══════════════════════════════════════════════════════════════════════
 
-**Memory Dream (记忆梦) - Van Gogh Late + Cézanne:**
+**Memory Dream (记忆梦) - Post-Impressionist Techniques:**
 - **Core Emotion**: Nostalgia, loss, tenderness, longing for past
-- **Artist Spirit**: Van Gogh's tender warmth + Cézanne's geometric structure
+- **Technical Approach**: STYLE REFERENCE ONLY - use thick impasto brushwork + geometric color planes (DO NOT copy famous paintings)
 - **Color System**: Mist blue, golden fog, ochre red, amber warmth, earth tones
-- **Brushwork**: Thick impasto with architectural solidity, warm-cool temperature clashes
+- **Brushwork**: Thick visible paint texture with architectural color structure, warm-cool temperature contrast
 - **User Feels**: Dreams of places I've been, people I've lost, childhood scenes
+- **CRITICAL**: Create ORIGINAL abstract compositions inspired by user's dream, NOT reproductions of Starry Night/Sunflowers/Mont Sainte-Victoire
 - **Masterworks**: Van Gogh late period paintings + Cézanne Mont Sainte-Victoire
 
 **Surreal Dream (超现实梦) - Dalí + Magritte:**
@@ -373,21 +375,21 @@ Panel 3: "Endless stairs perspective"
   "panels": [
     {
       "scene": "${styleConfig.artistReference} masterpiece: SENSATION - WIDE SHOT establishing nostalgic spatial trap. Distant parallel golden lines (memory of stairs abstracted to light strokes) floating in vast mist blue void (70% negative space), Cézanne geometric structure creating order, Van Gogh warm amber glow on lines suggesting past warmth, soft ochre fog creating atmospheric depth, parallel lines neither ascending nor descending but suspended, calm entry into circular memory, thick impasto texture visible as memory's weight.",
-      "caption": "金线悬在雾中",
+      "caption": "Golden threads in mist",
       "compose": "symmetry",
       "distance": "wide",
       "concrete_ratio": 0.08
     },
     {
       "scene": "${styleConfig.artistReference} masterpiece: DISTORTION - MID SHOT spatial conflict. Those same parallel golden lines now twisted and inverting (Cézanne geometry breaking apart), some lines climbing while others falling simultaneously creating impossible paradox, mist blue clashing with ochre red creating temperature war, Van Gogh thick brushwork showing emotional turbulence, lines melting and reforming in loop, atmospheric confusion through color temperature shifts, spatial anxiety where up equals down.",
-      "caption": "上即是下循环",
+      "caption": "Up equals down forever",
       "compose": "diagonal",
       "distance": "medium",
       "concrete_ratio": 0.12
     },
     {
       "scene": "${styleConfig.artistReference} masterpiece: ECHO - CLOSE-UP emotional release. Extreme close-up of golden lines dissolving into particles dispersing into blue void (80% darkness), soft impasto texture fading like breath on glass, amber warmth becoming mist, lines losing structure and becoming color memory, negative space dominates as trapped feeling surrenders to acceptance, memory geometry dissolving into atmosphere.",
-      "caption": "线成雾而散",
+      "caption": "Lines become fog and scatter",
       "compose": "center",
       "distance": "close",
       "concrete_ratio": 0.04
@@ -471,9 +473,10 @@ You MUST return a JSON object with this exact structure:
 6. Reference the composition template provided above
 
 **For "caption" field:**
-- 8-12 Chinese characters, DREAM SENTENCE (梦句) format
-- Poetic fragment, NOT literal description
-- Examples: "光跑在前" / "金线悬在雾中" / "线成雾而散"
+- 3-8 words in English, PHILOSOPHICAL/POETIC format
+- Abstract, contemplative, or surreal statement
+- NOT literal description, should evoke emotion or thought
+- Examples: "Light runs ahead" / "Golden threads in mist" / "Lines become fog and scatter" / "Shadows remember what light forgot" / "Time folds into itself"
 
 **For "compose" and "distance" fields:**
 - Panel 1: distance="wide", compose based on emotion (symmetry/diagonal/thirds/center)
@@ -501,21 +504,21 @@ Respond with VALID JSON (following the schema above):
   "panels": [
     {
       "scene": "Contemporary/Surrealist/Modern [art style]: [象征层] - Describe using COLOR FIELDS + LIGHT QUALITIES + ATMOSPHERIC DEPTH. At least 70% abstract language. NO literal subjects, NO faces, NO bodies.",
-      "caption": "梦句 (8-12 characters)",
+      "caption": "Light runs ahead",
       "compose": "symmetry",
       "distance": "wide",
       "concrete_ratio": 0.20
     },
     {
       "scene": "Contemporary/Surrealist/Modern [art style]: [跳切层] - Same visual DNA (color/light) in IMPOSSIBLE CONTEXT. Describe through SPACE and ATMOSPHERE. NO literal subjects, NO faces, NO bodies.",
-      "caption": "梦句 (8-12 characters)",
+      "caption": "Shadows fold inward",
       "compose": "diagonal",
       "distance": "medium",
       "concrete_ratio": 0.25
     },
     {
       "scene": "Contemporary/Surrealist/Modern [art style]: [内化层] - Visual DNA DISSOLVING into pure light/color mist. Negative space dominates. NO objects, NO people.",
-      "caption": "梦句 (8-12 characters)",
+      "caption": "Memory becomes mist",
       "compose": "center",
       "distance": "close",
       "concrete_ratio": 0.10
@@ -633,8 +636,8 @@ async function generateImage(
 
   switch (style) {
     case 'minimal':
-      // Memory Dream: Van Gogh Late + Cézanne
-      artistPrefix = 'masterpiece in the style of Vincent van Gogh late period and Paul Cézanne, memory dream atmosphere, tender impasto warmth meets geometric color planes, mist blue and golden amber fog, soft ochre earth tones, thick visible brushwork with architectural structure, warm light remnants like memory temperature, atmospheric haze with geometric solidity, nostalgic depth,';
+      // Memory Dream: Impressionist/Post-Impressionist techniques (avoid naming specific artists)
+      artistPrefix = 'abstract memory dream, tender thick impasto brushwork technique, geometric color field composition, soft mist blue and warm golden amber atmosphere, visible paint texture creating emotional depth, architectural color planes with nostalgic haze, post-impressionist color theory, warm earth tones meeting cool atmospheric depth, abstract emotional landscape,';
       break;
 
     case 'film':

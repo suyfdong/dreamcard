@@ -95,8 +95,7 @@ export function DreamStyleCard({ style, selected, onClick }: DreamStyleCardProps
         )}>
           {config.title}
         </h3>
-        <p className="mb-2 text-center text-sm text-white/90 drop-shadow-md">{config.description}</p>
-        <p className="text-center text-xs text-white/70 drop-shadow-sm italic">{config.subtitle}</p>
+        <p className="text-center text-sm text-white/90 drop-shadow-md">{config.description}</p>
       </div>
 
       {selected && (

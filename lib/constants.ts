@@ -19,9 +19,9 @@ export const STYLES = {
     },
     // Sketch-first: Memory sketch guidance
     sketchPrompt: 'soft geometric sketch, Cézanne-inspired planes, warm-cool color zones, nostalgic atmosphere guide, tender structural composition',
-    // Final render: Memory Dream aesthetic
-    prompt: 'memory dream atmosphere, Vincent van Gogh tender impasto warmth meets Paul Cézanne geometric color planes, mist blue and golden amber fog creating nostalgic depth, soft ochre and earth tones, thick visible brushwork with architectural structure, warm light remnants like memory temperature, atmospheric haze with geometric solidity, emotional weight through color and form, past solidified as color architecture',
-    negative: 'cold digital, oversaturated neon, harsh contrast, chaotic cluttered, modern smartphone aesthetic, flat no-depth, photorealistic details, text, watermark, faces, full bodies, literal objects, sharp edges',
+    // Final render: Memory Dream aesthetic (de-emphasize artist names, focus on techniques)
+    prompt: 'abstract memory dream atmosphere, tender thick impasto brushwork creating warmth, geometric color field planes with nostalgic depth, mist blue and golden amber atmospheric fog, soft ochre and earth tone palette, visible paint texture with architectural color structure, warm light remnants suggesting memory temperature, post-impressionist color theory, atmospheric haze with geometric solidity, emotional weight through abstract color and form, past expressed as color architecture',
+    negative: 'cold digital, oversaturated neon, harsh contrast, chaotic cluttered, modern smartphone aesthetic, flat no-depth, photorealistic details, text, watermark, faces, full bodies, literal objects, sharp edges, famous paintings, recognizable artworks, Starry Night, Sunflowers, art reproduction, museum piece, exact copy of masterpiece, literal Van Gogh painting, literal Cézanne painting',
   },
   film: {
     name: 'Surreal Dream',

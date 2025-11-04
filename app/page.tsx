@@ -32,21 +32,11 @@ export default function Home() {
     console.log('Generate clicked, dreamText:', dreamText, 'trimmed:', trimmedText);
 
     // Validate input before submitting
-    if (!trimmedText) {
-      console.log('Validation failed: empty text');
+    if (!trimmedText || trimmedText.length < 10) {
+      console.log('Validation failed:', !trimmedText ? 'empty' : 'too short', trimmedText.length);
       toast({
-        title: "Dream description required",
-        description: "Please describe your dream first",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (trimmedText.length < 10) {
-      console.log('Validation failed: too short', trimmedText.length);
-      toast({
-        title: "Description too short",
-        description: `Please provide at least 10 characters (you have ${trimmedText.length})`,
+        title: "Tell me more about your dream",
+        description: "Share more details to create a meaningful dream card. What did you see? How did it feel?",
         variant: "destructive",
       });
       return;
@@ -169,11 +159,6 @@ export default function Home() {
               </>
             )}
           </Button>
-
-          {/* Debug info - remove later */}
-          <div className="mt-2 text-xs text-muted-foreground text-center">
-            Debug: dreamText length = {dreamText.length}, trimmed = {dreamText.trim().length}, isGenerating = {isGenerating.toString()}
-          </div>
         </div>
         </div>
       </div>
