@@ -531,6 +531,19 @@ Respond with VALID JSON (following the schema above):
 
 DO NOT illustrate "what happened in the dream". Paint "HOW the dream FEELS" using COLOR, LIGHT, and SPACE.`;
 
+  // Build user message with dream text + optional symbols and mood
+  let userMessage = `Dream: ${inputText}`;
+
+  if (symbols && symbols.length > 0) {
+    userMessage += `\n\nUser-selected symbolic elements: ${symbols.join(', ')}`;
+    userMessage += `\nPlease incorporate these symbols SUBTLY as abstract visual metaphors (not literal objects). For example: "mirror" → duplicated color planes with slight shift, "stairs" → ascending diagonal light rhythm, "ocean" → horizontal blue void swallowing sightline.`;
+  }
+
+  if (mood) {
+    userMessage += `\n\nDesired mood/atmosphere: ${mood}`;
+    userMessage += `\nEmphasize this emotional tone through color temperature, light quality, and compositional energy.`;
+  }
+
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -543,7 +556,7 @@ DO NOT illustrate "what happened in the dream". Paint "HOW the dream FEELS" usin
       model: 'meta-llama/llama-3.3-70b-instruct',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: inputText },
+        { role: 'user', content: userMessage },
       ],
       temperature: 0.9, // Higher temperature for more creative interpretations
       max_tokens: 1500, // More tokens for detailed descriptions
