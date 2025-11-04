@@ -14,8 +14,8 @@ interface DreamStyleCardProps {
 
 const styleConfig = {
   minimal: {
-    title: "记忆梦 Memory",
-    description: "梦到过去的地方",
+    title: "Memory Dream",
+    description: "Dreams of places I've been",
     subtitle: "Van Gogh + Cézanne",
     // Using original Memory Dream image
     imageUrl: "https://images.pexels.com/photos/1209843/pexels-photo-1209843.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -23,8 +23,8 @@ const styleConfig = {
     bgColor: "from-orange-600/30",
   },
   film: {
-    title: "超现实梦 Surreal",
-    description: "世界的法则错乱",
+    title: "Surreal Dream",
+    description: "World logic breaks",
     subtitle: "Dalí + Magritte",
     // Using original Surreal Dream image
     imageUrl: "https://images.pexels.com/photos/1616403/pexels-photo-1616403.jpeg?auto=compress&cs=tinysrgb&w=800",
@@ -32,17 +32,17 @@ const styleConfig = {
     bgColor: "from-purple-600/30",
   },
   cyber: {
-    title: "清醒梦 Lucid",
-    description: "介于梦与醒之间",
-    subtitle: "Turrell + Syd Mead",
+    title: "Lucid Dream",
+    description: "Between sleep and wake",
+    subtitle: "Tanguy + de Chirico",
     // Using original Lucid Dream image
     imageUrl: "https://replicate.delivery/xezq/tjZXUEFBevVDJaAgtyIoqMRwdB6Rm7WqnkCQ1wvFIzjQHejVA/out-0.webp",
     gradient: "from-cyan-500/70 via-blue-600/50 to-transparent",
     bgColor: "from-cyan-600/30",
   },
   pastel: {
-    title: "温柔梦 Pastel",
-    description: "春天般的安慰",
+    title: "Pastel Dream",
+    description: "Spring-like comfort",
     subtitle: "Monet + Van Gogh",
     // Using original Fantasy Dream image
     imageUrl: "https://replicate.delivery/xezq/KskDYLE5M2rFJteUuph9J741X8HJpdyYGVFxftT1w9doB8jVA/out-0.webp",

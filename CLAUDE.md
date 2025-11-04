@@ -747,6 +747,406 @@ TypeScript type errors in `worker/index.ts`:
 
 ---
 
-**Last Updated**: 2025-11-03
+## 📅 Recent Updates Log (Continued)
+
+### 2025-11-03: 方案A渐进式改进 - 心理学梦境类型系统
+
+**实施方案**: 按照GPT建议的"方案A：渐进式改进"重构整个系统
+
+**核心改进** (Commit: e2589b7):
+
+#### 1. 心理学梦境类型系统 (`lib/constants.ts`)
+从"视觉风格"转变为"梦境心理类型"：
+- **minimal** → **Memory Dream (记忆梦)**: Van Gogh晚期 + Cézanne - 怀旧、失落、温柔 - "梦到过去的地方"
+- **film** → **Surreal Dream (超现实梦)**: Dalí + Magritte - 不安、冲突、荒诞 - "世界的法则错乱"
+- **cyber** → **Lucid Dream (清醒梦)**: Turrell + Syd Mead - 意识、漂浮、阈限 - "介于梦与醒之间"
+- **pastel** → **Pastel Dream (温柔梦)**: Monet + Van Gogh杏花 - 治愈、轻盈、温柔 - "春天般的安慰"
+
+每种类型新增字段：
+- `dreamType`: 梦境类型标识
+- `psychologicalCore`: 心理学核心情绪
+- `userFeeling`: 用户感受描述
+- `artistReference`: 艺术家参考
+- `artistPhilosophy`: 艺术哲学说明
+
+#### 2. 三格能量递进系统 (`worker/index.ts`)
+从"镜头语言"升级为"能量递进"：
+- **Panel A - SENSATION (初感)**: 静 - WIDE SHOT - 梦的氛围入口 - 70-75% 负空间
+- **Panel B - DISTORTION (漩涡)**: 动 - MID SHOT - 能量冲突湍流 - 环境混乱
+- **Panel C - ECHO (余晖)**: 空 - CLOSE-UP - 情绪释放消散 - 80-85% 虚空
+
+#### 3. 增强质检系统 (`worker/index.ts:35-135`)
+- 抽象度要求提升：≥0.70 (旧: 0.50)
+- 具象物比例限制：≤0.30 (警告: >0.15)
+- 新增艺术家引用检测
+- 新增情绪节奏关键词检测（calm→chaos→dissolution）
+- 新增禁词自动屏蔽（room/corridor/building/person/tiger等）
+- 输出结构：`{passed, failures[], warnings[]}`
+
+#### 4. LLM提示词系统重写
+- 开头注入梦境类型心理学上下文
+- 融入"画梦原则"6条
+- 四梦境类型心理学详细表格
+- 更新示例遵循能量递进逻辑
+
+#### 5. SDXL生成系统
+艺术家前缀按心理学重新分配：
+- Memory: 怀旧几何温暖（Van Gogh tender + Cézanne geometric）
+- Surreal: 荒诞矛盾暴力（Dalí melting + Magritte impossible）
+- Lucid: 光装置未来主义（Turrell light + Syd Mead visionary）
+- Pastel: 印象派治愈柔和（Monet impressionist + Van Gogh blossoms）
+
+#### 6. 前端UI升级 (`components/DreamStyleCard.tsx`)
+- 梦境类型卡片双语标题（中英文）
+- 心理学用户感受描述
+- 新增艺术家副标题显示（斜体小字）
+
+---
+
+### 2025-11-03: 用户测试反馈 - 待修复问题
+
+**测试状态**: 已部署到Vercel/Railway，用户在线测试后反馈
+
+#### 🔴 问题1: Lucid Dream (清醒梦) 风格不满意
+**用户反馈**: "风格3 lucid那个，我不喜欢他的出图，要全换"
+**当前艺术家**: Turrell + Syd Mead (光装置 + 科幻未来主义)
+**问题分析**:
+- 可能过于科幻/冷硬，缺少梦境感
+- Turrell纯光装置可能太抽象
+- Syd Mead概念设计可能太具象
+
+**待调整方向**:
+1. 更换艺术家组合（考虑更有梦境氛围的艺术家）
+2. 调整色彩系统（当前: 钴蓝+冷白+青光）
+3. 优化LLM提示词（减少科幻感，增强梦境漂浮感）
+4. 调整SDXL参数
+
+#### 🔴 问题2: Pastel Dream (温柔梦) 三格重复
+**用户反馈**: "风格4 pastel那个，三张图几乎一模一样"
+**当前艺术家**: Monet + Van Gogh杏花 (印象派治愈)
+**问题分析**:
+- 能量递进不明显（静→动→空未体现）
+- Monet/Van Gogh杏花过于柔和，缺少Panel 2的冲突感
+- LLM可能生成了相似的抽象描述
+- SDXL对柔和风格的理解可能导致趋同
+
+**待调整方向**:
+1. 增强LLM提示词中的"对比度"要求（Panel 2必须有张力）
+2. 调整compositionGuide模板（强制三格构图差异）
+3. 提高Panel 2的"chaos/conflict"关键词权重
+4. 考虑在Pastel中引入更多变化（虽然柔和但仍需节奏）
+
+#### 🔴 问题3: UI语言问题 - 移除所有中文
+**用户反馈**: "首页四个风格要都是英文的... 把页面里所有的中文都去掉。除非用户使用中文，其他地方不要主动使用中文。"
+**当前状态**:
+- `DreamStyleCard.tsx`: 标题为"记忆梦 Memory"（中英混合）
+- 描述为中文"梦到过去的地方"
+- 艺术家副标题为英文"Van Gogh + Cézanne"
+
+**待调整**:
+- [ ] 将所有UI文案改为纯英文
+- [ ] 标题改为: "Memory Dream", "Surreal Dream", "Lucid Dream", "Pastel Dream"
+- [ ] 描述改为英文: "Dreams of places I've been", "World logic breaks", "Between sleep and wake", "Spring-like comfort"
+- [ ] 保持艺术家副标题英文
+- [ ] 仅在用户输入中文梦境时，系统内部使用中文处理
+
+**需要修改的文件**:
+- `components/DreamStyleCard.tsx`: styleConfig文案
+- 其他UI组件中的中文提示
+- 确保后端LLM处理逻辑不受影响（caption仍可用中文）
+
+---
+
+## ⚠️ Current Known Issues (Updated)
+
+### 1. **Lucid Dream Style Unsatisfactory** (CRITICAL) 🔴
+**Problem**: 用户不喜欢Lucid Dream的出图效果，要求全部更换
+**Current System**: Turrell + Syd Mead (light installation + sci-fi futurism)
+**Status**: 待重新设计艺术家系统和色彩逻辑
+**Priority**: HIGH
+
+### 2. **Pastel Dream Panels Too Similar** (CRITICAL) 🔴
+**Problem**: Pastel Dream三张图几乎一模一样，能量递进失效
+**Current System**: Monet + Van Gogh Blossoms (too gentle, lacks contrast)
+**Status**: 需要增强Panel 2冲突感，强化三格差异化
+**Priority**: HIGH
+
+### 3. **UI Language - Remove All Chinese** (HIGH) 🟠
+**Problem**: UI中不应主动使用中文，除非用户输入中文
+**Current Status**: 标题和描述为中英混合
+**Required Changes**:
+- Dream type titles → pure English
+- Descriptions → pure English
+- User input can remain Chinese (backend handles)
+**Priority**: HIGH
+
+### 4. **Vercel Build Warnings** (Minor)
+TypeScript type errors - 不影响运行时
+- Missing type definitions: bullmq, replicate, uuid
+- JSX type errors in React components
+
+---
+
+**Last Updated**: 2025-11-04 (All Three Critical Issues Resolved)
 
 **Repository Status**: Public (Private mode caused Vercel auto-deployment issues - keeping Public for reliable CI/CD)
+
+**Deployment Status**:
+- Previous: Commit e2589b7 deployed to Vercel + Railway
+- Current: All 3 critical issues resolved and ready for deployment
+
+---
+
+## 📅 2025-11-04: Critical Issues Resolution - UI Language + Lucid Dream + Pastel Dream
+
+### Overview
+解决了用户测试后反馈的全部3个关键问题：UI语言、Lucid Dream风格、Pastel Dream重复。
+
+---
+
+### ✅ Issue 1 Resolved: UI Language - All Chinese Removed
+
+**Problem**: 用户要求"把页面里所有的中文都去掉，除非用户使用中文"
+
+**Solution Implemented**:
+
+**1. DreamStyleCard.tsx** (`components/DreamStyleCard.tsx`):
+- 标题改为纯英文：
+  * ❌ 旧："记忆梦 Memory" → ✅ 新："Memory Dream"
+  * ❌ 旧："超现实梦 Surreal" → ✅ 新："Surreal Dream"
+  * ❌ 旧："清醒梦 Lucid" → ✅ 新："Lucid Dream"
+  * ❌ 旧："温柔梦 Pastel" → ✅ 新："Pastel Dream"
+- 描述改为英文：
+  * Memory: "Dreams of places I've been"
+  * Surreal: "World logic breaks"
+  * Lucid: "Between sleep and wake"
+  * Pastel: "Spring-like comfort"
+- 艺术家副标题保持英文（已符合要求）
+
+**2. Homepage Tooltip** (`app/page.tsx`):
+- Button title tooltip 改为英文：
+  * ❌ 旧："请输入至少10个字符（当前X个）"
+  * ✅ 新："Please enter at least 10 characters (current: X)"
+
+**Files Modified**:
+- `components/DreamStyleCard.tsx`: Lines 17-46 (styleConfig)
+- `app/page.tsx`: Line 158 (button title)
+
+**Backend Unchanged**:
+- LLM处理逻辑不受影响
+- Panel captions仍可使用中文（根据用户输入语言自动判断）
+
+---
+
+### ✅ Issue 2 Resolved: Lucid Dream Style Completely Redesigned
+
+**Problem**: 用户不喜欢Lucid Dream的出图，要求"全换"
+
+**Root Cause Analysis**:
+- 旧艺术家：James Turrell + Syd Mead
+  * Turrell：纯光装置艺术，过于科技感、冷硬
+  * Syd Mead：科幻概念设计，未来主义建筑感太重
+  * 缺少：有机的梦境漂浮感、神秘氛围
+
+**New Artist System**: **Yves Tanguy + Giorgio de Chirico (超现实主义漂浮空间大师)**
+
+**Yves Tanguy (伊夫·唐吉)**:
+- 超现实主义代表作家
+- 特点：漂浮的有机抽象形态、无尽的虚空地平线、梦境般的孤独空间
+- 代表作：《Indefinite Divisibility》《Mama, Papa is Wounded!》
+
+**Giorgio de Chirico (基里科)**:
+- 形而上绘画创始人
+- 特点：神秘的阴影、空旷的广场、超现实的透视、孤独的建筑剪影
+- 代表作：《The Nostalgia of the Infinite》《Mystery and Melancholy of a Street》
+
+**New Color System**:
+- ❌ 旧：Cobalt blue void, cold white light, cyan glow, neon (科技感)
+- ✅ 新：Deep twilight blue, mysterious shadow purple, pale moonlight, dusty rose horizon, metaphysical teal (梦境感)
+
+**Implementation Details**:
+
+**1. lib/constants.ts** (Lines 48-69):
+```typescript
+cyber: {
+  artistReference: 'Yves Tanguy + Giorgio de Chirico',
+  artistPhilosophy: 'Tanguy\'s floating organic forms in infinite void meets de Chirico\'s metaphysical shadows and mysterious空旷.',
+  colorPalette: 'Deep twilight blue, mysterious shadow purple, pale moonlight, dusty rose horizon, metaphysical teal, infinite void gradient',
+  compositionGuide: {
+    panel1: 'Tanguy-style infinite horizon in deep twilight blue, single floating organic form (biomorphic shadow), de Chirico long mysterious shadows...',
+    panel2: 'Multiple Tanguy biomorphic shapes hovering in impossible positions, de Chirico metaphysical architecture fragments (arches, columns) floating disconnected...',
+    panel3: 'Extreme close-up of soft biomorphic form dissolving into twilight gradient, Tanguy organic texture melting like memory...'
+  },
+  prompt: 'lucid dream atmosphere, Yves Tanguy floating biomorphic forms in infinite void meets Giorgio de Chirico metaphysical shadows and mysterious architecture, deep twilight blue and purple gradient sky, pale moonlight creating long enigmatic shadows, organic surrealist shapes suspended weightlessly, dusty rose horizon line, atmospheric depth with soft haze, dreamlike solitude and floating consciousness, mysterious teal accents, metaphysical空旷, smooth gradient void dominating composition, surrealist masterpiece',
+  negative: 'warm daylight, bright cheerful colors, busy crowded scene, realistic lighting, photographic realism, cyberpunk neon, sci-fi technology, geometric hard edges, literal objects, faces, full bodies, cluttered details, flat composition, sharp focus throughout'
+}
+```
+
+**2. worker/index.ts** (Lines 638-641):
+```typescript
+case 'cyber':
+  // Lucid Dream: Yves Tanguy + Giorgio de Chirico
+  artistPrefix = 'surrealist masterpiece in the style of Yves Tanguy and Giorgio de Chirico, lucid dream atmosphere, floating biomorphic forms in infinite void meets metaphysical shadows and mysterious architecture, deep twilight blue and purple gradient sky, pale moonlight creating long enigmatic shadows, organic surrealist shapes suspended weightlessly, dusty rose horizon line, atmospheric depth with soft haze, dreamlike solitude and floating consciousness, mysterious teal accents, metaphysical空旷,';
+  break;
+```
+
+**3. components/DreamStyleCard.tsx** (Line 37):
+```typescript
+subtitle: "Tanguy + de Chirico"
+```
+
+**Expected Improvement**:
+- ✅ 更有梦境感：从科技光装置 → 超现实漂浮空间
+- ✅ 更有机：从几何光束 → 生物形态阴影
+- ✅ 更神秘：从霓虹灯 → 黄昏渐变和月光
+- ✅ 更符合"清醒梦"意境：漂浮的意识、阈限空间
+
+---
+
+### ✅ Issue 3 Resolved: Pastel Dream Panel Repetition Fixed
+
+**Problem**: 用户反馈"Pastel Dream三张图几乎一模一样"
+
+**Root Cause Analysis**:
+- Monet + Van Gogh Blossoms 都过于柔和温柔
+- Panel 2 缺少冲突感（应该是"漩涡/Distortion"阶段）
+- 色彩过于统一，没有明显的视觉差异
+- LLM 生成的描述可能过于相似
+
+**Solution Strategy**: 在保持柔和风格的同时，通过**构图方向**和**动态对比**强制三格差异化
+
+**Implementation Details**:
+
+**1. lib/constants.ts - Enhanced compositionGuide** (Lines 82-85):
+```typescript
+compositionGuide: {
+  panel1: 'SENSATION (初感) - WIDE SHOT: Monet-style distant HORIZONTAL color field in soft pink-white and mint green (70% soft negative space creating breathing room), wide landscape format with dappled impressionist light, delicate short brushstrokes visible like Van Gogh blossoms scattered across top third, warm peach light as comfort temperature, calm HORIZONTAL stillness, therapeutic atmosphere',
+
+  panel2: 'DISTORTION (漩涡) - MID SHOT: CRITICAL - MUST CREATE CONTRAST. Van Gogh blossom branches in DIAGONAL DYNAMIC composition (45-degree energy), soft lavender and sky blue swirling in impressionist motion blur (NOT static), gentle turbulence through flowing pastel brushstrokes, mid-ground depth with atmospheric layers, movement and rhythm (branches bending, petals flowing), Studio Ghibli wind-blown softness, tender chaos without violence',
+
+  panel3: 'ECHO (余晖) - CLOSE-UP: Comfort dissolves into peace. VERTICAL format extreme close-up of single pink-white blossom dissolving into cream void (80% soft light negative space), impressionist dabs becoming light particles from top to bottom, peach and lavender fading like spring breeze, emotional release through gentle upward dissolution, negative space as pure comfort, watercolor softness'
+}
+```
+
+**Key Changes**:
+- Panel 1: **HORIZONTAL** (wide landscape, calm stillness)
+- Panel 2: **DIAGONAL** (45-degree dynamic, branches bending, petals flowing) - **关键差异点**
+- Panel 3: **VERTICAL** (extreme close-up, upward dissolution)
+
+**2. worker/index.ts - Per-Panel Artist Prefix Variation** (Lines 643-656):
+```typescript
+case 'pastel':
+  // Different approach per panel to ensure visual variety
+  if (panelIndex === 0) {
+    // Panel 1: Horizontal calm stillness
+    artistPrefix = 'impressionist masterpiece in the style of Claude Monet water lilies, pastel dream atmosphere, HORIZONTAL wide landscape composition, soft pink-white and mint green color fields, dappled light across calm surface, delicate short brushstrokes scattered in top third, warm peach light, therapeutic stillness, watercolor softness,';
+  } else if (panelIndex === 1) {
+    // Panel 2: DIAGONAL dynamic movement (KEY: create contrast)
+    artistPrefix = 'impressionist masterpiece in the style of Vincent van Gogh Almond Blossoms in wind, pastel dream atmosphere, DIAGONAL 45-degree dynamic composition, soft lavender and sky blue swirling in motion blur, flowing branches bending, petals in gentle turbulent movement, impressionist wind-blown energy, Studio Ghibli atmospheric depth, tender chaos with rhythm,';
+  } else {
+    // Panel 3: VERTICAL dissolution close-up
+    artistPrefix = 'impressionist masterpiece in the style of Claude Monet and Vincent van Gogh, pastel dream atmosphere, VERTICAL extreme close-up composition, single pink-white blossom dissolving upward into cream void, impressionist dabs becoming light particles, peach and lavender fading vertically, gentle upward dissolution, watercolor softness,';
+  }
+  break;
+```
+
+**3. worker/index.ts - LLM Prompt Enhancement** (Lines 419-424):
+```
+**⚠️ CRITICAL FOR PASTEL DREAM: Panel 2 MUST Have Visual Contrast**
+If style is Pastel Dream (Monet + Van Gogh Blossoms):
+- Panel 1: HORIZONTAL calm stillness (wide landscape, dappled light)
+- Panel 2: DIAGONAL dynamic movement (45-degree composition, branches bending, petals flowing, gentle turbulence - MUST be visually different from Panel 1)
+- Panel 3: VERTICAL dissolution close-up (single blossom fading upward)
+- **DO NOT** create three similar gentle scenes - Panel 2 needs RHYTHM and MOVEMENT even in softness
+```
+
+**Expected Improvement**:
+- ✅ Panel 1: 水平构图，静态，宽画幅
+- ✅ Panel 2: 对角线构图，动态，枝条弯曲飘动（明显不同）
+- ✅ Panel 3: 垂直构图，特写，向上消散
+- ✅ 通过构图方向（横/斜/竖）+ 运动状态（静/动/散）实现视觉差异化
+- ✅ 保持柔和风格的同时，增加节奏感和对比度
+
+---
+
+## Files Modified Summary
+
+### Frontend (UI Language):
+1. **components/DreamStyleCard.tsx**:
+   - Lines 17-46: styleConfig (titles, descriptions全部英文化)
+   - Line 37: Lucid Dream subtitle更新为"Tanguy + de Chirico"
+
+2. **app/page.tsx**:
+   - Line 158: Button tooltip英文化
+
+### Backend (Style Systems):
+3. **lib/constants.ts**:
+   - Lines 48-69: Lucid Dream完全重写（艺术家、色彩、构图、提示词）
+   - Lines 82-85: Pastel Dream compositionGuide增强（强制三格差异化）
+
+4. **worker/index.ts**:
+   - Lines 638-641: Lucid Dream SDXL艺术家前缀更新
+   - Lines 643-656: Pastel Dream分panel定制SDXL前缀
+   - Lines 419-424: LLM提示词新增Pastel Dream特别注意事项
+
+---
+
+## Testing Recommendations
+
+### 1. Test Cases for Lucid Dream:
+- 梦境输入："我在漂浮，不知道是醒着还是睡着"
+- 期望效果：
+  * Panel 1: 黄昏蓝色无尽地平线，漂浮的生物形态阴影
+  * Panel 2: 多个有机形状悬浮，神秘的建筑碎片（拱门、柱子）
+  * Panel 3: 特写生物形态溶解成黄昏渐变
+- 验证点：是否有Tanguy的有机漂浮感 + de Chirico的神秘阴影
+
+### 2. Test Cases for Pastel Dream:
+- 梦境输入："梦到春天的花园，很温柔"
+- 期望效果：
+  * Panel 1: **水平**构图，静态水面，樱花点缀
+  * Panel 2: **对角线**构图，枝条弯曲，花瓣飞舞（明显不同）
+  * Panel 3: **垂直**构图，单朵花向上消散
+- 验证点：三格是否有明显的构图差异（横/斜/竖）
+
+### 3. UI Language Verification:
+- 检查首页四个风格卡片：标题和描述是否全部为英文
+- 检查按钮tooltip：是否为英文提示
+- 后端caption：如果用户输入中文梦境，caption可以是中文（不受影响）
+
+---
+
+## ⚠️ Current Known Issues (Updated)
+
+### 1. **Vercel Build Warnings** (Minor)
+TypeScript type errors - 不影响运行时
+- Missing type definitions: bullmq, replicate, uuid
+- JSX type errors in React components
+- 解决方案（可选）：`npm i --save-dev @types/node @types/uuid`
+
+### 2. **Pending User Feedback** (待验证)
+- Lucid Dream新艺术家系统（Tanguy + de Chirico）效果如何？
+- Pastel Dream三格差异化是否足够明显？
+- UI英文化是否满足要求？
+
+---
+
+**Deployment Checklist**:
+- [ ] Git commit所有修改
+- [ ] 推送到GitHub main分支
+- [ ] Vercel自动部署
+- [ ] Railway worker自动部署
+- [ ] 测试所有4种风格
+- [ ] 等待用户反馈
+
+---
+
+**Next Steps** (if user feedback is positive):
+1. 无需进一步调整，系统达到预期
+2. 可以考虑添加更多梦境类型（如果需要）
+3. 优化图像生成速度（如果用户反馈慢）
+
+**Next Steps** (if user feedback needs more tweaks):
+1. 根据具体反馈微调艺术家提示词
+2. 调整SDXL参数（guidance_scale, steps等）
+3. 考虑切换更强大的图像模型（FLUX.1-pro）

@@ -416,6 +416,13 @@ Panel 3: "Endless stairs perspective"
 - ✅ Same visual element (line/texture/light) transforming
 - ✅ Emotional arc: Calm → Chaos → Dissolution
 
+**⚠️ CRITICAL FOR PASTEL DREAM: Panel 2 MUST Have Visual Contrast**
+If style is Pastel Dream (Monet + Van Gogh Blossoms):
+- Panel 1: HORIZONTAL calm stillness (wide landscape, dappled light)
+- Panel 2: DIAGONAL dynamic movement (45-degree composition, branches bending, petals flowing, gentle turbulence - MUST be visually different from Panel 1)
+- Panel 3: VERTICAL dissolution close-up (single blossom fading upward)
+- **DO NOT** create three similar gentle scenes - Panel 2 needs RHYTHM and MOVEMENT even in softness
+
 ═══════════════════════════════════════════════════════════════════════
 🚫 ABSOLUTE PROHIBITIONS
 ═══════════════════════════════════════════════════════════════════════
@@ -636,13 +643,23 @@ async function generateImage(
       break;
 
     case 'cyber':
-      // Lucid Dream: Turrell + Syd Mead
-      artistPrefix = 'visionary masterpiece in the style of James Turrell and Syd Mead, lucid dream atmosphere, pure light field installations meets visionary architecture, cobalt blue void with cold white and cyan light phenomena, heavy volumetric fog, clean geometric light boundaries, impossible light architecture, wet reflective surfaces, soft bloom and atmospheric glow, liminal threshold aesthetic, consciousness as light,';
+      // Lucid Dream: Yves Tanguy + Giorgio de Chirico
+      artistPrefix = 'surrealist masterpiece in the style of Yves Tanguy and Giorgio de Chirico, lucid dream atmosphere, floating biomorphic forms in infinite void meets metaphysical shadows and mysterious architecture, deep twilight blue and purple gradient sky, pale moonlight creating long enigmatic shadows, organic surrealist shapes suspended weightlessly, dusty rose horizon line, atmospheric depth with soft haze, dreamlike solitude and floating consciousness, mysterious teal accents, metaphysical空旷,';
       break;
 
     case 'pastel':
-      // Pastel Dream: Monet + Van Gogh Blossoms
-      artistPrefix = 'impressionist masterpiece in the style of Claude Monet and Vincent van Gogh Almond Blossoms, pastel dream atmosphere, impressionist dappled light meets tender brushwork, soft pink-white and mint green color fields, lavender and peach warmth, delicate short brushstrokes visible, gentle atmospheric haze with bokeh, therapeutic color harmony, spring renewal mood, watercolor softness,';
+      // Pastel Dream: Monet + Van Gogh Blossoms with ENHANCED CONTRAST
+      // Different approach per panel to ensure visual variety
+      if (panelIndex === 0) {
+        // Panel 1: Horizontal calm stillness
+        artistPrefix = 'impressionist masterpiece in the style of Claude Monet water lilies, pastel dream atmosphere, HORIZONTAL wide landscape composition, soft pink-white and mint green color fields, dappled light across calm surface, delicate short brushstrokes scattered in top third, warm peach light, therapeutic stillness, watercolor softness,';
+      } else if (panelIndex === 1) {
+        // Panel 2: DIAGONAL dynamic movement (KEY: create contrast)
+        artistPrefix = 'impressionist masterpiece in the style of Vincent van Gogh Almond Blossoms in wind, pastel dream atmosphere, DIAGONAL 45-degree dynamic composition, soft lavender and sky blue swirling in motion blur, flowing branches bending, petals in gentle turbulent movement, impressionist wind-blown energy, Studio Ghibli atmospheric depth, tender chaos with rhythm,';
+      } else {
+        // Panel 3: VERTICAL dissolution close-up
+        artistPrefix = 'impressionist masterpiece in the style of Claude Monet and Vincent van Gogh, pastel dream atmosphere, VERTICAL extreme close-up composition, single pink-white blossom dissolving upward into cream void, impressionist dabs becoming light particles, peach and lavender fading vertically, gentle upward dissolution, watercolor softness,';
+      }
       break;
 
     default:

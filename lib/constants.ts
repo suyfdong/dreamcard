@@ -51,21 +51,21 @@ export const STYLES = {
     dreamType: 'Lucid',
     psychologicalCore: 'Awareness, floating, threshold between sleep and wake',
     userFeeling: 'I know I\'m dreaming, consciousness floating in void, liminal spaces',
-    // Artist System: James Turrell + Syd Mead (光装置未来主义)
-    artistReference: 'James Turrell + Syd Mead',
-    artistPhilosophy: 'Turrell\'s pure light phenomena meets Syd Mead\'s visionary architecture. Lucid dreams are consciousness observing itself as light in void.',
-    colorPalette: 'Cobalt blue void, cold white light, cyan glow, obsidian black, neon threshold markers',
+    // Artist System: Yves Tanguy + Giorgio de Chirico (超现实漂浮空间)
+    artistReference: 'Yves Tanguy + Giorgio de Chirico',
+    artistPhilosophy: 'Tanguy\'s floating organic forms in infinite void meets de Chirico\'s metaphysical shadows and mysterious空旷. Lucid dreams are conscious floating in surreal空间.',
+    colorPalette: 'Deep twilight blue, mysterious shadow purple, pale moonlight, dusty rose horizon, metaphysical teal, infinite void gradient',
     // Energy Progression: Sensation → Distortion → Echo
     compositionGuide: {
-      panel1: 'SENSATION (初感) - WIDE SHOT: Consciousness awakens in void. Turrell-style vast cobalt blue light field with 75% negative space, single pure light source (cold white) creating liminal threshold, clean geometric light boundaries, volumetric haze revealing space\'s depth, calm awareness of being in-between states, symmetrical order as mind recognizes dream',
-      panel2: 'DISTORTION (漩涡) - MID SHOT: Light architecture defies reality. Syd Mead impossible geometry made of pure cyan-white light beams, vertical light defying gravity with mirror reflections creating infinite recursion, low-angle perspective as consciousness looks up into void, atmospheric blue fog with neon accents marking impossible thresholds, spatial turbulence through light phenomena',
-      panel3: 'ECHO (余晖) - CLOSE-UP: Awareness dissolves back into sleep. Extreme close-up of light particles dispersing into obsidian void (85% darkness), soft bloom as consciousness fades, cold white becoming cyan mist then disappearing, emotional release through accepting return to unconsciousness, negative space as awareness surrenders control',
+      panel1: 'SENSATION (初感) - WIDE SHOT: Consciousness awakens in surreal void. Tanguy-style infinite horizon in deep twilight blue with 75% empty sky, single floating organic form (biomorphic shadow) suspended in空间, de Chirico long mysterious shadows cast by invisible light, calm surreal atmosphere of dream awareness, soft gradient from pale moonlight to deep void, weightless solitude',
+      panel2: 'DISTORTION (漩涡) - MID SHOT: Floating forms defy gravity and logic. Multiple Tanguy biomorphic shapes hovering in impossible positions, de Chirico metaphysical architecture fragments (arches, columns) floating disconnected, mysterious purple-teal shadows creating spatial confusion, low-angle perspective looking up into dreamscape, atmospheric haze with dusty rose accents, organic surrealism meets architectural mystery',
+      panel3: 'ECHO (余晖) - CLOSE-UP: Dream awareness fades into unconsciousness. Extreme close-up of soft biomorphic form dissolving into twilight gradient (85% void), Tanguy organic texture melting like memory, de Chirico shadow becoming formless, pale moonlight dispersing into deep blue-purple infinity, emotional release as lucidity surrenders to sleep, negative space as consciousness lets go',
     },
-    // Sketch-first: Light installation sketch
-    sketchPrompt: 'light installation sketch, Turrell-inspired light fields, geometric light boundaries, volumetric fog indication, pure color zones cobalt and cyan',
+    // Sketch-first: Surreal floating sketch
+    sketchPrompt: 'surrealist floating forms sketch, Tanguy biomorphic shapes, de Chirico mysterious shadows, infinite horizon, twilight gradient zones, metaphysical architecture fragments',
     // Final render: Lucid Dream aesthetic
-    prompt: 'lucid dream atmosphere, James Turrell pure light field installations meets Syd Mead visionary architecture, cobalt blue void with cold white and cyan light phenomena, heavy volumetric fog revealing spatial depth, clean geometric light boundaries, impossible light architecture defying gravity, wet reflective surfaces doubling light, soft bloom and atmospheric glow, liminal threshold aesthetic, consciousness as observer of light in void, negative space dominating, blade runner meets light art installation',
-    negative: 'warm daylight, earthy natural colors, dry matte surfaces, cozy intimate mood, organic textures, busy cluttered, oversaturated rainbow, generic cyberpunk street, realistic objects, faces, full bodies, literal architecture, flat composition without depth',
+    prompt: 'lucid dream atmosphere, Yves Tanguy floating biomorphic forms in infinite void meets Giorgio de Chirico metaphysical shadows and mysterious architecture, deep twilight blue and purple gradient sky, pale moonlight creating long enigmatic shadows, organic surrealist shapes suspended weightlessly, dusty rose horizon line, atmospheric depth with soft haze, dreamlike solitude and floating consciousness, mysterious teal accents, metaphysical空旷, smooth gradient void dominating composition, surrealist masterpiece',
+    negative: 'warm daylight, bright cheerful colors, busy crowded scene, realistic lighting, photographic realism, cyberpunk neon, sci-fi technology, geometric hard edges, literal objects, faces, full bodies, cluttered details, flat composition, sharp focus throughout',
   },
   pastel: {
     name: 'Pastel Dream',
@@ -79,9 +79,9 @@ export const STYLES = {
     colorPalette: 'Soft pink-white, mint green, lavender, peach, sky blue, cream, impressionist dappled light',
     // Energy Progression: Sensation → Distortion → Echo
     compositionGuide: {
-      panel1: 'SENSATION (初感) - WIDE SHOT: Enter gentle healing space. Monet-style distant color field in soft pink-white and mint green (70% soft negative space), dappled impressionist light creating atmospheric tenderness, delicate short brushstrokes visible like Van Gogh blossoms, warm peach light as comfort temperature, calm entry into therapeutic dream',
-      panel2: 'DISTORTION (漩涡) - MID SHOT: Gentle impossibility without violence. Van Gogh blossom branches floating in Monet water lily space, soft lavender and sky blue creating tender spatial contradiction, impressionist blur making gravity optional, short gentle brushstrokes showing emotional lightness, environmental ease through pastel color harmony, Studio Ghibli atmospheric depth',
-      panel3: 'ECHO (余晖) - CLOSE-UP: Comfort dissolves into peace. Extreme close-up of pink-white blossom paint dispersing into cream void (75% soft light), impressionist dabs becoming light particles, peach and lavender fading like spring breeze, emotional release through gentle dissolution, negative space as pure comfort, watercolor softness',
+      panel1: 'SENSATION (初感) - WIDE SHOT: Enter gentle healing space. Monet-style distant horizontal color field in soft pink-white and mint green (70% soft negative space creating breathing room), wide landscape format with dappled impressionist light, delicate short brushstrokes visible like Van Gogh blossoms scattered across top third, warm peach light as comfort temperature, calm horizontal stillness, therapeutic atmosphere',
+      panel2: 'DISTORTION (漩涡) - MID SHOT: CRITICAL - MUST CREATE CONTRAST. Van Gogh blossom branches in DIAGONAL DYNAMIC composition (45-degree energy), soft lavender and sky blue swirling in impressionist motion blur (NOT static), gentle turbulence through flowing pastel brushstrokes, mid-ground depth with atmospheric layers, movement and rhythm (branches bending, petals flowing), Studio Ghibli wind-blown softness, tender chaos without violence',
+      panel3: 'ECHO (余晖) - CLOSE-UP: Comfort dissolves into peace. VERTICAL format extreme close-up of single pink-white blossom dissolving into cream void (80% soft light negative space), impressionist dabs becoming light particles from top to bottom, peach and lavender fading like spring breeze, emotional release through gentle upward dissolution, negative space as pure comfort, watercolor softness',
     },
     // Sketch-first: Impressionist sketch guide
     sketchPrompt: 'soft impressionist sketch, Monet dappled light zones, Van Gogh blossom composition, pastel color fields, gentle atmospheric guide, tender brushwork indication',
